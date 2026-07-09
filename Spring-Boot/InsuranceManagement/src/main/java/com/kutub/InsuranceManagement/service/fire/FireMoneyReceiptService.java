@@ -22,14 +22,14 @@ public class FireMoneyReceiptService {
         return  moneyReceiptRepository.findAll();
     }
 
-    public void saveMoneyReceipt(FireMoneyReceipt mr) {
-            FireBill bill = billRepository.findById(mr.getBill().getId())
-                    .orElseThrow(
-                            () -> new RuntimeException("Bill not found " + mr.getBill().getId())
-                    );
-            mr.setBill(bill);
-            moneyReceiptRepository.save(mr);
-        }
+    public FireMoneyReceipt saveMoneyReceipt(FireMoneyReceipt mr) {
+        FireBill bill = billRepository.findById(mr.getBill().getId())
+                .orElseThrow(
+                        () -> new RuntimeException("Bill not found " + mr.getBill().getId())
+                );
+        mr.setBill(bill);
+        return moneyReceiptRepository.save(mr);
+    }
 
 
     public FireMoneyReceipt getMoneyReceiptById(int id) {
@@ -41,7 +41,7 @@ public class FireMoneyReceiptService {
         moneyReceiptRepository.deleteById(id);
     }
 
-    public void updateMoneyReceipt(FireMoneyReceipt updatedMoneyReceipt, int id) {
+    public FireMoneyReceipt updateMoneyReceipt(FireMoneyReceipt updatedMoneyReceipt, int id) {
         // Fetch the existing MoneyReceipt from the database
         FireMoneyReceipt existingMoneyReceipt = moneyReceiptRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("MoneyReceipt not found with ID: " + id));
@@ -61,6 +61,6 @@ public class FireMoneyReceiptService {
         }
 
         // Save the updated MoneyReceipt
-        moneyReceiptRepository.save(existingMoneyReceipt);
+        return moneyReceiptRepository.save(existingMoneyReceipt);
     }
 }

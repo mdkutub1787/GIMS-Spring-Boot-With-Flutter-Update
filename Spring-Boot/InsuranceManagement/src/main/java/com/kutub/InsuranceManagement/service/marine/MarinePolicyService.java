@@ -25,13 +25,13 @@ public class MarinePolicyService {
         return policyRepository.findAll();
     }
 
-    public void saveMarinePolicy(MarinePolicy marinePolicy) {
-        double exchangeRate = currencyService.fetchExchangeRate().doubleValue();
-        marinePolicy.convertSumInsuredUsd(exchangeRate);
+    public MarinePolicy saveMarinePolicy(MarinePolicy marinePolicy) {
         if (marinePolicy == null) {
             throw new IllegalArgumentException("Marine Policy cannot be null.");
         }
-        policyRepository.save(marinePolicy);
+        double exchangeRate = currencyService.fetchExchangeRate().doubleValue();
+        marinePolicy.convertSumInsuredUsd(exchangeRate);
+        return policyRepository.save(marinePolicy);
     }
 
     // Update Marine Policy details and trigger related updates

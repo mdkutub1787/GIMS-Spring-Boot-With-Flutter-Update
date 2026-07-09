@@ -43,7 +43,7 @@ public class MarineMoneyReceiptService {
     }
 
     // Update an existing marine money receipt
-    public void updateMarineMoneyReceipt(MarineMoneyReceipt updateMarineMoneyReceipt, long id) {
+    public MarineMoneyReceipt updateMarineMoneyReceipt(MarineMoneyReceipt updateMarineMoneyReceipt, long id) {
         // Fetch the existing MoneyReceipt from the database
         MarineMoneyReceipt existingMoneyReceipt = moneyReceiptRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("MoneyReceipt not found with ID: " + id));
@@ -70,7 +70,7 @@ public class MarineMoneyReceiptService {
         }
 
         // Save the updated MoneyReceipt
-        moneyReceiptRepository.save(existingMoneyReceipt);
+        return moneyReceiptRepository.save(existingMoneyReceipt);
     }
 
     // Delete a marine money receipt by ID

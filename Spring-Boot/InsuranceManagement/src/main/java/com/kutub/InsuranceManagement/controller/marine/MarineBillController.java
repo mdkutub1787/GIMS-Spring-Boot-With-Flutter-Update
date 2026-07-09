@@ -23,8 +23,9 @@ public class MarineBillController {
     }
 
     @PostMapping("/save")
-    public void saveMarineBill(@RequestBody MarineBill mb) {
-        marineBillService.saveMarineBill(mb);
+    public ResponseEntity<MarineBill> saveMarineBill(@RequestBody MarineBill mb) {
+        MarineBill savedBill = marineBillService.saveMarineBill(mb);
+        return new ResponseEntity<>(savedBill, HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
@@ -38,8 +39,9 @@ public class MarineBillController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteMarineBillById(@PathVariable long id) {
+    public ResponseEntity<Void> deleteMarineBillById(@PathVariable long id) {
         marineBillService.deleteMarineBill(id);
+        return ResponseEntity.noContent().build();
     }
 
     // Get bill by ID
