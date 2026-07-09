@@ -39,4 +39,9 @@ class ApiConstants {
   static const String marineReceiptSave = '$baseUrl/api/marinebillmoneyreceipt/save';
   static const String marineReceiptList = '$baseUrl/api/marinebillmoneyreceipt/list';
   static const String marineReceiptDelete = '$baseUrl/api/marinebillmoneyreceipt/delete';
+
+  // Utility
+  static const String banks = '$baseUrl/api/banks';
+  static const String branches = '$baseUrl/api/banks'; // Usage: $banks/$bankId/branches
+  static const String insuranceCompanies = '$baseUrl/api/insurance-companies';
 }

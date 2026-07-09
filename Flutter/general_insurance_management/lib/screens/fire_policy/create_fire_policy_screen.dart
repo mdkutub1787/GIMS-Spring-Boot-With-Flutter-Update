@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../models/policy_model.dart';
 import '../../viewmodels/fire_policy_viewmodel.dart';
+import '../../viewmodels/utility_viewmodel.dart';
 
 class CreateFirePolicyScreen extends ConsumerStatefulWidget {
   const CreateFirePolicyScreen({super.key});
@@ -15,7 +16,6 @@ class CreateFirePolicyScreen extends ConsumerStatefulWidget {
 class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen> {
   final _formKey = GlobalKey<FormState>();
   
-  final TextEditingController bankNameController = TextEditingController();
   final TextEditingController policyholderController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController stockInsuredController = TextEditingController();
@@ -25,6 +25,9 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
   final TextEditingController periodFromController = TextEditingController();
   final TextEditingController periodToController = TextEditingController();
 
+  String? selectedCompany;
+  String? selectedBank;
+  String? selectedBranch;
   String? selectedConstruction;
   String? selectedUsage;
 
@@ -37,13 +40,21 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
     periodFromController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
     DateTime nextYear = DateTime.now().add(const Duration(days: 365));
     periodToController.text = DateFormat('yyyy-MM-dd').format(nextYear);
+
+    // Fetch initial data
+    Future.microtask(() {
+      ref.read(utilityViewModelProvider.notifier).fetchBanks();
+      ref.read(utilityViewModelProvider.notifier).fetchInsuranceCompanies();
+    });
   }
 
   Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
       final policy = PolicyModel(
         date: DateTime.now(),
-        bankName: bankNameController.text,
+        company: selectedCompany ?? '',
+        bankName: selectedBank ?? '',
+        branchName: selectedBranch ?? '',
         policyholder: policyholderController.text,
         address: addressController.text,
         stockInsured: stockInsuredController.text,
@@ -70,7 +81,8 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(firePolicyViewModelProvider);
+    final fireState = ref.watch(firePolicyViewModelProvider);
+    final utilityState = ref.watch(utilityViewModelProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -88,8 +100,44 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
             children: [
               _buildSectionTitle('Client Information', theme),
               const SizedBox(height: 15),
-              _buildField(bankNameController, 'Bank Name', Icons.account_balance_outlined),
+              
+              // Company Dropdown
+              _buildDropdown(
+                'Company',
+                Icons.business_outlined,
+                utilityState.insuranceCompanies.map((e) => e.name).toList(),
+                selectedCompany,
+                (val) => setState(() => selectedCompany = val),
+              ),
               const SizedBox(height: 15),
+
+              // Bank Dropdown
+              _buildDropdown(
+                'Bank Name',
+                Icons.account_balance_outlined,
+                utilityState.banks.map((e) => e.name).toList(),
+                selectedBank,
+                (val) {
+                  setState(() {
+                    selectedBank = val;
+                    selectedBranch = null; // Reset branch
+                  });
+                  final bank = utilityState.banks.firstWhere((e) => e.name == val);
+                  ref.read(utilityViewModelProvider.notifier).fetchBranches(bank.id);
+                },
+              ),
+              const SizedBox(height: 15),
+
+              // Branch Dropdown
+              _buildDropdown(
+                'Branch Name',
+                Icons.account_tree_outlined,
+                utilityState.branches.map((e) => e.name).toList(),
+                selectedBranch,
+                (val) => setState(() => selectedBranch = val),
+              ),
+              const SizedBox(height: 15),
+
               _buildField(policyholderController, 'Policyholder', Icons.person_outline),
               const SizedBox(height: 15),
               _buildField(addressController, 'Address', Icons.location_on_outlined),
@@ -123,13 +171,13 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton(
-                  onPressed: state.isLoading ? null : _submit,
+                  onPressed: fireState.isLoading || utilityState.isLoading ? null : _submit,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: theme.colorScheme.primary,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                   ),
-                  child: state.isLoading 
+                  child: (fireState.isLoading || utilityState.isLoading)
                     ? const CircularProgressIndicator(color: Colors.white)
                     : Text('Create Policy', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
@@ -172,9 +220,10 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
   Widget _buildDropdown(String label, IconData icon, List<String> items, String? value, Function(String?) onChanged) {
     return DropdownButtonFormField<String>(
       value: value,
+      isExpanded: true,
       style: GoogleFonts.poppins(fontSize: 14, color: Colors.black87),
       decoration: _inputDecoration(label, icon),
-      items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+      items: items.map((e) => DropdownMenuItem(value: e, child: Text(e, overflow: TextOverflow.ellipsis))).toList(),
       onChanged: onChanged,
       validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
     );

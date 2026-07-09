@@ -9,7 +9,8 @@ class FireBillRepository {
   Future<List<BillModel>> fetchBills() async {
     final response = await _apiService.getFireBills();
     if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(response.body);
+      final decoded = jsonDecode(response.body);
+      List<dynamic> data = decoded['data'];
       return data.map((item) => BillModel.fromJson(item)).toList();
     }
     throw Exception('Failed to load fire bills');

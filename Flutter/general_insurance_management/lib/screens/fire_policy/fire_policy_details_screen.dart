@@ -23,8 +23,11 @@ class FirePolicyDetailsScreen extends StatelessWidget {
             _buildHeader(theme),
             const SizedBox(height: 25),
             _buildDetailCard([
+              _detailRow('System No', policy.sysNumber ?? 'N/A'),
+              _detailRow('Company', policy.company ?? 'N/A'),
               _detailRow('Policyholder', policy.policyholder ?? 'N/A'),
               _detailRow('Bank Name', policy.bankName ?? 'N/A'),
+              _detailRow('Branch Name', policy.branchName ?? 'N/A'),
               _detailRow('Sum Insured', 'TK ${policy.sumInsured}'),
               _detailRow('Stock Insured', policy.stockInsured ?? 'N/A'),
               _detailRow('Location', policy.location ?? 'N/A'),
@@ -55,7 +58,8 @@ class FirePolicyDetailsScreen extends StatelessWidget {
         children: [
           const Icon(Icons.security_rounded, size: 50, color: Colors.blue),
           const SizedBox(height: 10),
-          Text('Policy #${policy.id}', style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(policy.sysNumber ?? 'Policy #${policy.id}', style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(policy.company ?? 'N/A', style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.blueGrey)),
           Text('Created on: ${policy.date != null ? DateFormat('MMM dd, yyyy').format(policy.date!) : 'N/A'}',
               style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey[600])),
         ],

@@ -9,7 +9,8 @@ class FirePolicyRepository {
   Future<List<PolicyModel>> fetchPolicies() async {
     final response = await _apiService.getFirePolicies();
     if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(response.body);
+      final decoded = jsonDecode(response.body);
+      List<dynamic> data = decoded['data'];
       return data.map((item) => PolicyModel.fromJson(item)).toList();
     }
     throw Exception('Failed to load fire policies');

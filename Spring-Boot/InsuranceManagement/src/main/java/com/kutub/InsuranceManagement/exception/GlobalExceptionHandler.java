@@ -1,5 +1,6 @@
 package com.kutub.InsuranceManagement.exception;
 
+import com.kutub.InsuranceManagement.exception.auth.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;

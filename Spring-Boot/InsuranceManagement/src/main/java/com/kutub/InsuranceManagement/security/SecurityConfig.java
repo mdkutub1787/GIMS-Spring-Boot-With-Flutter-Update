@@ -1,10 +1,11 @@
 package com.kutub.InsuranceManagement.security;
 
 import com.kutub.InsuranceManagement.security.jwt.JwtAuthenticationFilter;
-import com.kutub.InsuranceManagement.service.UserService;
+import com.kutub.InsuranceManagement.service.auth.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -37,16 +38,21 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(
-                                        "/api/auth/register",
-                                        "/api/auth/login",
-                                        "/api/auth/verify-otp",
-                                        "/api/auth/forgot-password",
-                                        "/api/auth/verify-reset-code",
-                                        "/api/auth/reset-password",
+                                        // Public API endpoints
+                                        "/api/auth/**",
+                                        "/api/banks/**",
+                                        "/api/location/**",
                                         "/images/**"
                                 ).permitAll()
-                                .requestMatchers("/api/policy/save", "/api/bill/save").hasAuthority("ADMIN")
+                                // Policies: GET is public, others require ADMIN role
+                                .requestMatchers(HttpMethod.GET, "/api/policy/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/policy/save").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/api/policy/update/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/api/policy/delete/**").hasAuthority("ADMIN")
+                                // Bills: Some are for ADMIN, others for USER/ADMIN
+                                .requestMatchers("/api/bill/save").hasAuthority("ADMIN")
                                 .requestMatchers("/api/bill/{id}", "/api/bill/all/**", "/api/bill/").hasAnyAuthority("ADMIN", "USER")
+                                // Any other request must be authenticated
                                 .anyRequest().authenticated()
                 )
                 .userDetailsService(userService)

@@ -1,7 +1,10 @@
 class PolicyModel {
   int? id;
+  String? sysNumber;
+  String? company;
   DateTime? date;
   String? bankName;
+  String? branchName;
   String? policyholder;
   String? address;
   String? stockInsured;
@@ -18,6 +21,8 @@ class PolicyModel {
 
   PolicyModel({
     this.id,
+    this.sysNumber,
+    this.company,
     this.date,
     this.bankName,
     this.policyholder,
@@ -36,8 +41,11 @@ class PolicyModel {
 
   PolicyModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    sysNumber = json['sysNumber'];
+    company = json['company'];
     date = json['date'] != null ? DateTime.tryParse(json['date']) : null;
     bankName = json['bankName'];
+    branchName = json['branchName'];
     policyholder = json['policyholder'];
     address = json['address'];
     stockInsured = json['stockInsured'];
@@ -55,8 +63,11 @@ class PolicyModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
+    data['sysNumber'] = sysNumber;
+    data['company'] = company;
     data['date'] = date?.toIso8601String();
     data['bankName'] = bankName;
+    data['branchName'] = branchName;
     data['policyholder'] = policyholder;
     data['address'] = address;
     data['stockInsured'] = stockInsured;

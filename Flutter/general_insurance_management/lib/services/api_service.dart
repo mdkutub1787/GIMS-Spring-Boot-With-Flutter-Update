@@ -46,4 +46,9 @@ class ApiService {
   Future<http.Response> getMarineReceipts() => get(ApiConstants.marineReceiptList);
   Future<http.Response> saveMarineReceipt(Map<String, dynamic> data) => post(ApiConstants.marineReceiptSave, data);
   Future<http.Response> deleteMarineReceipt(int id) => delete('${ApiConstants.marineReceiptDelete}/$id');
+
+  // Utility
+  Future<http.Response> getBanks() => get(ApiConstants.banks);
+  Future<http.Response> getBranches(int bankId) => get('${ApiConstants.branches}/$bankId/branches');
+  Future<http.Response> getInsuranceCompanies() => get(ApiConstants.insuranceCompanies);
 }

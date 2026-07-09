@@ -1,0 +1,70 @@
+-- Clear existing bank data to avoid duplicates
+TRUNCATE TABLE bank;
+
+-- =============================================
+-- Insert New Bank Data from JSON
+-- =============================================
+
+INSERT INTO bank (name) VALUES ('AB Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Agrani Bank');
+INSERT INTO bank (name) VALUES ('Al-Arafah Islami Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Ansar VDP Unnayan Bank');
+INSERT INTO bank (name) VALUES ('BASIC Bank');
+INSERT INTO bank (name) VALUES ('BRAC Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Bangladesh Commerce Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Bangladesh Development Bank');
+INSERT INTO bank (name) VALUES ('Bangladesh Krishi Bank');
+INSERT INTO bank (name) VALUES ('Bank Al-Falah');
+INSERT INTO bank (name) VALUES ('Bank Asia Ltd.');
+INSERT INTO bank (name) VALUES ('CITI Bank NA');
+INSERT INTO bank (name) VALUES ('Commercial Bank of Ceylon');
+INSERT INTO bank (name) VALUES ('Community Bank Bangladesh Limited');
+INSERT INTO bank (name) VALUES ('Dhaka Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Dutch Bangla Bank Ltd.');
+INSERT INTO bank (name) VALUES ('EXIM Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Eastern Bank Ltd.');
+INSERT INTO bank (name) VALUES ('First Security Islami Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Global Islamic Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Grameen Bank');
+INSERT INTO bank (name) VALUES ('HSBC');
+INSERT INTO bank (name) VALUES ('Habib Bank Ltd.');
+INSERT INTO bank (name) VALUES ('ICB Islamic Bank');
+INSERT INTO bank (name) VALUES ('IFIC Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Islami Bank Bangladesh Ltd.');
+INSERT INTO bank (name) VALUES ('Jamuna Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Janata Bank');
+INSERT INTO bank (name) VALUES ('Jubilee Bank');
+INSERT INTO bank (name) VALUES ('Karmashangosthan Bank');
+INSERT INTO bank (name) VALUES ('Meghna Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Mercantile Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Midland Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Modhumoti Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Mutual Trust Bank Ltd.');
+INSERT INTO bank (name) VALUES ('NCC Bank Ltd.');
+INSERT INTO bank (name) VALUES ('NRB Bank Ltd.');
+INSERT INTO bank (name) VALUES ('NRB Commercial Bank Ltd.');
+INSERT INTO bank (name) VALUES ('National Bank Ltd.');
+INSERT INTO bank (name) VALUES ('National Bank of Pakistan');
+INSERT INTO bank (name) VALUES ('One Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Padma Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Palli Sanchay Bank');
+INSERT INTO bank (name) VALUES ('Premier Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Prime Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Pubali Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Rajshahi Krishi Unnayan Bank');
+INSERT INTO bank (name) VALUES ('Rupali Bank');
+INSERT INTO bank (name) VALUES ('SBAC Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Shahjalal Islami Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Shimanto Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Social Islami Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Sonali Bank');
+INSERT INTO bank (name) VALUES ('Southeast Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Standard Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Standard Chartered Bank');
+INSERT INTO bank (name) VALUES ('State Bank of India');
+INSERT INTO bank (name) VALUES ('The City Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Trust Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Union Bank Ltd.');
+INSERT INTO bank (name) VALUES ('United Commercial Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Uttara Bank Ltd.');
+INSERT INTO bank (name) VALUES ('Woori Bank Ltd.');

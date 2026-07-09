@@ -1,7 +1,7 @@
 package com.kutub.InsuranceManagement.security.jwt;
 
-import com.kutub.InsuranceManagement.entity.User;
-import com.kutub.InsuranceManagement.repository.TokenRepository;
+import com.kutub.InsuranceManagement.entity.auth.User;
+import com.kutub.InsuranceManagement.repository.auth.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -27,10 +27,10 @@ public class JwtService {
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parser()
-                .setSigningKey(getSigninKey())
+                .verifyWith(getSigninKey())
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     private SecretKey getSigninKey() {
@@ -41,10 +41,10 @@ public class JwtService {
     public String generateToken(User user) {
         return Jwts
                 .builder()
-                .setSubject(user.getUsername())
+                .subject(user.getUsername())
                 .claim("role", user.getRole())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000)) // 24 hours
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000)) // 24 hours
                 .signWith(getSigninKey())
                 .compact();
     }
@@ -78,6 +78,6 @@ public class JwtService {
     }
 
     public String extractUserRole(String token) {
-        return extractClaim(token, claims -> claims.get("role", String.class));
+        return extractClaim(token, claims -> (String) claims.get("role"));
     }
 }

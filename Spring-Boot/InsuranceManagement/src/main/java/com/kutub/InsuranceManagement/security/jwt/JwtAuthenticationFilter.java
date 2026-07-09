@@ -1,6 +1,6 @@
 package com.kutub.InsuranceManagement.security.jwt;
 
-import com.kutub.InsuranceManagement.service.UserService;
+import com.kutub.InsuranceManagement.service.auth.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

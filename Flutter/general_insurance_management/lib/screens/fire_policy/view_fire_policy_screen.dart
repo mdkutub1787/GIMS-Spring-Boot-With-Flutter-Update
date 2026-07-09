@@ -95,11 +95,22 @@ class _ViewFirePolicyScreenState extends ConsumerState<ViewFirePolicyScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('ID: #${policy.id}', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
+                Text(
+                  policy.sysNumber != null ? 'Sys No: ${policy.sysNumber}' : 'ID: #${policy.id}',
+                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
+                ),
                 Text(policy.date != null ? DateFormat('yyyy-MM-dd').format(policy.date!) : 'N/A', style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey)),
               ],
             ),
             const SizedBox(height: 10),
+            Row(
+              children: [
+                const Icon(Icons.business, size: 16, color: Colors.blueGrey),
+                const SizedBox(width: 5),
+                Text(policy.company ?? 'N/A', style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.blueGrey)),
+              ],
+            ),
+            const SizedBox(height: 5),
             Text(policy.bankName ?? 'N/A', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
             Text(policy.policyholder ?? 'N/A', style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[700])),
             const Divider(height: 25),

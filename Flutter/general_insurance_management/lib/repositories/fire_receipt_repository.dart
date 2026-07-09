@@ -9,7 +9,8 @@ class FireReceiptRepository {
   Future<List<MoneyReceiptModel>> fetchReceipts() async {
     final response = await _apiService.getFireReceipts();
     if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(response.body);
+      final decoded = jsonDecode(response.body);
+      List<dynamic> data = decoded['data'];
       return data.map((item) => MoneyReceiptModel.fromJson(item)).toList();
     }
     throw Exception('Failed to load fire receipts');

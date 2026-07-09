@@ -9,7 +9,8 @@ class MarinePolicyRepository {
   Future<List<MarinePolicyModel>> fetchPolicies() async {
     final response = await _apiService.getMarinePolicies();
     if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(response.body);
+      final decoded = jsonDecode(response.body);
+      List<dynamic> data = decoded['data'];
       return data.map((item) => MarinePolicyModel.fromJson(item)).toList();
     }
     throw Exception('Failed to load marine policies');
