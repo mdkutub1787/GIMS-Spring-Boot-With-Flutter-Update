@@ -37,10 +37,14 @@ class MarinePolicyViewModel extends StateNotifier<MarinePolicyState> {
   }
 
   Future<bool> savePolicy(MarinePolicyModel policy) async {
-    state = state.copyWith(isLoading: true);
+    state = state.copyWith(isLoading: true, error: null);
     try {
       final success = await _repository.savePolicy(policy);
-      if (success) fetchPolicies();
+      if (success) {
+        await fetchPolicies();
+      } else {
+        state = state.copyWith(isLoading: false, error: 'Failed to save marine policy');
+      }
       return success;
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());

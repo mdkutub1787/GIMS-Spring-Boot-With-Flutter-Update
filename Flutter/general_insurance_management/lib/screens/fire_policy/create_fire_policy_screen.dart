@@ -70,11 +70,21 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
       );
 
       final success = await ref.read(firePolicyViewModelProvider.notifier).savePolicy(policy);
-      if (success && mounted) {
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Policy Created Successfully!'), backgroundColor: Colors.green),
-        );
+      if (mounted) {
+        if (success) {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Policy Created Successfully!'), backgroundColor: Colors.green),
+          );
+        } else {
+          final error = ref.read(firePolicyViewModelProvider).error;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(error ?? 'Failed to create policy. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
     }
   }

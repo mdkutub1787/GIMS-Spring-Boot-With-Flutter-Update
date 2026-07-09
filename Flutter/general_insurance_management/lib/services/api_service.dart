@@ -6,18 +6,46 @@ import '../core/constants/api_constants.dart';
 class ApiService {
   Future<Map<String, String>> _getHeaders() async {
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('authToken') ?? '';
-    return {
+    final token = prefs.getString('authToken');
+    final headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token',
     };
+    if (token != null && token.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $token';
+    }
+    return headers;
   }
 
   // Generic Methods
-  Future<http.Response> get(String url) async => await http.get(Uri.parse(url), headers: await _getHeaders());
-  Future<http.Response> post(String url, Map<String, dynamic> body) async => await http.post(Uri.parse(url), headers: await _getHeaders(), body: jsonEncode(body));
-  Future<http.Response> put(String url, Map<String, dynamic> body) async => await http.put(Uri.parse(url), headers: await _getHeaders(), body: jsonEncode(body));
-  Future<http.Response> delete(String url) async => await http.delete(Uri.parse(url), headers: await _getHeaders());
+  Future<http.Response> get(String url) async {
+    print('GET Request to: $url');
+    final response = await http.get(Uri.parse(url), headers: await _getHeaders());
+    print('Response from $url: [${response.statusCode}] ${response.body}');
+    return response;
+  }
+
+  Future<http.Response> post(String url, Map<String, dynamic> body) async {
+    print('POST Request to: $url');
+    print('Request Body: ${jsonEncode(body)}');
+    final response = await http.post(Uri.parse(url), headers: await _getHeaders(), body: jsonEncode(body));
+    print('Response from $url: [${response.statusCode}] ${response.body}');
+    return response;
+  }
+
+  Future<http.Response> put(String url, Map<String, dynamic> body) async {
+    print('PUT Request to: $url');
+    print('Request Body: ${jsonEncode(body)}');
+    final response = await http.put(Uri.parse(url), headers: await _getHeaders(), body: jsonEncode(body));
+    print('Response from $url: [${response.statusCode}] ${response.body}');
+    return response;
+  }
+
+  Future<http.Response> delete(String url) async {
+    print('DELETE Request to: $url');
+    final response = await http.delete(Uri.parse(url), headers: await _getHeaders());
+    print('Response from $url: [${response.statusCode}] ${response.body}');
+    return response;
+  }
 
   // Fire Policy & Bill
   Future<http.Response> getFirePolicies() => get(ApiConstants.firePolicyList);

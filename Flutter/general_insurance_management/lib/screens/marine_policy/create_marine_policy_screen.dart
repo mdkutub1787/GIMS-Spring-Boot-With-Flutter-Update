@@ -58,11 +58,21 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
       );
 
       final success = await ref.read(marinePolicyViewModelProvider.notifier).savePolicy(policy);
-      if (success && mounted) {
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Marine Policy Created Successfully!'), backgroundColor: Colors.green),
-        );
+      if (mounted) {
+        if (success) {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Marine Policy Created Successfully!'), backgroundColor: Colors.green),
+          );
+        } else {
+          final error = ref.read(marinePolicyViewModelProvider).error;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(error ?? 'Failed to create marine policy. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
     }
   }

@@ -38,10 +38,14 @@ class FirePolicyViewModel extends StateNotifier<FirePolicyState> {
   }
 
   Future<bool> savePolicy(PolicyModel policy) async {
-    state = state.copyWith(isLoading: true);
+    state = state.copyWith(isLoading: true, error: null);
     try {
       final success = await _repository.savePolicy(policy);
-      if (success) fetchPolicies();
+      if (success) {
+        await fetchPolicies();
+      } else {
+        state = state.copyWith(isLoading: false, error: 'Failed to save policy');
+      }
       return success;
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
