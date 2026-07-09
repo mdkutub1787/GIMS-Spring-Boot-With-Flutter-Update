@@ -1,0 +1,2540 @@
+{
+  "info": {
+    "_postman_id": "4524d6ff-e758-4669-8017-1ffd969055ef",
+    "name": "Fflipy New - 02 Jul 2026, 12:22 PM",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "41772339"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Log In",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "default",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "username",
+                  "type": "text",
+                  "value": "kutub"
+                },
+                {
+                  "key": "password",
+                  "type": "text",
+                  "value": "Kutub1787@"
+                },
+                {
+                  "key": "location",
+                  "type": "text",
+                  "value": "Dhaka, Bangladesh"
+                },
+                {
+                  "key": "browser",
+                  "type": "text",
+                  "value": "Mobile"
+                },
+                {
+                  "key": "os",
+                  "type": "text",
+                  "value": "Android 13"
+                },
+                {
+                  "key": "longitude",
+                  "type": "text",
+                  "value": "90.4125"
+                },
+                {
+                  "key": "latitude",
+                  "type": "text",
+                  "value": "23.8103"
+                },
+                {
+                  "key": "country",
+                  "type": "text",
+                  "value": "Bangladesh"
+                },
+                {
+                  "key": "country_code",
+                  "type": "text",
+                  "value": "BD"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/apilogin",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "apilogin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Log In  google",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "default",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\": \"access token diben\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/mobile/auth/google",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "mobile",
+                "auth",
+                "google"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Log OUT",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "default",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/logoutmobile",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "logoutmobile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "password reset",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "default",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "type": "text",
+                  "value": "mdkutub150@gmail.com"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/password/reset",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "password",
+                "reset"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registation",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "firstname",
+                  "type": "text",
+                  "value": "Rakibul"
+                },
+                {
+                  "key": "lastname",
+                  "type": "text",
+                  "value": "Islam"
+                },
+                {
+                  "key": "username",
+                  "type": "text",
+                  "value": "rakib12188844"
+                },
+                {
+                  "key": "email",
+                  "type": "text",
+                  "value": "csemdrakibulislamrakib@gmail.com"
+                },
+                {
+                  "key": "phone",
+                  "type": "text",
+                  "value": "123456"
+                },
+                {
+                  "key": "password",
+                  "type": "text",
+                  "value": "123456"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/register_mobile",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "register_mobile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mail OTP Verify",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "code",
+                  "type": "text",
+                  "value": "596425"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mail-verify",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mail-verify"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Resend OTP",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "type",
+                  "type": "text",
+                  "value": "email"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/resend_code",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "resend_code"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Username check",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"kutub\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/mobile-check-username",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "mobile-check-username"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "Profile",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile_profile",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile_profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Profile Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "firstname",
+                  "type": "text",
+                  "value": "Md"
+                },
+                {
+                  "key": "lastname",
+                  "type": "text",
+                  "value": "Nishad"
+                },
+                {
+                  "key": "username",
+                  "type": "text",
+                  "value": "nishad93"
+                },
+                {
+                  "key": "date_of_birth",
+                  "type": "text",
+                  "value": "1993-04-22"
+                },
+                {
+                  "key": "place_of_birth",
+                  "type": "text",
+                  "value": "Bangladesh"
+                },
+                {
+                  "key": "occupation",
+                  "type": "text",
+                  "value": "Lawyer"
+                },
+                {
+                  "key": "language_id",
+                  "type": "text",
+                  "value": "1"
+                },
+                {
+                  "key": "address",
+                  "type": "text",
+                  "value": "Banani,Dhaka,Bangladesh"
+                },
+                {
+                  "key": "gender_type",
+                  "type": "text",
+                  "value": "1"
+                },
+                {
+                  "key": "remitter_type",
+                  "type": "text",
+                  "value": "2"
+                },
+                {
+                  "key": "post_code",
+                  "type": "text",
+                  "value": "1234"
+                },
+                {
+                  "key": "country_id",
+                  "type": "text",
+                  "value": "2"
+                },
+                {
+                  "key": "city",
+                  "type": "text",
+                  "value": "Dhaka"
+                },
+                {
+                  "key": "nationality",
+                  "type": "text",
+                  "value": "Bangladeshi"
+                },
+                {
+                  "key": "source_of_fund",
+                  "type": "text",
+                  "value": "Job"
+                },
+                {
+                  "key": "declaration_amount",
+                  "type": "text",
+                  "value": "20000"
+                },
+                {
+                  "key": "declaration_start_date",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "key": "declaration_end_date",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "key": "yearly_income",
+                  "type": "text",
+                  "value": "10000"
+                },
+                {
+                  "key": "daily_limit",
+                  "type": "text",
+                  "value": "1000000"
+                },
+                {
+                  "key": "monthly_limit",
+                  "type": "text",
+                  "value": "243535345"
+                },
+                {
+                  "key": "yearly_limit",
+                  "type": "text",
+                  "value": "3454353"
+                },
+                {
+                  "key": "remarks",
+                  "type": "text",
+                  "value": "Remarks My profile update"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "postman-cloud:///1f0c4744-6fde-4460-80bf-f29305188b50"
+                },
+                {
+                  "key": "document_type",
+                  "type": "text",
+                  "value": "4"
+                },
+                {
+                  "key": "document_upload",
+                  "type": "file",
+                  "value": null
+                },
+                {
+                  "key": "document_id_number",
+                  "type": "text",
+                  "value": "1234567890"
+                },
+                {
+                  "key": "issue_country_code",
+                  "type": "text",
+                  "value": "BD"
+                },
+                {
+                  "key": "document_issue_date",
+                  "type": "text",
+                  "value": "11-11-2000"
+                },
+                {
+                  "key": "document_expiry_date",
+                  "type": "text",
+                  "value": "12-12-2026"
+                },
+                {
+                  "key": "state",
+                  "type": "text",
+                  "value": "dhaka"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile_profile/update-info",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile_profile",
+                "update-info"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "document-info",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile/document-info",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile",
+                "document-info"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "document-types",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile/document-types",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile",
+                "document-types"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "active-countries",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile/active-countries",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile",
+                "active-countries"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "gender-types",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "code",
+                  "type": "text",
+                  "value": "200669"
+                },
+                {
+                  "key": "",
+                  "type": "text",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "",
+                  "type": "text",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "",
+                  "type": "text",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "",
+                  "type": "text",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "",
+                  "type": "text",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "password",
+                  "type": "text",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile/gender-types",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile",
+                "gender-types"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "remitter-types",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile/remitter-types",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile",
+                "remitter-types"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Beneficiary",
+      "item": [
+        {
+          "name": "Add Beneficiary",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiOTNlZDg0ZjM3Zjc4NTEwOWNiNDM0ZDA3ZGRlZjc5Nzk1MDQxNzVhZWNhOWJmZjA3NDE2NGJmM2NmZDU3YTE1NDY1OTk3NWQ0ODEwZGYzMDAiLCJpYXQiOjE3NjM5ODIzMzIuODYxODMzLCJuYmYiOjE3NjM5ODIzMzIuODYxODM1LCJleHAiOjE3OTU1MTgzMzIuODU2MzA0LCJzdWIiOiI3NyIsInNjb3BlcyI6W119.DyIsPBF8qmQc7QGPvuWtEqARIwbsakJly7ZmzwyZDo3X9bLoBTp_B9qzj2ar1hH9Ld_bgsrq-gN453eigE436R_ZY9cS16gZiWtqDNeQE6UFvY03c3ZwEQ0QOWqF9D3PojPhX_JheEf-wzpCA5yBb4B1WrIg83E86TYIDMXPXpfpVV-pmiHRyw875n1bxXLll_U9iFzfJ5-444cVSXS89gQpCg-GO0o5c8JXgTi0K9h-_PkYfAcELBs5B1BRpdzAsnO4-U_wEJUE38Nhm447UDRtWFIdIjqMs8S12jzcN4SSz36VWVBfp5ZxctoO2gJ-0lgXmAUWaojIb0CUnfagQtqJ-zdPPhEDsJeeKpeW35YOvMdWE-qOx1lRVeRCNppgrUkjAQSNjgWTKu-7r2ZEhJ2rzLnJCUwIZBex1aXPU_pdqNA6Sk484bSyakun0Plj94PqDyiFnv41q7kWtcVDqZE0QLEWhquAMWm0neHRzDjMmnrUNOdQCu_o89M-HDkkbKpCQB6Z7qaIwtGpwIfduYZ08vIux_QwH9jd-BxW1kjaIhIcHLrTIMsi0WM3DbNtzt0a798HdhHEvyOG2ngg46wPi4xkSJEOtMutGX1ACQHYQGumOVrKoibjSk4X3s7QjGzodOhGW6RmWBBPM09flWZ9yy_40_u4mIBNxy7_KAg",
+                "type": "default"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "FirstName",
+                  "type": "text",
+                  "value": "Ashraful"
+                },
+                {
+                  "key": "LastName",
+                  "type": "text",
+                  "value": "Islam"
+                },
+                {
+                  "key": "Email",
+                  "type": "text",
+                  "value": "ashrafulislam@gmail.com"
+                },
+                {
+                  "key": "PhoneNumber",
+                  "type": "text",
+                  "value": "01533366265"
+                },
+                {
+                  "key": "Address1",
+                  "type": "text",
+                  "value": "Berabari,Bohuli, Sadar, Sirajganj"
+                },
+                {
+                  "key": "CountryCode",
+                  "type": "text",
+                  "value": "2"
+                },
+                {
+                  "key": "CityCode",
+                  "type": "text",
+                  "value": "Dhaka"
+                },
+                {
+                  "key": "RelationshipToSender",
+                  "type": "text",
+                  "value": "11"
+                },
+                {
+                  "key": "TransactionType",
+                  "type": "text",
+                  "value": "6"
+                },
+                {
+                  "key": "bank_name",
+                  "type": "text",
+                  "value": "10"
+                },
+                {
+                  "key": "branch_name",
+                  "type": "text",
+                  "value": "2523"
+                },
+                {
+                  "key": "AccountNumber",
+                  "type": "text",
+                  "value": "19202203064"
+                },
+                {
+                  "key": "WalletProvider",
+                  "type": "text",
+                  "value": "Bkash"
+                },
+                {
+                  "key": "WalletNumber",
+                  "type": "text",
+                  "value": "0181765678"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile_beneficiary/store",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile_beneficiary",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Beneficiary",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"FirstName\": \"Ashraful\",\r\n  \"LastName\": \"Islam\",\r\n  \"Address1\": \"Berabari, Bohuli, Sadar, Sirajganj\",\r\n  \"PhoneNumber\": \"01533366265\",\r\n  \"TransactionType\": 1,\r\n  \"AccountNumber\": \"19202203064\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile-beneficiary-update/3",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile-beneficiary-update",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Beneficiary Data",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "default",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile_beneficiary_info",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile_beneficiary_info"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "facilities",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "default",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/country/17/facilities",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "country",
+                "17",
+                "facilities"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Country Bank",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "default",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "username",
+                  "type": "text",
+                  "value": "rakibul"
+                },
+                {
+                  "key": "password",
+                  "type": "text",
+                  "value": "123456"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/country/17/banks",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "country",
+                "17",
+                "banks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Account Type",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "default",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/account-types",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "account-types"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "branches",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "default",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "username",
+                  "type": "text",
+                  "value": "rakibul"
+                },
+                {
+                  "key": "password",
+                  "type": "text",
+                  "value": "123456"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/bank/14/branches",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "bank",
+                "14",
+                "branches"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Wallet Provider",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "default",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "username",
+                  "type": "text",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "password",
+                  "type": "text",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/country/17/wallet-providers",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "country",
+                "17",
+                "wallet-providers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "beneficiary delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "default",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/beneficiary/delete/48",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "beneficiary",
+                "delete",
+                "48"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Country wise City",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/city/1",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "city",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Send Money",
+      "item": [
+        {
+          "name": "1. Send Money Beneficiary Select",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/send-money",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "send-money"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Selected Beneficiary",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "beneficiary_id",
+                  "type": "text",
+                  "value": "81"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/select-send-money-beneficiary",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "select-send-money-beneficiary"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3 Send Money Payment Step 2",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "session_token",
+                  "type": "text",
+                  "value": "bf333c111a0738438f742c68fd4ab7adf643682efd945bd61b7361fc74d185ff"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/send-money-payment",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "send-money-payment"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4 Calculation Service Charge",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "session_token",
+                  "type": "text",
+                  "value": "b4cee00b5d80b4ca7b2f0eda4cd27cba2baf7b994dd1f8b3f4314b4ee123f0ac"
+                },
+                {
+                  "key": "beneficiary_id",
+                  "type": "text",
+                  "value": "81"
+                },
+                {
+                  "key": "send_amount",
+                  "type": "text",
+                  "value": "10"
+                },
+                {
+                  "key": "sender_currency_id",
+                  "type": "text",
+                  "value": "3"
+                },
+                {
+                  "key": "receiver_currency_id",
+                  "type": "text",
+                  "value": "1"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/send-money-cal-service-crg",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "send-money-cal-service-crg"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5 Step 2 Store",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"session_token\": \"b4cee00b5d80b4ca7b2f0eda4cd27cba2baf7b994dd1f8b3f4314b4ee123f0ac\",\r\n    \"beneficiary_id\": 81,\r\n    \"send_amount\": 100.00,\r\n    \"sender_currency_id\": 3,\r\n    \"receiver_currency_id\": 1,\r\n    \"calculated_data\": {\r\n        \"fee\": 0.00,\r\n        \"exchange_rate\": 141.696164,\r\n        \"received_amount\": 1416.96\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/send-money-step2-store",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "send-money-step2-store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6 Payment Step 3",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"transaction_token\": \"c0723d208b98e98420e601d5bbe17feacbc01c758d4dc27f0d950128dac6b6c0\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/send-money-step3-store",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "send-money-step3-store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6.1 payers-network",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "default",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/get-payers-network",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "get-payers-network"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7 Send Money OTP Generate",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"transaction_token\": \"fd3b6b1b40274ba9a272bb2e3828d9c1e346796588af4c10174b9c553c57927f\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/send-money-otp-generate",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "send-money-otp-generate"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7. 1   if failed Re-Send OTP",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                },
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "transaction_token",
+                  "type": "text",
+                  "value": "b7c8e73c250c944b1f1efffd4208939c20f4567bb8e226e0d6d326266318e299"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/send-money-otp-resend",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "send-money-otp-resend"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "8 Verify OTP",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "transaction_token",
+                  "type": "text",
+                  "value": "b9580fb881dc43dfbfa206738446347824568c391fa61a42e02bb6fa18e79bc5"
+                },
+                {
+                  "key": "otp",
+                  "type": "text",
+                  "value": "190928"
+                },
+                {
+                  "key": "purpose_of_transfer",
+                  "type": "text",
+                  "value": "5"
+                },
+                {
+                  "key": "remarks",
+                  "type": "text",
+                  "value": "testing"
+                },
+                {
+                  "key": "transfer_speed",
+                  "type": "text",
+                  "value": "5"
+                },
+                {
+                  "key": "payers_network",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "key": "payers_network_id",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "key": "payers_network_name",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "key": "user_card_id",
+                  "type": "text",
+                  "value": "22"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/send-money-verify-otp",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "send-money-verify-otp"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "Transaction_report",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/transaction_report?page=2",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "transaction_report"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Payment Invoice",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/payment/invoice/FL251221F303B149",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "payment",
+                "invoice",
+                "FL251221F303B149"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Transfer Track",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "ref_no",
+                  "type": "text",
+                  "value": "FL17651848574556"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/track-transfer",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "track-transfer"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Transaction Cancel",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile-transaction-cancel/18",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile-transaction-cancel",
+                "18"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notification",
+      "item": [
+        {
+          "name": "Notification",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/notification-show",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "notification-show"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Notification Read",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "default"
+              }
+            ],
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/read-at/2",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "read-at",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Support Ticket",
+      "item": [
+        {
+          "name": "Ticket Create",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "subject",
+                  "type": "text",
+                  "value": "test"
+                },
+                {
+                  "key": "message",
+                  "type": "text",
+                  "value": "kiiiii"
+                },
+                {
+                  "key": "attachments[]",
+                  "type": "file",
+                  "src": "postman-cloud:///1f0d40f3-9da2-4140-baf1-2f869cf97e10"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile-ticket-store",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile-ticket-store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ticket Chat Details",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile-view/376709",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile-view",
+                "376709"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ticket Reply",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "replayTicket",
+                  "type": "text",
+                  "value": "1"
+                },
+                {
+                  "key": "message",
+                  "type": "text",
+                  "value": "hiiiiiiiiii"
+                },
+                {
+                  "key": "attachments[]",
+                  "type": "file",
+                  "src": "postman-cloud:///1f0d40f3-9be8-42f0-82fa-0b5b9155c368"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile-ticket-reply/5",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile-ticket-reply",
+                "5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ticket List",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "default"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile-ticket-list",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile-ticket-list"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Currency List",
+      "item": [
+        {
+          "name": "Currency List",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/mobile/currencyList",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "mobile",
+                "currencyList"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Virtual Card",
+      "item": [
+        {
+          "name": "1. Create Vcards",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"card_holder_name\": \"Test Rakibul Islam\",\r\n  \"card_number\": \"4242424242424242\",\r\n  \"cvv\": \"123\",\r\n  \"expiry_month\": \"12\",\r\n  \"expiry_year\": \"2026\",\r\n  \"card_type\": \"visa\",\r\n  \"nick_name\": \"My Personal Card\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile-cards/store",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile-cards",
+                "store"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. List View VCards",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile-cards",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile-cards"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Update VCards",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"card_holder_name\": \"Md Kutub Uddin\",\r\n    \"card_number_masked\": \"**** **** **** 7099\",\r\n    \"card_last4\": \"7099\",\r\n    \"card_type\": \"mastercard\",\r\n    \"expiry_formatted\": \"23/26\",\r\n    \"nick_name\": \"Islami Bank\",\r\n    \"is_default\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile-cards/set-default/2",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile-cards",
+                "set-default",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Delete VCards",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "undefined",
+                  "type": "any"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "https://dev.fflipy.com/api/user/mobile-cards/delete/2",
+              "protocol": "https",
+              "host": [
+                "dev",
+                "fflipy",
+                "com"
+              ],
+              "path": [
+                "api",
+                "user",
+                "mobile-cards",
+                "delete",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "token",
+      "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiNDA5ZDdkMDhmYWM2ODE4Yzk3MTA4NjEzYTRiYjA5MThjODVhMmFjOTliM2RhMWNkN2ExY2RmYzYyNGIxNDJmOWNjNmJhNmM4ZmZiZTc0YWMiLCJpYXQiOjE3NzUzODA3ODkuODM1Mjk5LCJuYmYiOjE3NzUzODA3ODkuODM1MzAxLCJleHAiOjE4MDY5MTY3ODkuODMxNTY1LCJzdWIiOiIxNDgiLCJzY29wZXMiOltdfQ.b2l_Ef9mK8dQRjOULQkWl95T_CeQGFjG8nkxbT8D6-4JB5oCxadKv2hS3SJNq4u8Tw2kQ59Z8NJZlY0bP-lTr3bYvCczULggXiolkJav0wMcd0vYVZqNcuR-2_xOFo5PclGiBoc_WMup2uQ8wSXBu4TJrNRMh0e_CY6TqI2FFO5ddrNO-mt3hTxTMpfI_aIq6K6mSJMwNAEWPpPvRaYQmLZ43i4YsenqfAdLvlxorjVRnjoqxsZtNsYkOuVBYX-7J_EB3J1oC9aOlEXttyA5Fq2auu74cKOJXLiI1DAyYEmONRpXFITzTrsLFSRQBOGF5bbCDP8X-UXgQTGfIjgqwk7vDH7t3VBkY9X5zHiVH_UMrwngSZMdHFxa_GgYDb4_c_MTKkldqIhzwvyMvB9FcVPc9HjULlbr7eNwj8fbHc9G2DuHgQTbdsLzDwQn7Wjq5OU5mtkG7VcH9XNt7jSAvVz3M3pB7CObvt9Nwbkfvn3r8deUtqtpgIABNSAet7j1yJrNYJigiBfdfM_HQZT4iGUsdD7FDArPU4LSCCs7Auv_p8ABrds-atBdgqhH8j7fMmMyJOSWjy_XGOwEO_cZ346coe6vpZdD9247G8wLRVLPj3Kr2tQcbto5_TvWaxCN5T3CyovTGeIJylOrsj8XBgh_serUszAiTymFwT6Ty0Q",
+      "type": "default"
+    }
+  ]
+}

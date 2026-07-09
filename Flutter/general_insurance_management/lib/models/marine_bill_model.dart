@@ -1,0 +1,49 @@
+import 'marine_policy_model.dart';
+
+class MarineBillModel {
+  int? id;
+  double marineRate;
+  double warSrccRate;
+  double netPremium;
+  double tax;
+  double stampDuty;
+  double grossPremium;
+  MarinePolicyModel marineDetails;
+
+  MarineBillModel({
+    this.id,
+    required this.marineRate,
+    required this.warSrccRate,
+    required this.netPremium,
+    required this.tax,
+    required this.stampDuty,
+    required this.grossPremium,
+    required this.marineDetails,
+  });
+
+  factory MarineBillModel.fromJson(Map<String, dynamic> json) {
+    return MarineBillModel(
+      id: json['id'],
+      marineRate: (json['marineRate'] is num) ? json['marineRate'].toDouble() : 0.0,
+      warSrccRate: (json['warSrccRate'] is num) ? json['warSrccRate'].toDouble() : 0.0,
+      netPremium: (json['netPremium'] is num) ? json['netPremium'].toDouble() : 0.0,
+      tax: (json['tax'] is num) ? json['tax'].toDouble() : 0.0,
+      stampDuty: (json['stampDuty'] is num) ? json['stampDuty'].toDouble() : 0.0,
+      grossPremium: (json['grossPremium'] is num) ? json['grossPremium'].toDouble() : 0.0,
+      marineDetails: MarinePolicyModel.fromJson(json['marineDetails']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'marineRate': marineRate,
+      'warSrccRate': warSrccRate,
+      'netPremium': netPremium,
+      'tax': tax,
+      'stampDuty': stampDuty,
+      'grossPremium': grossPremium,
+      'marineDetails': marineDetails.toJson(),
+    };
+  }
+}
