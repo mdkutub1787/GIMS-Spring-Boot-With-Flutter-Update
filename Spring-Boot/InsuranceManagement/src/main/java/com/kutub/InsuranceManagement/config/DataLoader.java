@@ -30,6 +30,62 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private InsuranceCompanyRepository insuranceCompanyRepository;
 
+    private static final java.util.Map<String, String> jsonToDbMap = java.util.Map.ofEntries(
+        java.util.Map.entry("AB BANK LIMITED", "AB Bank Ltd."),
+        java.util.Map.entry("AGRANI BANK LIMITED", "Agrani Bank"),
+        java.util.Map.entry("AL-ARAFAH ISLAMI BANK LIMITED", "Al-Arafah Islami Bank Ltd."),
+        java.util.Map.entry("BASIC BANK LTD", "BASIC Bank"),
+        java.util.Map.entry("BRAC BANK LIMITED", "BRAC Bank Ltd."),
+        java.util.Map.entry("BANGLADESH COMMERCE BANK LIMITED", "Bangladesh Commerce Bank Ltd."),
+        java.util.Map.entry("BANGLADESH DEVELOPMENT BANK LIMITED", "Bangladesh Development Bank"),
+        java.util.Map.entry("BANGLADESH KRISHI BANK", "Bangladesh Krishi Bank"),
+        java.util.Map.entry("BANK ALFALAH LIMITED", "Bank Al-Falah"),
+        java.util.Map.entry("BANK ASIA LIMITED", "Bank Asia Ltd."),
+        java.util.Map.entry("CITIBANK N.A", "CITI Bank NA"),
+        java.util.Map.entry("COMMERCIAL BANK OF CEYLON LIMITED", "Commercial Bank of Ceylon"),
+        java.util.Map.entry("DHAKA BANK LIMITED", "Dhaka Bank Ltd."),
+        java.util.Map.entry("DUTCH-BANGLA BANK LIMITED", "Dutch Bangla Bank Ltd."),
+        java.util.Map.entry("EXIM BANK LTD", "EXIM Bank Ltd."),
+        java.util.Map.entry("EASTERN BANK LIMITED", "Eastern Bank Ltd."),
+        java.util.Map.entry("FIRST SECURITY ISLAMI BANK LIMITED", "First Security Islami Bank Ltd."),
+        java.util.Map.entry("HONGKONG AND SHANGHAI BANKING CORP", "HSBC"),
+        java.util.Map.entry("HABIB BANK LIMITED", "Habib Bank Ltd."),
+        java.util.Map.entry("ICB ISLAMIC BANK LIMITED", "ICB Islamic Bank"),
+        java.util.Map.entry("INTERNATIONAL FINANCE INVEST AND COMMERCE BANK LIMITED", "IFIC Bank Ltd."),
+        java.util.Map.entry("ISLAMI BANK BANGLADESH LIMITED", "Islami Bank Bangladesh Ltd."),
+        java.util.Map.entry("JAMUNA BANK LIMITED", "Jamuna Bank Ltd."),
+        java.util.Map.entry("JANATA BANK LIMITED", "Janata Bank"),
+        java.util.Map.entry("MEGHNA BANK LIMITED", "Meghna Bank Ltd."),
+        java.util.Map.entry("MERCANTILE BANK LIMITED", "Mercantile Bank Ltd."),
+        java.util.Map.entry("MODHUMOTI BANK LIMITED", "Modhumoti Bank Ltd."),
+        java.util.Map.entry("MUTUAL TRUST BANK LIMITED", "Mutual Trust Bank Ltd."),
+        java.util.Map.entry("NATIONAL CREDIT &amp; COMMERCE BANK LIMITED", "NCC Bank Ltd."),
+        java.util.Map.entry("NRB BANK LIMITED", "NRB Bank Ltd."),
+        java.util.Map.entry("NRB COMMERCIAL BANK LIMITED", "NRB Commercial Bank Ltd."),
+        java.util.Map.entry("NATIONAL BANK LIMITED", "National Bank Ltd."),
+        java.util.Map.entry("NATIONAL BANK OF PAKISTAN", "National Bank of Pakistan"),
+        java.util.Map.entry("ONE BANK LIMITED", "One Bank Ltd."),
+        java.util.Map.entry("THE PREMIER BANK LIMITED", "Premier Bank Ltd."),
+        java.util.Map.entry("PRIME BANK LIMITED", "Prime Bank Ltd."),
+        java.util.Map.entry("PUBALI BANK LIMITED", "Pubali Bank Ltd."),
+        java.util.Map.entry("RAJSHAHI KRISHI UNNAYAN BANK", "Rajshahi Krishi Unnayan Bank"),
+        java.util.Map.entry("RUPALI BANK LIMITED", "Rupali Bank"),
+        java.util.Map.entry("SOUTH BANGLA AGRICULTURE AND COMMERCE BANK LIMITED", "SBAC Bank Ltd."),
+        java.util.Map.entry("SHAHJALAL ISLAMI BANK LIMITED", "Shahjalal Islami Bank Ltd."),
+        java.util.Map.entry("SOCIAL ISLAMI BANK LIMITED", "Social Islami Bank Ltd."),
+        java.util.Map.entry("SONALI BANK LIMITED", "Sonali Bank"),
+        java.util.Map.entry("SOUTHEAST BANK LIMITED", "Southeast Bank Ltd."),
+        java.util.Map.entry("STANDARD BANK LIMITED", "Standard Bank Ltd."),
+        java.util.Map.entry("STANDARD CHARTERED BANK", "Standard Chartered Bank"),
+        java.util.Map.entry("STATE BANK OF INDIA", "State Bank of India"),
+        java.util.Map.entry("THE CITY BANK LIMITED", "The City Bank Ltd."),
+        java.util.Map.entry("TRUST BANK LIMITED", "Trust Bank Ltd."),
+        java.util.Map.entry("UNION BANK LIMITED", "Union Bank Ltd."),
+        java.util.Map.entry("UNITED COMMERCIAL BANK LIMITED", "United Commercial Bank Ltd."),
+        java.util.Map.entry("UTTARA BANK LIMITED", "Uttara Bank Ltd."),
+        java.util.Map.entry("WOORI BANK BANGLADESH", "Woori Bank Ltd.")
+    );
+
     @Override
     public void run(String... args) throws Exception {
         if (bankRepository.count() == 0) {
@@ -119,22 +175,32 @@ public class DataLoader implements CommandLineRunner {
             InputStream inputStream = new ClassPathResource("bank_data_minified.json").getInputStream();
             List<Map<String, Object>> banksData = mapper.readValue(inputStream, new TypeReference<>() {});
 
+            int totalBranchesLoaded = 0;
             for (Map<String, Object> bankData : banksData) {
-                String bankName = (String) bankData.get("BankName");
-                Bank bank = bankRepository.findByName(bankName).orElse(null);
+                String jsonBankName = (String) bankData.get("name");
+                if (jsonBankName == null) continue;
+                String dbBankName = jsonToDbMap.getOrDefault(jsonBankName, jsonBankName);
+                Bank bank = bankRepository.findByName(dbBankName).orElse(null);
 
                 if (bank != null) {
-                    List<Map<String, String>> branchesData = (List<Map<String, String>>) bankData.get("Branches");
-                    for (Map<String, String> branchData : branchesData) {
-                        Branch branch = new Branch();
-                        branch.setName(branchData.get("BranchName"));
-                        branch.setBank(bank);
-                        // You can also set routing number and branch code if you add those fields to the Branch entity
-                        branchRepository.save(branch);
+                    List<Map<String, Object>> districts = (List<Map<String, Object>>) bankData.get("districts");
+                    if (districts != null) {
+                        for (Map<String, Object> district : districts) {
+                            List<Map<String, Object>> branchesData = (List<Map<String, Object>>) district.get("branches");
+                            if (branchesData != null) {
+                                for (Map<String, Object> branchData : branchesData) {
+                                    Branch branch = new Branch();
+                                    branch.setName((String) branchData.get("branch_name"));
+                                    branch.setBank(bank);
+                                    branchRepository.save(branch);
+                                    totalBranchesLoaded++;
+                                }
+                            }
+                        }
                     }
                 }
             }
-            System.out.println("Branch data loaded successfully.");
+            System.out.println(totalBranchesLoaded + " branch data loaded successfully.");
         } catch (Exception e) {
             System.err.println("Error loading branch data: " + e.getMessage());
         }

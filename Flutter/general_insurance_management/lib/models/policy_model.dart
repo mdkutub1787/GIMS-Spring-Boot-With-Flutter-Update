@@ -25,6 +25,7 @@ class PolicyModel {
     this.company,
     this.date,
     this.bankName,
+    this.branchName,
     this.policyholder,
     this.address,
     this.stockInsured,
