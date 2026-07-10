@@ -1,15 +1,15 @@
-import 'marine_bill_model.dart';
+import 'marine_bill.dart';
 
-class MarineMoneyReceiptModel {
+class MarineMoneyReceipt {
   int? id;
   String? issuingOffice;
   String? classOfInsurance;
   DateTime? date;
   String? modeOfPayment;
   String? issuedAgainst;
-  MarineBillModel? marinebill;
+  MarineBill? marinebill;
 
-  MarineMoneyReceiptModel({
+  MarineMoneyReceipt({
     this.id,
     this.issuingOffice,
     this.classOfInsurance,
@@ -19,7 +19,7 @@ class MarineMoneyReceiptModel {
     this.marinebill,
   });
 
-  MarineMoneyReceiptModel.fromJson(Map<String, dynamic> json)
+  MarineMoneyReceipt.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         issuingOffice = json['issuingOffice'],
         classOfInsurance = json['classOfInsurance'],
@@ -27,7 +27,7 @@ class MarineMoneyReceiptModel {
         modeOfPayment = json['modeOfPayment'],
         issuedAgainst = json['issuedAgainst'],
         marinebill = json['marinebill'] != null
-            ? MarineBillModel.fromJson(json['marinebill'])
+            ? MarineBill.fromJson(json['marinebill'])
             : null;
 
   Map<String, dynamic> toJson() {

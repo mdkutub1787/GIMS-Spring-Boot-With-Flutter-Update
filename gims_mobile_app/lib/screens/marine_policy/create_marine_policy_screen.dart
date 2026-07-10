@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import '../../models/marine_policy_model.dart';
+import '../../models/marine/marine_policy.dart';
 import '../../viewmodels/marine_policy_viewmodel.dart';
 
 class CreateMarinePolicyScreen extends ConsumerStatefulWidget {
@@ -42,7 +42,7 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
 
   Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
-      final policy = MarinePolicyModel(
+      final policy = MarinePolicy(
         date: DateTime.now(),
         bankName: bankNameController.text,
         policyholder: policyholderController.text,

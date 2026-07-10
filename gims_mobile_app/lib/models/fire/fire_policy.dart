@@ -1,4 +1,4 @@
-class PolicyModel {
+class FirePolicy {
   int? id;
   String? sysNumber;
   String? company;
@@ -19,7 +19,7 @@ class PolicyModel {
   DateTime? periodTo;
   bool isHovered = false;
 
-  PolicyModel({
+  FirePolicy({
     this.id,
     this.sysNumber,
     this.company,
@@ -40,7 +40,7 @@ class PolicyModel {
     this.periodTo,
   });
 
-  PolicyModel.fromJson(Map<String, dynamic> json) {
+  FirePolicy.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     sysNumber = json['sysNumber'];
     company = json['company'];

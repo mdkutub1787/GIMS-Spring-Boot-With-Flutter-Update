@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/policy_model.dart';
-import '../repositories/fire_policy_repository.dart';
+import '../models/fire/fire_policy.dart';
+import '../repositories/fire/fire_policy_repository.dart';
 import '../services/api_service.dart';
 
 final apiServiceProvider = Provider((ref) => ApiService());
@@ -8,12 +8,12 @@ final firePolicyRepositoryProvider = Provider((ref) => FirePolicyRepository(ref.
 
 class FirePolicyState {
   final bool isLoading;
-  final List<PolicyModel> policies;
+  final List<FirePolicy> policies;
   final String? error;
 
   FirePolicyState({this.isLoading = false, this.policies = const [], this.error});
 
-  FirePolicyState copyWith({bool? isLoading, List<PolicyModel>? policies, String? error}) {
+  FirePolicyState copyWith({bool? isLoading, List<FirePolicy>? policies, String? error}) {
     return FirePolicyState(
       isLoading: isLoading ?? this.isLoading,
       policies: policies ?? this.policies,
@@ -37,7 +37,7 @@ class FirePolicyViewModel extends StateNotifier<FirePolicyState> {
     }
   }
 
-  Future<bool> savePolicy(PolicyModel policy) async {
+  Future<bool> savePolicy(FirePolicy policy) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
       final success = await _repository.savePolicy(policy);

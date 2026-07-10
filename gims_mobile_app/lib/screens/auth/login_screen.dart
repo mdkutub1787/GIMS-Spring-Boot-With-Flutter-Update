@@ -23,12 +23,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
 
     if (success && mounted) {
-      final role = ref.read(authViewModelProvider).role;
-      if (role == 'ADMIN') {
-        Navigator.pushReplacementNamed(context, AppRouter.home);
-      } else {
-        Navigator.pushReplacementNamed(context, AppRouter.localOffice);
-      }
+      Navigator.pushReplacementNamed(context, AppRouter.home);
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(ref.read(authViewModelProvider).error ?? 'Login Failed'), backgroundColor: Colors.red),

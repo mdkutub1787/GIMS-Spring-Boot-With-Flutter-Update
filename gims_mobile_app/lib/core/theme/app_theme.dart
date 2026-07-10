@@ -2,13 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Primary Colors (FFLIPY Style)
+  // Light Theme Colors (FFLIPY Style)
   static const Color lightPrimary = Color(0xFF007AFF);
   static const Color lightSecondary = Color(0xFF0EA5E9);
   static const Color lightAccent = Color(0xFFEC4899);
   static const Color lightBackground = Color(0xFFFAFAFA);
+  static const Color lightError = Color(0xFFDC2626);
+  static const Color lightErrorContainer = Color(0xFFFFE5E0);
+  static const Color lightSuccess = Color(0xFF6BA180);
+  static const Color lightWarning = Color(0xFFF59E0B);
+  static const Color lightInfo = Color(0xFF0EA5E9);
   static const Color lightSurface = Color(0xFFFFFFFF);
-  
+  static const Color topBar = Color(0x4827A18D);
+  static const Color actionBar = Color(0xFFE91E63);
+  static const Color topBarGradientLeft = Color(0xFFF3BED9);
+  static const Color topBarGradientRight = Color(0xFF39D1B8);
+
+  // Neutral Colors
   static const Color neutralGrey50 = Color(0xFFFAFAFA);
   static const Color neutralGrey100 = Color(0xFFF3F4F6);
   static const Color neutralGrey200 = Color(0xFFE5E7EB);
@@ -17,6 +27,8 @@ class AppTheme {
   static const Color neutralGrey500 = Color(0xFF6B7280);
   static const Color neutralGrey600 = Color(0xFF4B5563);
   static const Color neutralGrey700 = Color(0xFF374151);
+  static const Color neutralGrey800 = Color(0xFF1F2937);
+  static const Color neutralGrey900 = Color(0xFF111827);
 
   static ThemeData lightTheme() {
     return ThemeData(
@@ -27,11 +39,13 @@ class AppTheme {
         secondary: lightSecondary,
         tertiary: lightAccent,
         surface: lightSurface,
+        error: lightError,
+        errorContainer: lightErrorContainer,
       ),
       scaffoldBackgroundColor: lightBackground,
       appBarTheme: AppBarTheme(
         backgroundColor: lightSurface,
-        foregroundColor: Colors.black,
+        foregroundColor: neutralGrey900,
         elevation: 0,
         centerTitle: true,
         titleTextStyle: GoogleFonts.poppins(
@@ -62,6 +76,20 @@ class AppTheme {
           color: neutralGrey600,
         ),
       ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: lightPrimary,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          textStyle: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
       cardTheme: CardThemeData(
         color: lightSurface,
         elevation: 1,
@@ -72,4 +100,14 @@ class AppTheme {
       ),
     );
   }
+}
+
+extension ColorSchemeExtension on ColorScheme {
+  Color get success => AppTheme.lightSuccess;
+  Color get warning => AppTheme.lightWarning;
+  Color get info => AppTheme.lightInfo;
+  Color get topBarGradientLeft => AppTheme.topBarGradientLeft;
+  Color get topBarGradientRight => AppTheme.topBarGradientRight;
+  Color get topBar => AppTheme.topBar;
+  Color get actionBar => AppTheme.actionBar;
 }

@@ -1,18 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/marine_policy_model.dart';
-import '../repositories/marine_policy_repository.dart';
+import '../models/marine/marine_policy.dart';
+import '../repositories/marine/marine_policy_repository.dart';
 import '../viewmodels/fire_policy_viewmodel.dart';
 
 final marinePolicyRepositoryProvider = Provider((ref) => MarinePolicyRepository(ref.watch(apiServiceProvider)));
 
 class MarinePolicyState {
   final bool isLoading;
-  final List<MarinePolicyModel> policies;
+  final List<MarinePolicy> policies;
   final String? error;
 
   MarinePolicyState({this.isLoading = false, this.policies = const [], this.error});
 
-  MarinePolicyState copyWith({bool? isLoading, List<MarinePolicyModel>? policies, String? error}) {
+  MarinePolicyState copyWith({bool? isLoading, List<MarinePolicy>? policies, String? error}) {
     return MarinePolicyState(
       isLoading: isLoading ?? this.isLoading,
       policies: policies ?? this.policies,
@@ -36,7 +36,7 @@ class MarinePolicyViewModel extends StateNotifier<MarinePolicyState> {
     }
   }
 
-  Future<bool> savePolicy(MarinePolicyModel policy) async {
+  Future<bool> savePolicy(MarinePolicy policy) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
       final success = await _repository.savePolicy(policy);

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../viewmodels/fire_bill_viewmodel.dart';
+import '../../models/fire/fire_bill.dart';
 import '../../core/routing/app_router.dart';
 import 'fire_bill_details_screen.dart';
 
@@ -78,7 +79,7 @@ class _ViewFireBillScreenState extends ConsumerState<ViewFireBillScreen> {
     );
   }
 
-  Widget _buildBillCard(dynamic bill, ThemeData theme) {
+  Widget _buildBillCard(FireBill bill, ThemeData theme) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(

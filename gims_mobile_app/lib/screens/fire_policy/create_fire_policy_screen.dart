@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import '../../models/policy_model.dart';
+import '../../models/fire/fire_policy.dart';
 import '../../viewmodels/fire_policy_viewmodel.dart';
 import '../../viewmodels/utility_viewmodel.dart';
 
@@ -50,7 +50,7 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
 
   Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
-      final policy = PolicyModel(
+      final policy = FirePolicy(
         date: DateTime.now(),
         company: selectedCompany ?? '',
         bankName: selectedBank ?? '',
@@ -235,7 +235,10 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
       decoration: _inputDecoration(label, icon),
       items: items.map((e) => DropdownMenuItem(value: e, child: Text(e, overflow: TextOverflow.ellipsis))).toList(),
       onChanged: onChanged,
-      validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
+      validator: (v) => (val) {
+        if (val == null || val.isEmpty) return 'Required';
+        return null;
+      }(value),
     );
   }
 

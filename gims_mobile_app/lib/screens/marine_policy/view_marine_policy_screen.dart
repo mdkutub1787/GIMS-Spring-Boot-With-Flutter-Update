@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../viewmodels/marine_policy_viewmodel.dart';
-import '../../models/marine_policy_model.dart';
+import '../../models/marine/marine_policy.dart';
 import '../../core/routing/app_router.dart';
 import 'marine_policy_details_screen.dart';
 
@@ -79,7 +79,7 @@ class _ViewMarinePolicyScreenState extends ConsumerState<ViewMarinePolicyScreen>
     );
   }
 
-  Widget _buildPolicyCard(MarinePolicyModel policy, ThemeData theme) {
+  Widget _buildPolicyCard(MarinePolicy policy, ThemeData theme) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(

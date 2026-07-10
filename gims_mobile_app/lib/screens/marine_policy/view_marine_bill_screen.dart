@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../viewmodels/marine_bill_viewmodel.dart';
+import '../../models/marine/marine_bill.dart';
 import 'marine_bill_details_screen.dart';
 
 class ViewMarineBillScreen extends ConsumerStatefulWidget {
@@ -69,7 +70,7 @@ class _ViewMarineBillScreenState extends ConsumerState<ViewMarineBillScreen> {
     );
   }
 
-  Widget _buildBillCard(dynamic bill, ThemeData theme) {
+  Widget _buildBillCard(MarineBill bill, ThemeData theme) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(

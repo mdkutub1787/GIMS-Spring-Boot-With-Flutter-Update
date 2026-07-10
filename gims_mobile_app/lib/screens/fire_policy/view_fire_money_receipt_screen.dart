@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../viewmodels/fire_receipt_viewmodel.dart';
+import '../../models/fire/fire_money_receipt.dart';
 import '../../core/routing/app_router.dart';
 
 class ViewFireMoneyReceiptScreen extends ConsumerStatefulWidget {
@@ -73,7 +74,7 @@ class _ViewFireMoneyReceiptScreenState extends ConsumerState<ViewFireMoneyReceip
     );
   }
 
-  Widget _buildReceiptCard(dynamic receipt, ThemeData theme) {
+  Widget _buildReceiptCard(FireMoneyReceipt receipt, ThemeData theme) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(

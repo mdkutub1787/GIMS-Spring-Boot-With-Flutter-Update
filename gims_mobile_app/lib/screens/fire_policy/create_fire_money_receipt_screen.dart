@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import '../../models/bill_model.dart';
-import '../../models/money_receipt_model.dart';
+import '../../models/fire/fire_bill.dart';
+import '../../models/fire/fire_money_receipt.dart';
 import '../../viewmodels/fire_bill_viewmodel.dart';
 import '../../viewmodels/fire_receipt_viewmodel.dart';
 
@@ -21,7 +21,7 @@ class _CreateFireMoneyReceiptScreenState extends ConsumerState<CreateFireMoneyRe
   final TextEditingController dateController = TextEditingController();
   final TextEditingController issuedAgainstController = TextEditingController();
 
-  BillModel? selectedBill;
+  FireBill? selectedBill;
   String? selectedClassOfInsurance;
   String? selectedModeOfPayment;
 
@@ -37,7 +37,7 @@ class _CreateFireMoneyReceiptScreenState extends ConsumerState<CreateFireMoneyRe
 
   void _submit() async {
     if (_formKey.currentState!.validate() && selectedBill != null) {
-      final receipt = MoneyReceiptModel(
+      final receipt = FireMoneyReceipt(
         issuingOffice: issuingOfficeController.text,
         classOfInsurance: selectedClassOfInsurance!,
         modeOfPayment: selectedModeOfPayment!,
@@ -77,10 +77,11 @@ class _CreateFireMoneyReceiptScreenState extends ConsumerState<CreateFireMoneyRe
             children: [
               Text('Bill Selection', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
               const SizedBox(height: 15),
-              DropdownButtonFormField<BillModel>(
+              DropdownButtonFormField<FireBill>(
                 value: selectedBill,
+                isExpanded: true,
                 decoration: _inputDecoration('Select Bill', Icons.receipt_long_outlined),
-                items: billState.bills.map((b) => DropdownMenuItem(value: b, child: Text('${b.policy.policyholder} (#${b.id})'))).toList(),
+                items: billState.bills.map((b) => DropdownMenuItem<FireBill>(value: b, child: Text('${b.policy.policyholder} (#${b.id})'))).toList(),
                 onChanged: (val) => setState(() => selectedBill = val),
                 validator: (val) => val == null ? 'Required' : null,
               ),
@@ -144,6 +145,7 @@ class _CreateFireMoneyReceiptScreenState extends ConsumerState<CreateFireMoneyRe
   Widget _buildDropdown(String label, IconData icon, List<String> items, String? value, Function(String?) onChanged) {
     return DropdownButtonFormField<String>(
       value: value,
+      isExpanded: true,
       style: GoogleFonts.poppins(fontSize: 14, color: Colors.black87),
       decoration: _inputDecoration(label, icon),
       items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),

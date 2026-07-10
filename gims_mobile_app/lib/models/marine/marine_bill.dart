@@ -1,6 +1,6 @@
-import 'marine_policy_model.dart';
+import 'marine_policy.dart';
 
-class MarineBillModel {
+class MarineBill {
   int? id;
   double marineRate;
   double warSrccRate;
@@ -8,9 +8,9 @@ class MarineBillModel {
   double tax;
   double stampDuty;
   double grossPremium;
-  MarinePolicyModel marineDetails;
+  MarinePolicy marineDetails;
 
-  MarineBillModel({
+  MarineBill({
     this.id,
     required this.marineRate,
     required this.warSrccRate,
@@ -21,8 +21,8 @@ class MarineBillModel {
     required this.marineDetails,
   });
 
-  factory MarineBillModel.fromJson(Map<String, dynamic> json) {
-    return MarineBillModel(
+  factory MarineBill.fromJson(Map<String, dynamic> json) {
+    return MarineBill(
       id: json['id'],
       marineRate: (json['marineRate'] is num) ? json['marineRate'].toDouble() : 0.0,
       warSrccRate: (json['warSrccRate'] is num) ? json['warSrccRate'].toDouble() : 0.0,
@@ -30,7 +30,7 @@ class MarineBillModel {
       tax: (json['tax'] is num) ? json['tax'].toDouble() : 0.0,
       stampDuty: (json['stampDuty'] is num) ? json['stampDuty'].toDouble() : 0.0,
       grossPremium: (json['grossPremium'] is num) ? json['grossPremium'].toDouble() : 0.0,
-      marineDetails: MarinePolicyModel.fromJson(json['marineDetails']),
+      marineDetails: MarinePolicy.fromJson(json['marineDetails']),
     );
   }
 

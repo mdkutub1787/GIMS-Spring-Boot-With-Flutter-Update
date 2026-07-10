@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../models/bill_model.dart';
+import '../../models/fire/fire_bill.dart';
 
 class FireBillDetailsScreen extends StatelessWidget {
-  final BillModel bill;
+  final FireBill bill;
   const FireBillDetailsScreen({super.key, required this.bill});
 
   @override

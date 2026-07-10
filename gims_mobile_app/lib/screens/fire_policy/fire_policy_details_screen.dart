@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import '../../models/policy_model.dart';
+import '../../models/fire/fire_policy.dart';
 
 class FirePolicyDetailsScreen extends StatelessWidget {
-  final PolicyModel policy;
+  final FirePolicy policy;
   const FirePolicyDetailsScreen({super.key, required this.policy});
 
   @override

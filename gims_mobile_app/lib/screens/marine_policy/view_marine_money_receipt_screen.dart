@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../viewmodels/marine_receipt_viewmodel.dart';
+import '../../models/marine/marine_money_receipt.dart';
 import '../../core/routing/app_router.dart';
 
 class ViewMarineMoneyReceiptScreen extends ConsumerStatefulWidget {
@@ -73,7 +74,7 @@ class _ViewMarineMoneyReceiptScreenState extends ConsumerState<ViewMarineMoneyRe
     );
   }
 
-  Widget _buildReceiptCard(dynamic receipt, ThemeData theme) {
+  Widget _buildReceiptCard(MarineMoneyReceipt receipt, ThemeData theme) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(

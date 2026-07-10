@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../models/bill_model.dart';
-import '../../models/policy_model.dart';
+import '../../models/fire/fire_bill.dart';
+import '../../models/fire/fire_policy.dart';
 import '../../viewmodels/fire_bill_viewmodel.dart';
 import '../../viewmodels/fire_policy_viewmodel.dart';
 
@@ -21,10 +21,8 @@ class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
   final TextEditingController netPremiumController = TextEditingController();
   final TextEditingController taxController = TextEditingController();
   final TextEditingController grossPremiumController = TextEditingController();
-  final TextEditingController searchController = TextEditingController();
 
-  PolicyModel? selectedPolicy;
-  List<PolicyModel> filteredPolicies = [];
+  FirePolicy? selectedPolicy;
 
   @override
   void initState() {
@@ -49,14 +47,14 @@ class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
 
     setState(() {
       netPremiumController.text = netPremium.toStringAsFixed(0);
-      taxController.text = taxRate.toStringAsFixed(0) + "%";
+      taxController.text = "${taxRate.toStringAsFixed(0)}%";
       grossPremiumController.text = grossPremium.toStringAsFixed(0);
     });
   }
 
   void _submit() async {
     if (_formKey.currentState!.validate() && selectedPolicy != null) {
-      final bill = BillModel(
+      final bill = FireBill(
         fire: double.parse(fireController.text),
         rsd: double.parse(rsdController.text),
         netPremium: double.parse(netPremiumController.text),
@@ -96,10 +94,11 @@ class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
             children: [
               Text('Policy Selection', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
               const SizedBox(height: 15),
-              DropdownButtonFormField<PolicyModel>(
+              DropdownButtonFormField<FirePolicy>(
                 value: selectedPolicy,
+                isExpanded: true,
                 decoration: _inputDecoration('Select Policy', Icons.person_outline),
-                items: policyState.policies.map((p) => DropdownMenuItem(value: p, child: Text(p.policyholder ?? 'N/A'))).toList(),
+                items: policyState.policies.map((p) => DropdownMenuItem<FirePolicy>(value: p, child: Text(p.policyholder ?? 'N/A'))).toList(),
                 onChanged: (val) {
                   setState(() {
                     selectedPolicy = val;

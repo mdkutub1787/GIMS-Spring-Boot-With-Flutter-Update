@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import '../../models/marine_policy_model.dart';
+import '../../models/marine/marine_policy.dart';
 
 class MarinePolicyDetailsScreen extends StatelessWidget {
-  final MarinePolicyModel policy;
+  final MarinePolicy policy;
   const MarinePolicyDetailsScreen({super.key, required this.policy});
 
   @override

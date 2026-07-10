@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/auth_service.dart';
+import '../models/user_model.dart';
 
 final authServiceProvider = Provider((ref) => AuthService());
 
@@ -8,15 +9,17 @@ class AuthState {
   final String? error;
   final String? role;
   final String? message;
+  final UserModel? user;
 
-  AuthState({this.isLoading = false, this.error, this.role, this.message});
+  AuthState({this.isLoading = false, this.error, this.role, this.message, this.user});
 
-  AuthState copyWith({bool? isLoading, String? error, String? role, String? message}) {
+  AuthState copyWith({bool? isLoading, String? error, String? role, String? message, UserModel? user}) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
       role: role ?? this.role,
       message: message ?? this.message,
+      user: user ?? this.user,
     );
   }
 }
@@ -30,8 +33,13 @@ class AuthViewModel extends StateNotifier<AuthState> {
     state = state.copyWith(isLoading: true, error: null);
     try {
       final response = await _authService.login(username, password);
-      if (response != null) {
-        state = state.copyWith(isLoading: false, role: response['user']['role']);
+      if (response != null && response['user'] != null) {
+        final user = UserModel.fromJson(response['user']);
+        state = state.copyWith(
+          isLoading: false, 
+          role: user.role?.toString().split('.').last,
+          user: user,
+        );
         return true;
       } else {
         state = state.copyWith(isLoading: false, error: 'Invalid username or password');

@@ -1,15 +1,15 @@
-import 'policy_model.dart';
+import 'fire_policy.dart';
 
-class BillModel {
+class FireBill {
   int? id;
   double fire;
   double rsd;
   double netPremium;
   double tax;
   double grossPremium;
-  PolicyModel policy;
+  FirePolicy policy;
 
-  BillModel({
+  FireBill({
     this.id,
     required this.fire,
     required this.rsd,
@@ -19,15 +19,15 @@ class BillModel {
     required this.policy,
   });
 
-  factory BillModel.fromJson(Map<String, dynamic> json) {
-    return BillModel(
+  factory FireBill.fromJson(Map<String, dynamic> json) {
+    return FireBill(
       id: json['id'],
       fire: (json['fire'] is num) ? json['fire'].toDouble() : 0.0,
       rsd: (json['rsd'] is num) ? json['rsd'].toDouble() : 0.0,
       netPremium: (json['netPremium'] is num) ? json['netPremium'].toDouble() : 0.0,
       tax: (json['tax'] is num) ? json['tax'].toDouble() : 0.0,
       grossPremium: (json['grossPremium'] is num) ? json['grossPremium'].toDouble() : 0.0,
-      policy: PolicyModel.fromJson(json['policy']),
+      policy: FirePolicy.fromJson(json['policy']),
     );
   }
 

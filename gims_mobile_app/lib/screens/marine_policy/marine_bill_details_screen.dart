@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../models/marine_bill_model.dart';
+import '../../models/marine/marine_bill.dart';
 
 class MarineBillDetailsScreen extends StatelessWidget {
-  final MarineBillModel bill;
+  final MarineBill bill;
   const MarineBillDetailsScreen({super.key, required this.bill});
 
   @override

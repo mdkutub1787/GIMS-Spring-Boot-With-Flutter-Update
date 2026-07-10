@@ -1,18 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/marine_bill_model.dart';
-import '../repositories/marine_bill_repository.dart';
+import '../models/marine/marine_bill.dart';
+import '../repositories/marine/marine_bill_repository.dart';
 import '../viewmodels/fire_policy_viewmodel.dart';
 
 final marineBillRepositoryProvider = Provider((ref) => MarineBillRepository(ref.watch(apiServiceProvider)));
 
 class MarineBillState {
   final bool isLoading;
-  final List<MarineBillModel> bills;
+  final List<MarineBill> bills;
   final String? error;
 
   MarineBillState({this.isLoading = false, this.bills = const [], this.error});
 
-  MarineBillState copyWith({bool? isLoading, List<MarineBillModel>? bills, String? error}) {
+  MarineBillState copyWith({bool? isLoading, List<MarineBill>? bills, String? error}) {
     return MarineBillState(
       isLoading: isLoading ?? this.isLoading,
       bills: bills ?? this.bills,
@@ -36,11 +36,11 @@ class MarineBillViewModel extends StateNotifier<MarineBillState> {
     }
   }
 
-  Future<bool> saveBill(MarineBillModel bill) async {
+  Future<bool> saveBill(MarineBill bill) async {
     state = state.copyWith(isLoading: true);
     try {
       final success = await _repository.saveBill(bill);
-      if (success) fetchBills();
+      if (success) await fetchBills();
       return success;
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
@@ -51,7 +51,7 @@ class MarineBillViewModel extends StateNotifier<MarineBillState> {
   Future<bool> deleteBill(int id) async {
     try {
       final success = await _repository.deleteBill(id);
-      if (success) fetchBills();
+      if (success) await fetchBills();
       return success;
     } catch (e) {
       state = state.copyWith(error: e.toString());

@@ -5,7 +5,6 @@ import 'package:gims_mobile_app/screens/auth/forgot_password_screen.dart';
 import 'package:gims_mobile_app/screens/auth/verify_otp_screen.dart';
 import 'package:gims_mobile_app/screens/auth/reset_password_screen.dart';
 import 'package:gims_mobile_app/screens/home/home_screen.dart';
-import 'package:gims_mobile_app/screens/home/local_office_screen.dart';
 import 'package:gims_mobile_app/screens/fire_policy/view_fire_policy_screen.dart';
 import 'package:gims_mobile_app/screens/fire_policy/create_fire_policy_screen.dart';
 import 'package:gims_mobile_app/screens/fire_policy/view_fire_bill_screen.dart';
@@ -32,7 +31,6 @@ class AppRouter {
   static const String verifyOtp = '/verify-otp';
   static const String resetPassword = '/reset-password';
   static const String home = '/home';
-  static const String localOffice = '/local-office';
   
   static const String viewFirePolicy = '/view-fire-policy';
   static const String createFirePolicy = '/create-fire-policy';
@@ -76,8 +74,6 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => ResetPasswordScreen(email: email));
       case home:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
-      case localOffice:
-        return MaterialPageRoute(builder: (_) => const LocalOfficeScreen());
         
       case viewFirePolicy:
         return MaterialPageRoute(builder: (_) => const ViewFirePolicyScreen());

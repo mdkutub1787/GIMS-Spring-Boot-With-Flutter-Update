@@ -1,4 +1,4 @@
-class MarinePolicyModel {
+class MarinePolicy {
   int? id;
   DateTime? date;
   String? bankName;
@@ -14,7 +14,7 @@ class MarinePolicyModel {
   String? coverage;
   bool isHovered = false;
 
-  MarinePolicyModel({
+  MarinePolicy({
     this.id,
     this.date,
     this.bankName,
@@ -30,7 +30,7 @@ class MarinePolicyModel {
     this.coverage,
   });
 
-  MarinePolicyModel.fromJson(Map<String, dynamic> json) {
+  MarinePolicy.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     date = json['date'] != null ? DateTime.tryParse(json['date']) : null;
     bankName = json['bankName'];
@@ -40,9 +40,9 @@ class MarinePolicyModel {
     voyageTo = json['voyageTo'];
     via = json['via'];
     stockItem = json['stockItem'];
-    sumInsuredUsd = json['sumInsuredUsd']?.toDouble();
-    usdRate = json['usdRate']?.toDouble();
-    sumInsured = json['sumInsured']?.toDouble();
+    sumInsuredUsd = (json['sumInsuredUsd'] is num) ? json['sumInsuredUsd'].toDouble() : 0.0;
+    usdRate = (json['usdRate'] is num) ? json['usdRate'].toDouble() : 0.0;
+    sumInsured = (json['sumInsured'] is num) ? json['sumInsured'].toDouble() : 0.0;
     coverage = json['coverage'];
   }
 

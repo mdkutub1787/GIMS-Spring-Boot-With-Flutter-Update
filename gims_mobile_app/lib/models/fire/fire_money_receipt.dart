@@ -1,15 +1,15 @@
-import 'bill_model.dart';
+import 'fire_bill.dart';
 
-class MoneyReceiptModel {
+class FireMoneyReceipt {
   int? id;
   String? issuingOffice;
   String? classOfInsurance;
   DateTime? date;
   String? modeOfPayment;
   String? issuedAgainst;
-  BillModel? bill;
+  FireBill? bill;
 
-  MoneyReceiptModel({
+  FireMoneyReceipt({
     this.id,
     this.issuingOffice,
     this.classOfInsurance,
@@ -19,14 +19,14 @@ class MoneyReceiptModel {
     this.bill,
   });
 
-  MoneyReceiptModel.fromJson(Map<String, dynamic> json) {
+  FireMoneyReceipt.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     issuingOffice = json['issuingOffice'];
     classOfInsurance = json['classOfInsurance'];
     date = json['date'] != null ? DateTime.parse(json['date']) : null;
     modeOfPayment = json['modeOfPayment'];
     issuedAgainst = json['issuedAgainst'];
-    bill = json['bill'] != null ? BillModel.fromJson(json['bill']) : null;
+    bill = json['bill'] != null ? FireBill.fromJson(json['bill']) : null;
   }
 
   Map<String, dynamic> toJson() {

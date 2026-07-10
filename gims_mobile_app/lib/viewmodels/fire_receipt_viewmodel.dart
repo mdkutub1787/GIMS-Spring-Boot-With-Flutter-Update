@@ -1,18 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/money_receipt_model.dart';
-import '../repositories/fire_receipt_repository.dart';
+import '../models/fire/fire_money_receipt.dart';
+import '../repositories/fire/fire_receipt_repository.dart';
 import '../viewmodels/fire_policy_viewmodel.dart';
 
 final fireReceiptRepositoryProvider = Provider((ref) => FireReceiptRepository(ref.watch(apiServiceProvider)));
 
 class FireReceiptState {
   final bool isLoading;
-  final List<MoneyReceiptModel> receipts;
+  final List<FireMoneyReceipt> receipts;
   final String? error;
 
   FireReceiptState({this.isLoading = false, this.receipts = const [], this.error});
 
-  FireReceiptState copyWith({bool? isLoading, List<MoneyReceiptModel>? receipts, String? error}) {
+  FireReceiptState copyWith({bool? isLoading, List<FireMoneyReceipt>? receipts, String? error}) {
     return FireReceiptState(
       isLoading: isLoading ?? this.isLoading,
       receipts: receipts ?? this.receipts,
@@ -36,11 +36,11 @@ class FireReceiptViewModel extends StateNotifier<FireReceiptState> {
     }
   }
 
-  Future<bool> saveReceipt(MoneyReceiptModel receipt) async {
+  Future<bool> saveReceipt(FireMoneyReceipt receipt) async {
     state = state.copyWith(isLoading: true);
     try {
       final success = await _repository.saveReceipt(receipt);
-      if (success) fetchReceipts();
+      if (success) await fetchReceipts();
       return success;
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
@@ -51,7 +51,7 @@ class FireReceiptViewModel extends StateNotifier<FireReceiptState> {
   Future<bool> deleteReceipt(int id) async {
     try {
       final success = await _repository.deleteReceipt(id);
-      if (success) fetchReceipts();
+      if (success) await fetchReceipts();
       return success;
     } catch (e) {
       state = state.copyWith(error: e.toString());

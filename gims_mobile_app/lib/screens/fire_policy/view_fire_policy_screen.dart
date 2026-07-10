@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../core/routing/app_router.dart';
 import '../../viewmodels/fire_policy_viewmodel.dart';
-import '../../models/policy_model.dart';
+import '../../models/fire/fire_policy.dart';
 
 class ViewFirePolicyScreen extends ConsumerStatefulWidget {
   const ViewFirePolicyScreen({super.key});
@@ -79,7 +79,7 @@ class _ViewFirePolicyScreenState extends ConsumerState<ViewFirePolicyScreen> {
     );
   }
 
-  Widget _buildPolicyCard(PolicyModel policy, ThemeData theme) {
+  Widget _buildPolicyCard(FirePolicy policy, ThemeData theme) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(
