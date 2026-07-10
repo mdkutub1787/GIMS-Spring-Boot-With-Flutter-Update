@@ -24,7 +24,7 @@ class MarinePolicyDetailsScreen extends StatelessWidget {
             const SizedBox(height: 25),
             _buildDetailCard([
               _detailRow('Policyholder', policy.policyholder ?? 'N/A'),
-              _detailRow('Bank Name', policy.bankName ?? 'N/A'),
+              _detailRow('Bank Name', policy.bank?.name ?? 'N/A'),
               _detailRow('Sum Insured', 'TK ${policy.sumInsured}'),
               _detailRow('Stock Item', policy.stockItem ?? 'N/A'),
               _detailRow('Voyage From', policy.voyageFrom ?? 'N/A'),

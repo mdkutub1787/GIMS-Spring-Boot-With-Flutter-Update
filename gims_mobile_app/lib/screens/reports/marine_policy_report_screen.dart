@@ -70,7 +70,7 @@ class _MarinePolicyReportScreenState extends ConsumerState<MarinePolicyReportScr
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(policy.policyholder ?? 'N/A', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14)),
-                                Text(policy.bankName ?? 'N/A', style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey)),
+                                Text(policy.bank?.name ?? 'N/A', style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey)),
                               ],
                             ),
                           ),

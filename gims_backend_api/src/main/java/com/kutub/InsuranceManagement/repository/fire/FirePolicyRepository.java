@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FirePolicyRepository extends JpaRepository<FirePolicy, Integer> {
@@ -17,8 +18,10 @@ public interface FirePolicyRepository extends JpaRepository<FirePolicy, Integer>
     List<FirePolicy> findByPolicyHolder(@Param("policyholder") String policyholder);
 
     // Search Policy records by bank name (full or partial, case-insensitive)
-    @Query("SELECT p FROM FirePolicy p WHERE LOWER(p.bankName) LIKE LOWER(CONCAT('%', :bankName, '%'))")
+    @Query("SELECT p FROM FirePolicy p WHERE LOWER(p.bank.name) LIKE LOWER(CONCAT('%', :bankName, '%'))")
     List<FirePolicy> findByBankName(@Param("bankName") String bankName);
+
+    Optional<FirePolicy> findBySysNumber(String sysNumber);
 
 
 }

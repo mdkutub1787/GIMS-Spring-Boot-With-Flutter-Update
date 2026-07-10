@@ -10,7 +10,8 @@ class FireReceiptRepository {
     final response = await _apiService.getFireReceipts();
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
-      if (decoded['success'] == true) {
+      if (decoded['status'] == true) {
+        if (decoded['data'] == null) return [];
         List<dynamic> data = decoded['data'];
         return data.map((item) => FireMoneyReceipt.fromJson(item)).toList();
       }

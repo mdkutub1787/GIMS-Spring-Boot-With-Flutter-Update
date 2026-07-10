@@ -2,32 +2,53 @@ import 'fire_policy.dart';
 
 class FireBill {
   int? id;
-  double fire;
-  double rsd;
+  double fire; // Percentage
+  double fireAmount;
+  double rsd; // Percentage
+  double rsdAmount;
   double netPremium;
-  double tax;
+  double tax; // Percentage
+  double taxAmount;
   double grossPremium;
-  FirePolicy policy;
+  FirePolicy? policy;
 
   FireBill({
     this.id,
     required this.fire,
+    this.fireAmount = 0.0,
     required this.rsd,
+    this.rsdAmount = 0.0,
     required this.netPremium,
     required this.tax,
+    this.taxAmount = 0.0,
     required this.grossPremium,
-    required this.policy,
+    this.policy,
   });
 
   factory FireBill.fromJson(Map<String, dynamic> json) {
+    // Helper to extract double from complex objects or direct values
+    double getVal(dynamic data, {bool isAmount = false}) {
+      if (data == null) return 0.0;
+      if (data is num) {
+        return isAmount ? 0.0 : data.toDouble();
+      }
+      if (data is Map) {
+        return (data[isAmount ? 'amount' : 'percentage'] ?? 0.0).toDouble();
+      }
+      return 0.0;
+    }
+
     return FireBill(
-      id: json['id'],
-      fire: (json['fire'] is num) ? json['fire'].toDouble() : 0.0,
-      rsd: (json['rsd'] is num) ? json['rsd'].toDouble() : 0.0,
-      netPremium: (json['netPremium'] is num) ? json['netPremium'].toDouble() : 0.0,
-      tax: (json['tax'] is num) ? json['tax'].toDouble() : 0.0,
-      grossPremium: (json['grossPremium'] is num) ? json['grossPremium'].toDouble() : 0.0,
-      policy: FirePolicy.fromJson(json['policy']),
+      id: json['billId'] ?? json['bill_id'] ?? json['id'],
+      fire: getVal(json['fire']),
+      fireAmount: getVal(json['fire'], isAmount: true),
+      rsd: getVal(json['rsd']),
+      rsdAmount: getVal(json['rsd'], isAmount: true),
+      netPremium: (json['netPremium'] ?? json['net_premium'] ?? 0.0).toDouble(),
+      tax: getVal(json['tax']),
+      taxAmount: getVal(json['tax'], isAmount: true),
+      grossPremium: (json['grossPremium'] ?? json['gross_premium'] ?? 0.0).toDouble(),
+      policy: json['policy'] != null ? FirePolicy.fromJson(json['policy']) : null,
     );
   }
 
@@ -35,11 +56,14 @@ class FireBill {
     return {
       'id': id,
       'fire': fire,
+      'fireAmount': fireAmount,
       'rsd': rsd,
+      'rsdAmount': rsdAmount,
       'netPremium': netPremium,
       'tax': tax,
+      'taxAmount': taxAmount,
       'grossPremium': grossPremium,
-      'policy': policy.toJson(),
+      if (policy != null) 'policy': {'id': policy!.id},
     };
   }
 }

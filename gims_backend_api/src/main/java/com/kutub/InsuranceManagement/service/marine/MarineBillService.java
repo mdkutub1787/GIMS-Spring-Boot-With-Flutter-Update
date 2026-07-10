@@ -7,6 +7,7 @@ import com.kutub.InsuranceManagement.repository.marine.MarinePolicyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -28,6 +29,12 @@ public class MarineBillService {
         MarinePolicy marinePolicy = policyRepository.findById(bill.getMarineDetails().getId())
                 .orElseThrow(() -> new RuntimeException("Policy not found with ID: " + bill.getMarineDetails().getId()));
 
+        // Generate sysNumber if it doesn't exist
+        if (marinePolicy.getSysNumber() == null || marinePolicy.getSysNumber().isEmpty()) {
+            marinePolicy.setSysNumber(generateSysNumber(marinePolicy));
+            policyRepository.save(marinePolicy); // Save the policy with the new sysNumber
+        }
+
         // Associate the policy with the bill
         bill.setMarineDetails(marinePolicy);
 
@@ -36,6 +43,30 @@ public class MarineBillService {
 
         // Save and return the bill
         return billRepository.save(bill);
+    }
+
+    private String getCompanyAcronym(String companyName) {
+        if (companyName == null || companyName.isEmpty()) {
+            return "DEFAULT";
+        }
+        // Remove content in parentheses and trim whitespace
+        String nameWithoutParentheses = companyName.replaceAll("\\(.*?\\)", "").trim();
+        StringBuilder acronym = new StringBuilder();
+        // Split by one or more spaces
+        for (String s : nameWithoutParentheses.split("\\s+")) {
+            if (!s.isEmpty()) {
+                acronym.append(s.charAt(0));
+            }
+        }
+        return acronym.toString().toUpperCase();
+    }
+
+    private String generateSysNumber(MarinePolicy policy) {
+        String companyAcronym = getCompanyAcronym(policy.getBank().getName()); // Assuming bank name is used for company
+        String insuranceType = "MI"; // For Marine insurance
+        int year = Calendar.getInstance().get(Calendar.YEAR) % 100;
+        long count = policyRepository.count();
+        return companyAcronym + "-" + insuranceType + "-" + year + "-" + String.format("%05d", count + 1);
     }
 
     // Update an existing Marine Bill with calculations

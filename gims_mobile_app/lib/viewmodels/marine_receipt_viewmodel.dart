@@ -37,9 +37,21 @@ class MarineReceiptViewModel extends StateNotifier<MarineReceiptState> {
   }
 
   Future<bool> saveReceipt(MarineMoneyReceipt receipt) async {
-    state = state.copyWith(isLoading: true);
+    state = state.copyWith(isLoading: true, error: null);
     try {
       final success = await _repository.saveReceipt(receipt);
+      if (success) await fetchReceipts();
+      return success;
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> updateReceipt(int id, MarineMoneyReceipt receipt) async {
+    state = state.copyWith(isLoading: true, error: null);
+    try {
+      final success = await _repository.updateReceipt(id, receipt);
       if (success) await fetchReceipts();
       return success;
     } catch (e) {

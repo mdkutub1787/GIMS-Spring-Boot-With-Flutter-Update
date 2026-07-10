@@ -20,6 +20,11 @@ class MarineReceiptRepository {
     return response.statusCode == 200 || response.statusCode == 201;
   }
 
+  Future<bool> updateReceipt(int id, MarineMoneyReceipt receipt) async {
+    final response = await _apiService.updateMarineReceipt(id, receipt.toJson());
+    return response.statusCode == 200;
+  }
+
   Future<bool> deleteReceipt(int id) async {
     final response = await _apiService.deleteMarineReceipt(id);
     return response.statusCode == 200;

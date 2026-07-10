@@ -10,7 +10,8 @@ class MarinePolicyRepository {
     final response = await _apiService.getMarinePolicies();
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
-      if (decoded['success'] == true) {
+      if (decoded['status'] == true) {
+        if (decoded['data'] == null) return [];
         List<dynamic> data = decoded['data'];
         return data.map((item) => MarinePolicy.fromJson(item)).toList();
       }
@@ -22,7 +23,7 @@ class MarinePolicyRepository {
     final response = await _apiService.getMarinePolicyById(id);
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
-      if (decoded['success'] == true) {
+      if (decoded['status'] == true) {
         return MarinePolicy.fromJson(decoded['data']);
       }
     }
@@ -33,7 +34,7 @@ class MarinePolicyRepository {
     final response = await _apiService.saveMarinePolicy(policy.toJson());
     if (response.statusCode == 200 || response.statusCode == 201) {
       final decoded = jsonDecode(response.body);
-      return decoded['success'] == true;
+      return decoded['status'] == true;
     }
     return false;
   }
@@ -42,7 +43,7 @@ class MarinePolicyRepository {
     final response = await _apiService.updateMarinePolicy(id, policy.toJson());
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
-      return decoded['success'] == true;
+      return decoded['status'] == true;
     }
     return false;
   }
@@ -51,7 +52,7 @@ class MarinePolicyRepository {
     final response = await _apiService.deleteMarinePolicy(id);
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
-      return decoded['success'] == true;
+      return decoded['status'] == true;
     }
     return false;
   }

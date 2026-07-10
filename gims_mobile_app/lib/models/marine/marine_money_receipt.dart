@@ -23,7 +23,7 @@ class MarineMoneyReceipt {
       : id = json['id'],
         issuingOffice = json['issuingOffice'],
         classOfInsurance = json['classOfInsurance'],
-        date = json['date'] != null ? DateTime.parse(json['date']) : null,
+        date = json['date'] != null ? DateTime.tryParse(json['date'].toString()) : null,
         modeOfPayment = json['modeOfPayment'],
         issuedAgainst = json['issuedAgainst'],
         marinebill = json['marinebill'] != null
@@ -32,14 +32,14 @@ class MarineMoneyReceipt {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
+    if (id != null) data['id'] = id;
     data['issuingOffice'] = issuingOffice;
     data['classOfInsurance'] = classOfInsurance;
-    data['date'] = date?.toIso8601String();
+    if (date != null) data['date'] = date?.toIso8601String();
     data['modeOfPayment'] = modeOfPayment;
     data['issuedAgainst'] = issuedAgainst;
     if (marinebill != null) {
-      data['marinebill'] = marinebill!.toJson();
+      data['marinebill'] = {'id': marinebill!.id};
     }
     return data;
   }

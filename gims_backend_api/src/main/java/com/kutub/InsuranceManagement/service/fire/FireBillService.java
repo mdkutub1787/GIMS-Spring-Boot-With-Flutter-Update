@@ -6,7 +6,9 @@ import com.kutub.InsuranceManagement.repository.fire.FireBillRepository;
 import com.kutub.InsuranceManagement.repository.fire.FirePolicyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -25,10 +27,17 @@ public class FireBillService {
     }
 
     // Save a new Bill with calculations
+    @Transactional
     public FireBill saveBill(FireBill bill) {
         // Fetch the related policy to ensure it's valid
         FirePolicy policy = policyRepository.findById(bill.getPolicy().getId())
                 .orElseThrow(() -> new RuntimeException("Policy not found with ID: " + bill.getPolicy().getId()));
+
+        // Generate sysNumber if it doesn't exist
+        if (policy.getSysNumber() == null || policy.getSysNumber().isEmpty()) {
+            policy.setSysNumber(generateSysNumber(policy));
+            policy = policyRepository.save(policy); // Save the policy with the new sysNumber and get the managed instance
+        }
 
         // Associate the policy with the bill
         bill.setPolicy(policy);
@@ -40,7 +49,32 @@ public class FireBillService {
         return billRepository.save(bill);
     }
 
+    private String getCompanyAcronym(String companyName) {
+        if (companyName == null || companyName.isEmpty()) {
+            return "DEFAULT";
+        }
+        // Remove content in parentheses and trim whitespace
+        String nameWithoutParentheses = companyName.replaceAll("\\(.*?\\)", "").trim();
+        StringBuilder acronym = new StringBuilder();
+        // Split by one or more spaces
+        for (String s : nameWithoutParentheses.split("\\s+")) {
+            if (!s.isEmpty()) {
+                acronym.append(s.charAt(0));
+            }
+        }
+        return acronym.toString().toUpperCase();
+    }
+
+    private String generateSysNumber(FirePolicy policy) {
+        String companyAcronym = getCompanyAcronym(policy.getCompany().getName());
+        String insuranceType = "FI"; // For Fire insurance
+        int year = Calendar.getInstance().get(Calendar.YEAR) % 100;
+        // Use the policy's own ID for a unique and reliable number
+        return companyAcronym + "-" + insuranceType + "-" + year + "-" + String.format("%05d", policy.getId());
+    }
+
     // Update an existing Bill by ID
+    @Transactional
     public FireBill updateBill(FireBill updatedBill, int id) {
         // Fetch the existing bill
         FireBill existingBill = billRepository.findById(id)
@@ -102,6 +136,7 @@ public class FireBillService {
     }
 
     // Update all bills when policy sumInsured changes
+    @Transactional
     public void updateBillsForPolicy(FirePolicy updatedPolicy) {
         // Fetch bills associated with the policy
         List<FireBill> bills = billRepository.findBillsByPolicyId(updatedPolicy.getId());
@@ -125,5 +160,11 @@ public class FireBillService {
     // Find bills by the associated policy ID
     public List<FireBill> findBillByPolicyId(int policyId) {
         return billRepository.findBillsByPolicyId(policyId);
+    }
+
+    public List<FireBill> getBillsBySysNumber(String sysNumber) {
+        FirePolicy policy = policyRepository.findBySysNumber(sysNumber)
+                .orElseThrow(() -> new RuntimeException("Policy not found with sysNumber: " + sysNumber));
+        return billRepository.findBillsByPolicyId(policy.getId());
     }
 }

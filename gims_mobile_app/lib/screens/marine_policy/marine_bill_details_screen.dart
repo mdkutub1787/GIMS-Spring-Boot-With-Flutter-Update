@@ -22,9 +22,9 @@ class MarineBillDetailsScreen extends StatelessWidget {
             _buildAmountHeader(theme),
             const SizedBox(height: 25),
             _buildDetailCard('Vessel & Voyage', [
-              _detailRow('Voyage From', bill.marineDetails.voyageFrom ?? 'N/A'),
-              _detailRow('Voyage To', bill.marineDetails.voyageTo ?? 'N/A'),
-              _detailRow('Via', bill.marineDetails.via ?? 'N/A'),
+              _detailRow('Voyage From', bill.marineDetails?.voyageFrom ?? 'N/A'),
+              _detailRow('Voyage To', bill.marineDetails?.voyageTo ?? 'N/A'),
+              _detailRow('Via', bill.marineDetails?.via ?? 'N/A'),
             ]),
             const SizedBox(height: 20),
             _buildDetailCard('Premium Calculation', [
@@ -55,7 +55,7 @@ class MarineBillDetailsScreen extends StatelessWidget {
           Text('Marine Insurance Bill', style: GoogleFonts.poppins(color: Colors.white70, fontSize: 13)),
           Text('TK ${bill.grossPremium}', style: GoogleFonts.poppins(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold)),
           const SizedBox(height: 10),
-          Text('Policy: ${bill.marineDetails.policyholder}', style: GoogleFonts.poppins(color: Colors.white, fontSize: 14)),
+          Text('Policy: ${bill.marineDetails?.policyholder ?? 'N/A'}', style: GoogleFonts.poppins(color: Colors.white, fontSize: 14)),
         ],
       ),
     );

@@ -8,8 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/policy")
@@ -19,10 +21,56 @@ public class FirePolicyController {
     @Autowired
     private FirePolicyService policyService;
 
+    private Map<String, Object> toPolicyMap(FirePolicy policy) {
+        Map<String, Object> policyMap = new LinkedHashMap<>();
+        policyMap.put("policy_id", policy.getId());
+
+        Map<String, Object> companyMap = new LinkedHashMap<>();
+        companyMap.put("id", policy.getCompany().getId());
+        companyMap.put("name", policy.getCompany().getName());
+        policyMap.put("company", companyMap);
+
+        policyMap.put("date", policy.getDate());
+
+        Map<String, Object> bankMap = new LinkedHashMap<>();
+        bankMap.put("id", policy.getBank().getId());
+        bankMap.put("name", policy.getBank().getName());
+        policyMap.put("bank", bankMap);
+
+        if (policy.getBranch() != null) {
+            Map<String, Object> branchMap = new LinkedHashMap<>();
+            branchMap.put("id", policy.getBranch().getId());
+            branchMap.put("name", policy.getBranch().getName());
+            policyMap.put("branch", branchMap);
+        } else {
+            policyMap.put("branch", null);
+        }
+
+        policyMap.put("policyholder", policy.getPolicyholder());
+        policyMap.put("address", policy.getAddress());
+        policyMap.put("stock_insured", policy.getStockInsured());
+        policyMap.put("sum_insured", policy.getSumInsured());
+        policyMap.put("interest_insured", policy.getInterestInsured());
+        policyMap.put("coverage", policy.getCoverage());
+        policyMap.put("location", policy.getLocation());
+        policyMap.put("construction", policy.getConstruction());
+        policyMap.put("owner", policy.getOwner());
+        policyMap.put("used_as", policy.getUsedAs());
+        policyMap.put("period_from", policy.getPeriodFrom());
+        policyMap.put("period_to", policy.getPeriodTo());
+        return policyMap;
+    }
+
     @GetMapping("/list")
-    public ResponseEntity<ApiResponse<List<FirePolicy>>> getAllPolicies() {
+    public ResponseEntity<Object> getAllPolicies() {
         List<FirePolicy> policies = policyService.getAllPolicy();
-        return ResponseEntity.ok(ApiResponse.success(policies));
+        if (policies.isEmpty()) {
+            return createNotFoundResponse();
+        }
+        List<Map<String, Object>> customResponse = policies.stream()
+                .map(this::toPolicyMap)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(ApiResponse.success(customResponse));
     }
 
     @PostMapping("/save")
@@ -32,44 +80,68 @@ public class FirePolicyController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ApiResponse<FirePolicy>> updatePolicy(@RequestBody FirePolicy policy, @PathVariable int id) {
+    public ResponseEntity<Object> updatePolicy(@RequestBody FirePolicy policy, @PathVariable int id) {
         try {
             FirePolicy updatedPolicy = policyService.updatePolicy(policy, id);
-            return ResponseEntity.ok(ApiResponse.success(updatedPolicy));
+            return ResponseEntity.ok(ApiResponse.success(toPolicyMap(updatedPolicy)));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(e.getMessage()));
+            return createNotFoundResponse();
         }
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ApiResponse<Map<String, String>>> deletePolicyById(@PathVariable int id) {
+    public ResponseEntity<Object> deletePolicyById(@PathVariable int id) {
         try {
             policyService.deletePolicy(id);
             return ResponseEntity.ok(ApiResponse.success(Map.of("id", String.valueOf(id), "status", "deleted")));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(e.getMessage()));
+            return createNotFoundResponse();
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<FirePolicy>> getPolicyById(@PathVariable int id) {
+    public ResponseEntity<Object> getPolicyById(@PathVariable int id) {
         try {
             FirePolicy policy = policyService.findById(id);
-            return ResponseEntity.ok(ApiResponse.success(policy));
+            return ResponseEntity.ok(ApiResponse.success(toPolicyMap(policy)));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(e.getMessage()));
+            return createNotFoundResponse();
         }
     }
 
     @GetMapping("/searchpolicyholder")
-    public ResponseEntity<ApiResponse<List<FirePolicy>>> getPolicyByPolicyHolder(@RequestParam String policyholder) {
+    public ResponseEntity<Object> getPolicyByPolicyHolder(@RequestParam String policyholder) {
         List<FirePolicy> policies = policyService.searchPolicyByPolicyHolder(policyholder);
-        return ResponseEntity.ok(ApiResponse.success(policies));
+        if (policies.isEmpty()) {
+            return createNotFoundResponse();
+        }
+        List<Map<String, Object>> customResponse = policies.stream()
+                .map(this::toPolicyMap)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(ApiResponse.success(customResponse));
     }
 
     @GetMapping("/searchbankname")
-    public ResponseEntity<ApiResponse<List<FirePolicy>>> getPolicyByBankName(@RequestParam String bankname) {
+    public ResponseEntity<Object> getPolicyByBankName(@RequestParam String bankname) {
         List<FirePolicy> policies = policyService.searchPolicyByBankName(bankname);
-        return ResponseEntity.ok(ApiResponse.success(policies));
+        if (policies.isEmpty()) {
+            return createNotFoundResponse();
+        }
+        List<Map<String, Object>> customResponse = policies.stream()
+                .map(this::toPolicyMap)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(ApiResponse.success(customResponse));
+    }
+
+    private ResponseEntity<Object> createNotFoundResponse() {
+        Map<String, Object> failedResult = new LinkedHashMap<>();
+        failedResult.put("status", "Failed");
+        failedResult.put("msg", "Data Not Found");
+
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        responseBody.put("status", true);
+        responseBody.put("resultset", failedResult);
+
+        return ResponseEntity.ok(responseBody);
     }
 }

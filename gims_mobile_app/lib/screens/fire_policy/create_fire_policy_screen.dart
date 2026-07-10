@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../models/fire/fire_policy.dart';
 import '../../viewmodels/fire_policy_viewmodel.dart';
 import '../../viewmodels/utility_viewmodel.dart';
+import '../../core/widgets/brand_app_bar.dart';
 
 class CreateFirePolicyScreen extends ConsumerStatefulWidget {
   const CreateFirePolicyScreen({super.key});
@@ -41,7 +42,6 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
     DateTime nextYear = DateTime.now().add(const Duration(days: 365));
     periodToController.text = DateFormat('yyyy-MM-dd').format(nextYear);
 
-    // Fetch initial data
     Future.microtask(() {
       ref.read(utilityViewModelProvider.notifier).fetchBanks();
       ref.read(utilityViewModelProvider.notifier).fetchInsuranceCompanies();
@@ -50,11 +50,19 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
 
   Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
+      final utilityState = ref.read(utilityViewModelProvider);
+      
+      final company = utilityState.insuranceCompanies.firstWhere((e) => e.name == selectedCompany);
+      final bank = utilityState.banks.firstWhere((e) => e.name == selectedBank);
+      final branch = selectedBranch != null 
+          ? utilityState.branches.firstWhere((e) => e.name == selectedBranch)
+          : null;
+
       final policy = FirePolicy(
         date: DateTime.now(),
-        company: selectedCompany ?? '',
-        bankName: selectedBank ?? '',
-        branchName: selectedBranch ?? '',
+        company: company,
+        bank: bank,
+        branch: branch,
         policyholder: policyholderController.text,
         address: addressController.text,
         stockInsured: stockInsuredController.text,
@@ -74,15 +82,12 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
         if (success) {
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Policy Created Successfully!'), backgroundColor: Colors.green),
+            const SnackBar(content: Text('Policy Created Successfully!'), backgroundColor: Colors.green, behavior: SnackBarBehavior.floating),
           );
         } else {
           final error = ref.read(firePolicyViewModelProvider).error;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(error ?? 'Failed to create policy. Please try again.'),
-              backgroundColor: Colors.red,
-            ),
+            SnackBar(content: Text(error ?? 'Failed to create policy'), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating),
           );
         }
       }
@@ -97,9 +102,12 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text('New Fire Policy', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
-        centerTitle: true,
+      appBar: BrandAppBar(
+        title: Text('New Fire Policy', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black87)),
+        leading: IconButton(
+          icon: const Icon(Icons.close_rounded, color: Colors.black87),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -108,91 +116,97 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionTitle('Client Information', theme),
-              const SizedBox(height: 15),
+              _buildSectionTitle('Client & Company', Icons.business_rounded),
+              const SizedBox(height: 20),
               
-              // Company Dropdown
-              _buildDropdown(
-                'Company',
-                Icons.business_outlined,
-                utilityState.insuranceCompanies.map((e) => e.name).toList(),
-                selectedCompany,
-                (val) => setState(() => selectedCompany = val),
+              _buildDropdownField(
+                label: 'Insurance Company',
+                icon: Icons.store_rounded,
+                items: utilityState.insuranceCompanies.map((e) => e.name).toList(),
+                value: selectedCompany,
+                onChanged: (val) => setState(() => selectedCompany = val),
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 16),
 
-              // Bank Dropdown
-              _buildDropdown(
-                'Bank Name',
-                Icons.account_balance_outlined,
-                utilityState.banks.map((e) => e.name).toList(),
-                selectedBank,
-                (val) {
+              _buildDropdownField(
+                label: 'Select Bank',
+                icon: Icons.account_balance_rounded,
+                items: utilityState.banks.map((e) => e.name).toList(),
+                value: selectedBank,
+                onChanged: (val) {
                   setState(() {
                     selectedBank = val;
-                    selectedBranch = null; // Reset branch
+                    selectedBranch = null;
                   });
                   final bank = utilityState.banks.firstWhere((e) => e.name == val);
                   ref.read(utilityViewModelProvider.notifier).fetchBranches(bank.id);
                 },
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 16),
 
-              // Branch Dropdown
-              _buildDropdown(
-                'Branch Name',
-                Icons.account_tree_outlined,
-                utilityState.branches.map((e) => e.name).toList(),
-                selectedBranch,
-                (val) => setState(() => selectedBranch = val),
+              _buildDropdownField(
+                label: 'Select Branch',
+                icon: Icons.account_tree_rounded,
+                items: utilityState.branches.map((e) => e.name).toList(),
+                value: selectedBranch,
+                onChanged: (val) => setState(() => selectedBranch = val),
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 16),
 
-              _buildField(policyholderController, 'Policyholder', Icons.person_outline),
-              const SizedBox(height: 15),
-              _buildField(addressController, 'Address', Icons.location_on_outlined),
+              _buildTextField(policyholderController, 'Policyholder Name', Icons.person_rounded),
+              const SizedBox(height: 16),
+              _buildTextField(addressController, 'Full Address', Icons.location_on_rounded, maxLines: 2),
               
-              const SizedBox(height: 30),
-              _buildSectionTitle('Policy Details', theme),
-              const SizedBox(height: 15),
-              _buildField(stockInsuredController, 'Stock Insured', Icons.inventory_2_outlined),
-              const SizedBox(height: 15),
-              _buildField(sumInsuredController, 'Sum Insured (TK)', Icons.monetization_on_outlined, keyboardType: TextInputType.number),
-              const SizedBox(height: 15),
-              _buildField(interestInsuredController, 'Interest Insured', Icons.info_outline),
-              const SizedBox(height: 15),
-              _buildDropdown('Construction', Icons.build_outlined, constructionTypes, selectedConstruction, (val) => setState(() => selectedConstruction = val)),
-              const SizedBox(height: 15),
-              _buildDropdown('Usage', Icons.business_outlined, usageTypes, selectedUsage, (val) => setState(() => selectedUsage = val)),
+              const SizedBox(height: 32),
+              _buildSectionTitle('Policy Assets', Icons.inventory_2_rounded),
+              const SizedBox(height: 20),
               
-              const SizedBox(height: 30),
-              _buildSectionTitle('Validity', theme),
-              const SizedBox(height: 15),
+              _buildTextField(stockInsuredController, 'Stock Description', Icons.label_important_rounded),
+              const SizedBox(height: 16),
+              _buildTextField(sumInsuredController, 'Sum Insured (TK)', Icons.monetization_on_rounded, keyboardType: TextInputType.number),
+              const SizedBox(height: 16),
+              _buildTextField(interestInsuredController, 'Interest Insured', Icons.info_outline_rounded),
+              const SizedBox(height: 16),
+              
               Row(
                 children: [
-                  Expanded(child: _buildDateField(periodFromController, 'From')),
-                  const SizedBox(width: 15),
-                  Expanded(child: _buildDateField(periodToController, 'To')),
+                  Expanded(child: _buildDropdownField(label: 'Construction', icon: Icons.build_rounded, items: constructionTypes, value: selectedConstruction, onChanged: (v) => setState(() => selectedConstruction = v))),
+                  const SizedBox(width: 16),
+                  Expanded(child: _buildDropdownField(label: 'Usage', icon: Icons.work_rounded, items: usageTypes, value: selectedUsage, onChanged: (v) => setState(() => selectedUsage = v))),
                 ],
               ),
               
-              const SizedBox(height: 40),
+              const SizedBox(height: 32),
+              _buildSectionTitle('Validity Period', Icons.calendar_today_rounded),
+              const SizedBox(height: 20),
+              
+              Row(
+                children: [
+                  Expanded(child: _buildDateField(periodFromController, 'Period From')),
+                  const SizedBox(width: 16),
+                  Expanded(child: _buildDateField(periodToController, 'Period To')),
+                ],
+              ),
+              
+              const SizedBox(height: 48),
               SizedBox(
                 width: double.infinity,
-                height: 55,
+                height: 58,
                 child: ElevatedButton(
                   onPressed: fireState.isLoading || utilityState.isLoading ? null : _submit,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: theme.colorScheme.primary,
                     foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    elevation: 4,
+                    shadowColor: theme.colorScheme.primary.withOpacity(0.3),
                   ),
                   child: (fireState.isLoading || utilityState.isLoading)
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : Text('Create Policy', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
+                    : Text('Generate Policy', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
             ],
           ),
         ),
@@ -200,17 +214,24 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
     );
   }
 
-  Widget _buildSectionTitle(String title, ThemeData theme) {
-    return Text(title, style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: theme.colorScheme.primary));
+  Widget _buildSectionTitle(String title, IconData icon) {
+    return Row(
+      children: [
+        Icon(icon, size: 20, color: Colors.blue),
+        const SizedBox(width: 10),
+        Text(title, style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87)),
+      ],
+    );
   }
 
-  Widget _buildField(TextEditingController controller, String label, IconData icon, {TextInputType? keyboardType}) {
+  Widget _buildTextField(TextEditingController controller, String label, IconData icon, {TextInputType? keyboardType, int maxLines = 1}) {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
+      maxLines: maxLines,
       style: GoogleFonts.poppins(fontSize: 14),
       decoration: _inputDecoration(label, icon),
-      validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
+      validator: (v) => (v == null || v.isEmpty) ? 'Field required' : null,
     );
   }
 
@@ -219,7 +240,7 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
       controller: controller,
       readOnly: true,
       style: GoogleFonts.poppins(fontSize: 14),
-      decoration: _inputDecoration(label, Icons.calendar_today_outlined),
+      decoration: _inputDecoration(label, Icons.calendar_month_rounded),
       onTap: () async {
         final date = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(2000), lastDate: DateTime(2100));
         if (date != null) setState(() => controller.text = DateFormat('yyyy-MM-dd').format(date));
@@ -227,28 +248,29 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
     );
   }
 
-  Widget _buildDropdown(String label, IconData icon, List<String> items, String? value, Function(String?) onChanged) {
+  Widget _buildDropdownField({required String label, required IconData icon, required List<String> items, String? value, required Function(String?) onChanged}) {
     return DropdownButtonFormField<String>(
       value: value,
       isExpanded: true,
+      icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
       style: GoogleFonts.poppins(fontSize: 14, color: Colors.black87),
       decoration: _inputDecoration(label, icon),
       items: items.map((e) => DropdownMenuItem(value: e, child: Text(e, overflow: TextOverflow.ellipsis))).toList(),
       onChanged: onChanged,
-      validator: (v) => (val) {
-        if (val == null || val.isEmpty) return 'Required';
-        return null;
-      }(value),
+      validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
     );
   }
 
   InputDecoration _inputDecoration(String label, IconData icon) {
     return InputDecoration(
       labelText: label,
-      prefixIcon: Icon(icon, size: 20),
+      labelStyle: GoogleFonts.poppins(color: Colors.grey[600], fontSize: 13),
+      prefixIcon: Icon(icon, size: 20, color: Colors.blue.withOpacity(0.7)),
       filled: true,
-      fillColor: Colors.grey[50],
+      fillColor: const Color(0xFFF8FAFC),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Colors.blue, width: 1.5)),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     );
   }

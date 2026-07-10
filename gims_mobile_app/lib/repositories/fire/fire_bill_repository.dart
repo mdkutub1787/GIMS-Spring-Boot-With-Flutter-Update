@@ -10,9 +10,23 @@ class FireBillRepository {
     final response = await _apiService.getFireBills();
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
-      if (decoded['success'] == true) {
+      if (decoded['status'] == true) {
+        if (decoded['data'] == null) return [];
         List<dynamic> data = decoded['data'];
-        return data.map((item) => FireBill.fromJson(item)).toList();
+        List<FireBill> allBills = [];
+        for (var entry in data) {
+          if (entry is Map<String, dynamic> && entry.containsKey('BillDetails')) {
+            var policyJson = entry['PolicyDetails'];
+            List<dynamic> billDetails = entry['BillDetails'];
+            for (var billJson in billDetails) {
+              billJson['policy'] = policyJson;
+              allBills.add(FireBill.fromJson(billJson));
+            }
+          } else {
+            allBills.add(FireBill.fromJson(entry));
+          }
+        }
+        return allBills;
       }
     }
     throw Exception('Failed to load fire bills');
@@ -22,7 +36,7 @@ class FireBillRepository {
     final response = await _apiService.getFireBillById(id);
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
-      if (decoded['success'] == true) {
+      if (decoded['status'] == true) {
         return FireBill.fromJson(decoded['data']);
       }
     }
@@ -48,7 +62,8 @@ class FireBillRepository {
     final response = await _apiService.searchFireBillsByPolicyholder(policyholder);
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
-      if (decoded['success'] == true) {
+      if (decoded['status'] == true) {
+        if (decoded['data'] == null) return [];
         List<dynamic> data = decoded['data'];
         return data.map((item) => FireBill.fromJson(item)).toList();
       }
@@ -60,7 +75,8 @@ class FireBillRepository {
     final response = await _apiService.searchFireBillsByPolicyId(policyId);
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
-      if (decoded['success'] == true) {
+      if (decoded['status'] == true) {
+        if (decoded['data'] == null) return [];
         List<dynamic> data = decoded['data'];
         return data.map((item) => FireBill.fromJson(item)).toList();
       }

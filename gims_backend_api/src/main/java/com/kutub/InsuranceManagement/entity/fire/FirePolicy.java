@@ -1,6 +1,11 @@
 package com.kutub.InsuranceManagement.entity.fire;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kutub.InsuranceManagement.entity.utility.Bank;
+import com.kutub.InsuranceManagement.entity.utility.Branch;
+import com.kutub.InsuranceManagement.entity.utility.InsuranceCompany;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,23 +24,28 @@ public class FirePolicy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("policyId")
+    @JsonAlias("id")
     private int id;
 
-    @Column(name = "sys_number", unique = true, nullable = true, updatable = false)
+    @Column(name = "sys_number", unique = true, nullable = true)
     private String sysNumber;
 
-    @Column(nullable = false)
-    private String company;
+    @ManyToOne
+    @JoinColumn(name = "company_id", nullable = false)
+    private InsuranceCompany company;
 
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date date = new Date();
 
-    @Column(nullable = false)
-    private String bankName;
+    @ManyToOne
+    @JoinColumn(name = "bank_id", nullable = false)
+    private Bank bank;
 
-    @Column(nullable = true)
-    private String branchName;
+    @ManyToOne
+    @JoinColumn(name = "branch_id", nullable = true)
+    private Branch branch;
 
     @Column(nullable = false)
     private String policyholder;

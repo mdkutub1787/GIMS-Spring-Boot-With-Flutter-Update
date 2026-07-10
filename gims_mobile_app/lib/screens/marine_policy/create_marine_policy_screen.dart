@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../models/marine/marine_policy.dart';
 import '../../viewmodels/marine_policy_viewmodel.dart';
+import '../../viewmodels/utility_viewmodel.dart';
 
 class CreateMarinePolicyScreen extends ConsumerStatefulWidget {
   const CreateMarinePolicyScreen({super.key});
@@ -15,7 +16,6 @@ class CreateMarinePolicyScreen extends ConsumerStatefulWidget {
 class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScreen> {
   final _formKey = GlobalKey<FormState>();
   
-  final TextEditingController bankNameController = TextEditingController();
   final TextEditingController policyholderController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController voyageFromController = TextEditingController();
@@ -27,11 +27,16 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
   final TextEditingController sumInsuredController = TextEditingController();
   final TextEditingController coverageController = TextEditingController();
 
+  String? selectedBank;
+
   @override
   void initState() {
     super.initState();
     usdRateController.addListener(_calculateTk);
     sumInsuredUsdController.addListener(_calculateTk);
+    Future.microtask(() {
+      ref.read(utilityViewModelProvider.notifier).fetchBanks();
+    });
   }
 
   void _calculateTk() {
@@ -42,9 +47,12 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
 
   Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
+      final utilityState = ref.read(utilityViewModelProvider);
+      final bank = utilityState.banks.firstWhere((e) => e.name == selectedBank);
+
       final policy = MarinePolicy(
         date: DateTime.now(),
-        bankName: bankNameController.text,
+        bank: bank,
         policyholder: policyholderController.text,
         address: addressController.text,
         voyageFrom: voyageFromController.text,
@@ -80,6 +88,7 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(marinePolicyViewModelProvider);
+    final utilityState = ref.watch(utilityViewModelProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -97,7 +106,13 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
             children: [
               _buildSectionTitle('Client & Bank', theme),
               const SizedBox(height: 15),
-              _buildField(bankNameController, 'Bank Name', Icons.account_balance_outlined),
+              _buildDropdownField(
+                label: 'Select Bank',
+                icon: Icons.account_balance_rounded,
+                items: utilityState.banks.map((e) => e.name).toList(),
+                value: selectedBank,
+                onChanged: (val) => setState(() => selectedBank = val),
+              ),
               const SizedBox(height: 15),
               _buildField(policyholderController, 'Policyholder', Icons.person_outline),
               const SizedBox(height: 15),
@@ -130,19 +145,21 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
               ),
               const SizedBox(height: 15),
               _buildField(sumInsuredController, 'Sum Insured (TK)', Icons.monetization_on_outlined, readOnly: true),
+              const SizedBox(height: 15),
+              _buildField(coverageController, 'Coverage', Icons.security_outlined),
               
               const SizedBox(height: 40),
               SizedBox(
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton(
-                  onPressed: state.isLoading ? null : _submit,
+                  onPressed: state.isLoading || utilityState.isLoading ? null : _submit,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.indigo,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                   ),
-                  child: state.isLoading 
+                  child: (state.isLoading || utilityState.isLoading)
                     ? const CircularProgressIndicator(color: Colors.white)
                     : Text('Create Marine Policy', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
@@ -166,6 +183,19 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
       keyboardType: keyboardType,
       style: GoogleFonts.poppins(fontSize: 14),
       decoration: _inputDecoration(label, icon),
+      validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
+    );
+  }
+
+  Widget _buildDropdownField({required String label, required IconData icon, required List<String> items, String? value, required Function(String?) onChanged}) {
+    return DropdownButtonFormField<String>(
+      value: value,
+      isExpanded: true,
+      icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
+      style: GoogleFonts.poppins(fontSize: 14, color: Colors.black87),
+      decoration: _inputDecoration(label, icon),
+      items: items.map((e) => DropdownMenuItem(value: e, child: Text(e, overflow: TextOverflow.ellipsis))).toList(),
+      onChanged: onChanged,
       validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
     );
   }

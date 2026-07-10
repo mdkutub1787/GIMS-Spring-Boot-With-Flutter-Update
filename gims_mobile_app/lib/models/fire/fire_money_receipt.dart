@@ -20,25 +20,32 @@ class FireMoneyReceipt {
   });
 
   FireMoneyReceipt.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    issuingOffice = json['issuingOffice'];
-    classOfInsurance = json['classOfInsurance'];
-    date = json['date'] != null ? DateTime.parse(json['date']) : null;
-    modeOfPayment = json['modeOfPayment'];
-    issuedAgainst = json['issuedAgainst'];
-    bill = json['bill'] != null ? FireBill.fromJson(json['bill']) : null;
+    // Handling both camelCase and snake_case from API
+    id = json['id'] ?? json['money_receipt_id'] ?? json['receipt_id'];
+    issuingOffice = json['issuingOffice'] ?? json['issuing_office'] ?? 'N/A';
+    classOfInsurance = json['classOfInsurance'] ?? json['class_of_insurance'] ?? 'N/A';
+    date = json['date'] != null ? DateTime.tryParse(json['date'].toString()) : null;
+    modeOfPayment = json['modeOfPayment'] ?? json['mode_of_payment'] ?? 'N/A';
+    issuedAgainst = json['issuedAgainst'] ?? json['issued_against'] ?? 'N/A';
+    
+    // Handling nested bill object
+    if (json['bill'] != null) {
+      bill = FireBill.fromJson(json['bill']);
+    } else if (json['fire_bill'] != null) {
+      bill = FireBill.fromJson(json['fire_bill']);
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['issuingOffice'] = issuingOffice;
-    data['classOfInsurance'] = classOfInsurance;
-    data['date'] = date?.toIso8601String();
-    data['modeOfPayment'] = modeOfPayment;
-    data['issuedAgainst'] = issuedAgainst;
+    if (id != null) data['id'] = id;
+    data['issuing_office'] = issuingOffice;
+    data['class_of_insurance'] = classOfInsurance;
+    if (date != null) data['date'] = date?.toIso8601String();
+    data['mode_of_payment'] = modeOfPayment;
+    data['issued_against'] = issuedAgainst;
     if (bill != null) {
-      data['bill'] = bill!.toJson();
+      data['bill'] = {'id': bill!.id};
     }
     return data;
   }

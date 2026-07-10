@@ -8,8 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/marine")
@@ -19,11 +21,41 @@ public class MarinePolicyController {
     @Autowired
     private MarinePolicyService marinePolicyService;
 
+    private Map<String, Object> toPolicyMap(MarinePolicy policy) {
+        Map<String, Object> policyMap = new LinkedHashMap<>();
+        policyMap.put("policy_id", policy.getId());
+        policyMap.put("sys_number", policy.getSysNumber());
+
+        Map<String, Object> bankMap = new LinkedHashMap<>();
+        bankMap.put("id", policy.getBank().getId());
+        bankMap.put("name", policy.getBank().getName());
+        policyMap.put("bank", bankMap);
+
+        policyMap.put("date", policy.getDate());
+        policyMap.put("policyholder", policy.getPolicyholder());
+        policyMap.put("address", policy.getAddress());
+        policyMap.put("voyage_from", policy.getVoyageFrom());
+        policyMap.put("voyage_to", policy.getVoyageTo());
+        policyMap.put("via", policy.getVia());
+        policyMap.put("stock_item", policy.getStockItem());
+        policyMap.put("sum_insured_usd", policy.getSumInsuredUsd());
+        policyMap.put("usd_rate", policy.getUsdRate());
+        policyMap.put("sum_insured", policy.getSumInsured());
+        policyMap.put("coverage", policy.getCoverage());
+        return policyMap;
+    }
+
     // Get all Marine policies
     @GetMapping("/list")
-    public ResponseEntity<ApiResponse<List<MarinePolicy>>> getAllMarinePolicies() {
+    public ResponseEntity<Object> getAllMarinePolicies() {
         List<MarinePolicy> marinePolicies = marinePolicyService.findAll();
-        return ResponseEntity.ok(ApiResponse.success(marinePolicies));
+        if (marinePolicies.isEmpty()) {
+            return createNotFoundResponse();
+        }
+        List<Map<String, Object>> customResponse = marinePolicies.stream()
+                .map(this::toPolicyMap)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(ApiResponse.success(customResponse));
     }
 
     // Save new Marine policy
@@ -35,25 +67,25 @@ public class MarinePolicyController {
 
     // Update an existing policy
     @PutMapping("/update/{id}")
-    public ResponseEntity<ApiResponse<MarinePolicy>> updateMarinePolicy(
+    public ResponseEntity<Object> updateMarinePolicy(
             @RequestBody MarinePolicy policy,
             @PathVariable long id) {
         try {
             MarinePolicy updatedPolicy = marinePolicyService.updateMarinePolicy(policy, id);
-            return ResponseEntity.ok(ApiResponse.success(updatedPolicy));
+            return ResponseEntity.ok(ApiResponse.success(toPolicyMap(updatedPolicy)));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(e.getMessage()));
+            return createNotFoundResponse();
         }
     }
 
     // Get Marine policy by ID
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<MarinePolicy>> getMarinePolicyById(@PathVariable long id) {
+    public ResponseEntity<Object> getMarinePolicyById(@PathVariable long id) {
         try {
             MarinePolicy marinePolicy = marinePolicyService.findById(id);
-            return ResponseEntity.ok(ApiResponse.success(marinePolicy));
+            return ResponseEntity.ok(ApiResponse.success(toPolicyMap(marinePolicy)));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(e.getMessage()));
+            return createNotFoundResponse();
         }
     }
 
@@ -66,5 +98,17 @@ public class MarinePolicyController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(e.getMessage()));
         }
+    }
+
+    private ResponseEntity<Object> createNotFoundResponse() {
+        Map<String, Object> failedResult = new LinkedHashMap<>();
+        failedResult.put("status", "Failed");
+        failedResult.put("msg", "Data Not Found");
+
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        responseBody.put("status", true);
+        responseBody.put("resultset", failedResult);
+
+        return ResponseEntity.ok(responseBody);
     }
 }

@@ -1,7 +1,10 @@
+import '../utility_models.dart';
+
 class MarinePolicy {
   int? id;
+  String? sysNumber;
   DateTime? date;
-  String? bankName;
+  Bank? bank;
   String? policyholder;
   String? address;
   String? voyageFrom;
@@ -16,8 +19,9 @@ class MarinePolicy {
 
   MarinePolicy({
     this.id,
+    this.sysNumber,
     this.date,
-    this.bankName,
+    this.bank,
     this.policyholder,
     this.address,
     this.voyageFrom,
@@ -30,27 +34,38 @@ class MarinePolicy {
     this.coverage,
   });
 
-  MarinePolicy.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    date = json['date'] != null ? DateTime.tryParse(json['date']) : null;
-    bankName = json['bankName'];
-    policyholder = json['policyholder'];
-    address = json['address'];
-    voyageFrom = json['voyageFrom'];
-    voyageTo = json['voyageTo'];
-    via = json['via'];
-    stockItem = json['stockItem'];
-    sumInsuredUsd = (json['sumInsuredUsd'] is num) ? json['sumInsuredUsd'].toDouble() : 0.0;
-    usdRate = (json['usdRate'] is num) ? json['usdRate'].toDouble() : 0.0;
-    sumInsured = (json['sumInsured'] is num) ? json['sumInsured'].toDouble() : 0.0;
-    coverage = json['coverage'];
+  factory MarinePolicy.fromJson(Map<String, dynamic> json) {
+    double? parseDouble(dynamic value) {
+      if (value == null) return null;
+      if (value is num) return value.toDouble();
+      if (value is String) return double.tryParse(value);
+      return null;
+    }
+
+    return MarinePolicy(
+      id: json['policy_id'] ?? json['id'],
+      sysNumber: json['sys_number']?.toString(),
+      date: json['date'] != null ? DateTime.tryParse(json['date'].toString()) : null,
+      bank: json['bank'] != null ? Bank.fromJson(json['bank']) : null,
+      policyholder: json['policyholder']?.toString() ?? 'N/A',
+      address: json['address']?.toString() ?? '',
+      voyageFrom: (json['voyage_from'] ?? json['voyageFrom'])?.toString() ?? '',
+      voyageTo: (json['voyage_to'] ?? json['voyageTo'])?.toString() ?? '',
+      via: json['via']?.toString() ?? '',
+      stockItem: (json['stock_item'] ?? json['stockItem'])?.toString() ?? '',
+      sumInsuredUsd: parseDouble(json['sum_insured_usd'] ?? json['sumInsuredUsd']),
+      usdRate: parseDouble(json['usd_rate'] ?? json['usdRate']),
+      sumInsured: parseDouble(json['sum_insured'] ?? json['sumInsured']),
+      coverage: json['coverage']?.toString() ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['date'] = date?.toIso8601String();
-    data['bankName'] = bankName;
+    if (id != null) data['id'] = id;
+    if (sysNumber != null) data['sysNumber'] = sysNumber;
+    if (date != null) data['date'] = date?.toIso8601String();
+    if (bank != null) data['bank'] = {'id': bank!.id};
     data['policyholder'] = policyholder;
     data['address'] = address;
     data['voyageFrom'] = voyageFrom;

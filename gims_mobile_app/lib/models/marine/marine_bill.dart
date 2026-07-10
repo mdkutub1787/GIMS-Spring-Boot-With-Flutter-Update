@@ -8,7 +8,7 @@ class MarineBill {
   double tax;
   double stampDuty;
   double grossPremium;
-  MarinePolicy marineDetails;
+  MarinePolicy? marineDetails;
 
   MarineBill({
     this.id,
@@ -18,19 +18,21 @@ class MarineBill {
     required this.tax,
     required this.stampDuty,
     required this.grossPremium,
-    required this.marineDetails,
+    this.marineDetails,
   });
 
   factory MarineBill.fromJson(Map<String, dynamic> json) {
     return MarineBill(
-      id: json['id'],
-      marineRate: (json['marineRate'] is num) ? json['marineRate'].toDouble() : 0.0,
-      warSrccRate: (json['warSrccRate'] is num) ? json['warSrccRate'].toDouble() : 0.0,
-      netPremium: (json['netPremium'] is num) ? json['netPremium'].toDouble() : 0.0,
-      tax: (json['tax'] is num) ? json['tax'].toDouble() : 0.0,
-      stampDuty: (json['stampDuty'] is num) ? json['stampDuty'].toDouble() : 0.0,
-      grossPremium: (json['grossPremium'] is num) ? json['grossPremium'].toDouble() : 0.0,
-      marineDetails: MarinePolicy.fromJson(json['marineDetails']),
+      id: json['bill_id'] ?? json['id'],
+      marineRate: (json['marine_rate_percentage'] ?? json['marineRate'] ?? 0.0).toDouble(),
+      warSrccRate: (json['war_srcc_rate_percentage'] ?? json['warSrccRate'] ?? 0.0).toDouble(),
+      netPremium: (json['net_premium'] ?? json['netPremium'] ?? 0.0).toDouble(),
+      tax: (json['tax_rate_percentage'] ?? json['tax'] ?? 15.0).toDouble(),
+      stampDuty: (json['stamp_duty'] ?? json['stampDuty'] ?? 0.0).toDouble(),
+      grossPremium: (json['gross_premium'] ?? json['grossPremium'] ?? 0.0).toDouble(),
+      marineDetails: json['marineDetails'] != null 
+          ? MarinePolicy.fromJson(json['marineDetails']) 
+          : (json['PolicyDetails'] != null ? MarinePolicy.fromJson(json['PolicyDetails']) : null),
     );
   }
 
@@ -43,7 +45,7 @@ class MarineBill {
       'tax': tax,
       'stampDuty': stampDuty,
       'grossPremium': grossPremium,
-      'marineDetails': marineDetails.toJson(),
+      if (marineDetails != null) 'marineDetails': {'id': marineDetails!.id},
     };
   }
 }

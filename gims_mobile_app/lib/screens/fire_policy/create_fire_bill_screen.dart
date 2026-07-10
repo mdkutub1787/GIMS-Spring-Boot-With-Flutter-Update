@@ -109,7 +109,7 @@ class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
               ),
               if (selectedPolicy != null) ...[
                 const SizedBox(height: 10),
-                Text('Bank: ${selectedPolicy!.bankName}', style: GoogleFonts.poppins(fontSize: 12, color: Colors.blue)),
+                Text('Bank: ${selectedPolicy!.bank?.name ?? 'N/A'}', style: GoogleFonts.poppins(fontSize: 12, color: Colors.blue)),
                 Text('Sum Insured: TK ${selectedPolicy!.sumInsured}', style: GoogleFonts.poppins(fontSize: 12, color: Colors.green)),
               ],
               const SizedBox(height: 30),

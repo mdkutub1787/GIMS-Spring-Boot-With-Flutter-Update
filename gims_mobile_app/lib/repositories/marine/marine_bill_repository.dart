@@ -9,8 +9,25 @@ class MarineBillRepository {
   Future<List<MarineBill>> fetchBills() async {
     final response = await _apiService.getMarineBills();
     if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(response.body);
-      return data.map((item) => MarineBill.fromJson(item)).toList();
+      final decoded = jsonDecode(response.body);
+      if (decoded['status'] == true) {
+        if (decoded['data'] == null) return [];
+        List<dynamic> data = decoded['data'];
+        List<MarineBill> allBills = [];
+        for (var entry in data) {
+          if (entry is Map<String, dynamic> && entry.containsKey('BillDetails')) {
+            var policyJson = entry['PolicyDetails'];
+            List<dynamic> billDetails = entry['BillDetails'];
+            for (var billJson in billDetails) {
+              billJson['PolicyDetails'] = policyJson;
+              allBills.add(MarineBill.fromJson(billJson));
+            }
+          } else {
+            allBills.add(MarineBill.fromJson(entry));
+          }
+        }
+        return allBills;
+      }
     }
     throw Exception('Failed to load marine bills');
   }
@@ -18,7 +35,10 @@ class MarineBillRepository {
   Future<MarineBill> getBillById(int id) async {
     final response = await _apiService.getMarineBillById(id);
     if (response.statusCode == 200) {
-      return MarineBill.fromJson(jsonDecode(response.body));
+      final decoded = jsonDecode(response.body);
+      if (decoded['status'] == true) {
+        return MarineBill.fromJson(decoded['data']);
+      }
     }
     throw Exception('Failed to load marine bill with ID $id');
   }

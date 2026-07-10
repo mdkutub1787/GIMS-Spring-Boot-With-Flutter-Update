@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../core/constants/api_constants.dart';
+import '../core/constants/api_config.dart';
 
 class ApiService {
   Future<Map<String, String>> _getHeaders() async {
@@ -48,47 +48,48 @@ class ApiService {
   }
 
   // Fire Policy & Bill
-  Future<http.Response> getFirePolicies() => get(ApiConstants.firePolicyList);
-  Future<http.Response> getFirePolicyById(int id) => get('${ApiConstants.firePolicyGet}/$id');
-  Future<http.Response> saveFirePolicy(Map<String, dynamic> data) => post(ApiConstants.firePolicySave, data);
-  Future<http.Response> updateFirePolicy(int id, Map<String, dynamic> data) => put('${ApiConstants.firePolicyUpdate}/$id', data);
-  Future<http.Response> deleteFirePolicy(int id) => delete('${ApiConstants.firePolicyDelete}/$id');
-  Future<http.Response> searchFirePoliciesByHolder(String holder) => get('${ApiConstants.firePolicySearchHolder}?policyholder=$holder');
-  Future<http.Response> searchFirePoliciesByBank(String bank) => get('${ApiConstants.firePolicySearchBank}?bankname=$bank');
+  Future<http.Response> getFirePolicies() => get(ApiConfig.firePolicyListUrl);
+  Future<http.Response> getFirePolicyById(int id) => get(ApiConfig.firePolicyGetUrl(id));
+  Future<http.Response> saveFirePolicy(Map<String, dynamic> data) => post(ApiConfig.firePolicySaveUrl, data);
+  Future<http.Response> updateFirePolicy(int id, Map<String, dynamic> data) => put(ApiConfig.firePolicyUpdateUrl(id), data);
+  Future<http.Response> deleteFirePolicy(int id) => delete(ApiConfig.firePolicyDeleteUrl(id));
+  Future<http.Response> searchFirePoliciesByHolder(String holder) => get(ApiConfig.firePolicySearchHolderUrl(holder));
+  Future<http.Response> searchFirePoliciesByBank(String bank) => get(ApiConfig.firePolicySearchBankUrl(bank));
   
-  Future<http.Response> getFireBills() => get(ApiConstants.fireBillList);
-  Future<http.Response> getFireBillById(int id) => get('${ApiConstants.fireBillGet}/$id');
-  Future<http.Response> saveFireBill(Map<String, dynamic> data) => post(ApiConstants.fireBillSave, data);
-  Future<http.Response> updateFireBill(int id, Map<String, dynamic> data) => put('${ApiConstants.fireBillUpdate}/$id', data);
-  Future<http.Response> deleteFireBill(int id) => delete('${ApiConstants.fireBillDelete}/$id');
-  Future<http.Response> searchFireBillsByPolicyholder(String policyholder) => get('${ApiConstants.fireBillSearchPolicyholder}?policyholder=$policyholder');
-  Future<http.Response> searchFireBillsByPolicyId(int policyId) => get('${ApiConstants.fireBillSearchPolicyId}?policyid=$policyId');
+  Future<http.Response> getFireBills() => get(ApiConfig.fireBillListUrl);
+  Future<http.Response> getFireBillById(int id) => get(ApiConfig.fireBillGetUrl(id));
+  Future<http.Response> saveFireBill(Map<String, dynamic> data) => post(ApiConfig.fireBillSaveUrl, data);
+  Future<http.Response> updateFireBill(int id, Map<String, dynamic> data) => put(ApiConfig.fireBillUpdateUrl(id), data);
+  Future<http.Response> deleteFireBill(int id) => delete(ApiConfig.fireBillDeleteUrl(id));
+  Future<http.Response> searchFireBillsByPolicyholder(String policyholder) => get(ApiConfig.fireBillSearchPolicyholderUrl(policyholder));
+  Future<http.Response> searchFireBillsByPolicyId(int policyId) => get(ApiConfig.fireBillSearchPolicyIdUrl(policyId));
 
   // Fire Money Receipt
-  Future<http.Response> getFireReceipts() => get(ApiConstants.fireReceiptList);
-  Future<http.Response> saveFireReceipt(Map<String, dynamic> data) => post(ApiConstants.fireReceiptSave, data);
-  Future<http.Response> deleteFireReceipt(int id) => delete('${ApiConstants.fireReceiptDelete}/$id');
+  Future<http.Response> getFireReceipts() => get(ApiConfig.fireReceiptListUrl);
+  Future<http.Response> saveFireReceipt(Map<String, dynamic> data) => post(ApiConfig.fireReceiptSaveUrl, data);
+  Future<http.Response> deleteFireReceipt(int id) => delete(ApiConfig.fireReceiptDeleteUrl(id));
 
   // Marine Policy & Bill
-  Future<http.Response> getMarinePolicies() => get(ApiConstants.marinePolicyList);
-  Future<http.Response> getMarinePolicyById(int id) => get('${ApiConstants.marinePolicyGet}/$id');
-  Future<http.Response> saveMarinePolicy(Map<String, dynamic> data) => post(ApiConstants.marinePolicySave, data);
-  Future<http.Response> updateMarinePolicy(int id, Map<String, dynamic> data) => put('${ApiConstants.marinePolicyUpdate}/$id', data);
-  Future<http.Response> deleteMarinePolicy(int id) => delete('${ApiConstants.marinePolicyDelete}/$id');
+  Future<http.Response> getMarinePolicies() => get(ApiConfig.marinePolicyListUrl);
+  Future<http.Response> getMarinePolicyById(int id) => get(ApiConfig.marinePolicyGetUrl(id));
+  Future<http.Response> saveMarinePolicy(Map<String, dynamic> data) => post(ApiConfig.marinePolicySaveUrl, data);
+  Future<http.Response> updateMarinePolicy(int id, Map<String, dynamic> data) => put(ApiConfig.marinePolicyUpdateUrl(id), data);
+  Future<http.Response> deleteMarinePolicy(int id) => delete(ApiConfig.marinePolicyDeleteUrl(id));
 
-  Future<http.Response> getMarineBills() => get(ApiConstants.marineBillList);
-  Future<http.Response> getMarineBillById(int id) => get('${ApiConstants.marineBillGet}/$id');
-  Future<http.Response> saveMarineBill(Map<String, dynamic> data) => post(ApiConstants.marineBillSave, data);
-  Future<http.Response> updateMarineBill(int id, Map<String, dynamic> data) => put('${ApiConstants.marineBillUpdate}/$id', data);
-  Future<http.Response> deleteMarineBill(int id) => delete('${ApiConstants.marineBillDelete}/$id');
+  Future<http.Response> getMarineBills() => get(ApiConfig.marineBillListUrl);
+  Future<http.Response> getMarineBillById(int id) => get(ApiConfig.marineBillGetUrl(id));
+  Future<http.Response> saveMarineBill(Map<String, dynamic> data) => post(ApiConfig.marineBillSaveUrl, data);
+  Future<http.Response> updateMarineBill(int id, Map<String, dynamic> data) => put(ApiConfig.marineBillUpdateUrl(id), data);
+  Future<http.Response> deleteMarineBill(int id) => delete(ApiConfig.marineBillDeleteUrl(id));
 
   // Marine Money Receipt
-  Future<http.Response> getMarineReceipts() => get(ApiConstants.marineReceiptList);
-  Future<http.Response> saveMarineReceipt(Map<String, dynamic> data) => post(ApiConstants.marineReceiptSave, data);
-  Future<http.Response> deleteMarineReceipt(int id) => delete('${ApiConstants.marineReceiptDelete}/$id');
+  Future<http.Response> getMarineReceipts() => get(ApiConfig.marineReceiptListUrl);
+  Future<http.Response> saveMarineReceipt(Map<String, dynamic> data) => post(ApiConfig.marineReceiptSaveUrl, data);
+  Future<http.Response> updateMarineReceipt(int id, Map<String, dynamic> data) => put(ApiConfig.marineReceiptUpdateUrl(id), data);
+  Future<http.Response> deleteMarineReceipt(int id) => delete(ApiConfig.marineReceiptDeleteUrl(id));
 
   // Utility
-  Future<http.Response> getBanks() => get(ApiConstants.banks);
-  Future<http.Response> getBranches(int bankId) => get('${ApiConstants.branches}/$bankId/branches');
-  Future<http.Response> getInsuranceCompanies() => get(ApiConstants.insuranceCompanies);
+  Future<http.Response> getBanks() => get(ApiConfig.banksUrl);
+  Future<http.Response> getBranches(int bankId) => get(ApiConfig.branchesUrl(bankId));
+  Future<http.Response> getInsuranceCompanies() => get(ApiConfig.insuranceCompaniesUrl);
 }

@@ -1,6 +1,9 @@
 package com.kutub.InsuranceManagement.entity.marine;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kutub.InsuranceManagement.entity.utility.Bank;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -14,19 +17,25 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "marineInsuranceDetails")
+@Table(name = "marine_insurance_details")
 public class MarinePolicy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("policyId")
+    @JsonAlias("id")
     private long id;
+
+    @Column(unique = true)
+    private String sysNumber;
 
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date date = new Date();
 
-    @Column(nullable = false)
-    private String bankName;
+    @ManyToOne
+    @JoinColumn(name = "bank_id", nullable = false)
+    private Bank bank;
 
     @Column(nullable = false)
     private String policyholder;

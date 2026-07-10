@@ -5,6 +5,7 @@ import 'package:gims_mobile_app/screens/auth/forgot_password_screen.dart';
 import 'package:gims_mobile_app/screens/auth/verify_otp_screen.dart';
 import 'package:gims_mobile_app/screens/auth/reset_password_screen.dart';
 import 'package:gims_mobile_app/screens/home/home_screen.dart';
+import 'package:gims_mobile_app/screens/profile/profile_screen.dart';
 import 'package:gims_mobile_app/screens/fire_policy/view_fire_policy_screen.dart';
 import 'package:gims_mobile_app/screens/fire_policy/create_fire_policy_screen.dart';
 import 'package:gims_mobile_app/screens/fire_policy/view_fire_bill_screen.dart';
@@ -15,6 +16,8 @@ import 'package:gims_mobile_app/screens/marine_policy/view_marine_policy_screen.
 import 'package:gims_mobile_app/screens/marine_policy/create_marine_policy_screen.dart';
 import 'package:gims_mobile_app/screens/marine_policy/view_marine_bill_screen.dart';
 import 'package:gims_mobile_app/screens/marine_policy/view_marine_money_receipt_screen.dart';
+import 'package:gims_mobile_app/screens/marine_policy/create_marine_money_receipt_screen.dart';
+import 'package:gims_mobile_app/models/marine/marine_money_receipt.dart';
 import 'package:gims_mobile_app/screens/reports/fire_policy_report_screen.dart';
 import 'package:gims_mobile_app/screens/reports/fire_bill_report_screen.dart';
 import 'package:gims_mobile_app/screens/reports/fire_money_receipt_report_screen.dart';
@@ -31,6 +34,7 @@ class AppRouter {
   static const String verifyOtp = '/verify-otp';
   static const String resetPassword = '/reset-password';
   static const String home = '/home';
+  static const String profile = '/profile';
   
   static const String viewFirePolicy = '/view-fire-policy';
   static const String createFirePolicy = '/create-fire-policy';
@@ -42,7 +46,9 @@ class AppRouter {
   static const String viewMarinePolicy = '/view-marine-policy';
   static const String createMarinePolicy = '/create-marine-policy';
   static const String viewMarineBill = '/view-marine-bill';
+  static const String createMarineBill = '/create-marine-bill';
   static const String viewMarineMoneyReceipt = '/view-marine-money-receipt';
+  static const String createMarineMoneyReceipt = '/create-marine-money-receipt';
   
   static const String firePolicyReport = '/fire-policy-report';
   static const String fireBillReport = '/fire-bill-report';
@@ -74,6 +80,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => ResetPasswordScreen(email: email));
       case home:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
+      case profile:
+        return MaterialPageRoute(builder: (_) => const ProfileScreen());
         
       case viewFirePolicy:
         return MaterialPageRoute(builder: (_) => const ViewFirePolicyScreen());
@@ -96,7 +104,9 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const ViewMarineBillScreen());
       case viewMarineMoneyReceipt:
         return MaterialPageRoute(builder: (_) => const ViewMarineMoneyReceiptScreen());
-        
+      case createMarineMoneyReceipt:
+        final receipt = settings.arguments as MarineMoneyReceipt?;
+        return MaterialPageRoute(builder: (_) => CreateMarineMoneyReceiptScreen(receipt: receipt));
       case firePolicyReport:
         return MaterialPageRoute(builder: (_) => const FirePolicyReportScreen());
       case fireBillReport:

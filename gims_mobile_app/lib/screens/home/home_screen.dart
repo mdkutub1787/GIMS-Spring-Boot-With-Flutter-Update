@@ -20,6 +20,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _isBalanceVisible = false;
   bool _isCalculatorExpanded = false;
   Timer? _balanceTimer;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void dispose() {
     _balanceTimer?.cancel();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -53,6 +55,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return 'Good Night';
   }
 
+  IconData _getGreetingIcon() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return Icons.wb_sunny_rounded;
+    if (hour < 17) return Icons.wb_cloudy_rounded;
+    if (hour < 21) return Icons.wb_twilight_rounded;
+    return Icons.nights_stay_rounded;
+  }
+
+  Color _getGreetingColor() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return Colors.orange.shade700;
+    if (hour < 17) return Colors.blue.shade600;
+    if (hour < 21) return Colors.deepOrange;
+    return Colors.indigo.shade400;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -60,7 +78,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final user = ref.watch(authViewModelProvider).user;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[50],
       appBar: BrandAppBar(
         height: 65.0,
         leadingWidth: 100,
@@ -139,11 +157,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body: RefreshIndicator(
         onRefresh: () => ref.read(firePolicyViewModelProvider.notifier).fetchPolicies(),
         child: SingleChildScrollView(
+          controller: _scrollController,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 15),
-              // FFLIPY Header
+              // Header with Greeting
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
@@ -154,11 +173,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           children: [
                             TextSpan(
                               text: '${_getGreeting()}, ',
-                              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.orange.shade700, fontWeight: FontWeight.bold, fontSize: 16),
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: _getGreetingColor(),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
                             ),
                             TextSpan(
                               text: user?.name ?? 'Admin User',
-                              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.black87, fontSize: 18),
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                                fontSize: 18,
+                              ),
                             ),
                           ],
                         ),
@@ -167,21 +194,33 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(color: Colors.blue.withOpacity(0.1), shape: BoxShape.circle),
-                      child: const Icon(Icons.wb_sunny_rounded, color: Colors.orange, size: 20),
+                      child: Icon(_getGreetingIcon(), color: _getGreetingColor(), size: 20),
                     ),
                   ],
                 ),
               ),
+              const SizedBox(height: 15),
+              // Pulsing Live Badge (FFLIPY style)
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: _PulsingLiveBadge(label: 'LIVE: Managing Insurance Data'),
+              ),
               const SizedBox(height: 20),
-              // FFLIPY Action Grid Container
+              // Action Grid Container (FFLIPY style)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 20, offset: const Offset(0, 10))],
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 24,
+                        offset: const Offset(0, 12),
+                      )
+                    ],
                     border: Border.all(color: Colors.blue.withOpacity(0.05), width: 1.5),
                   ),
                   child: Column(
@@ -189,20 +228,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildCircleAction(Icons.security, 'Fire Policy', () => Navigator.pushNamed(context, AppRouter.viewFirePolicy), Colors.blue),
-                          _buildCircleAction(Icons.receipt_long, 'Fire Bill', () => Navigator.pushNamed(context, AppRouter.viewFireBill), Colors.green),
-                          _buildCircleAction(Icons.payments, 'Money MR', () => Navigator.pushNamed(context, AppRouter.viewFireMoneyReceipt), Colors.orange),
-                          _buildCircleAction(Icons.directions_boat, 'Marine Policy', () => Navigator.pushNamed(context, AppRouter.viewMarinePolicy), Colors.indigo),
+                          _buildCircleAction(context, Icons.security_rounded, 'Fire Policy', () => Navigator.pushNamed(context, AppRouter.viewFirePolicy), Colors.blue),
+                          _buildCircleAction(context, Icons.receipt_long_rounded, 'Fire Bill', () => Navigator.pushNamed(context, AppRouter.viewFireBill), Colors.green),
+                          _buildCircleAction(context, Icons.payments_rounded, 'Money Receipt', () => Navigator.pushNamed(context, AppRouter.viewFireMoneyReceipt), Colors.orange),
+                          _buildCircleAction(context, Icons.directions_boat_rounded, 'Marine Policy', () => Navigator.pushNamed(context, AppRouter.viewMarinePolicy), Colors.indigo),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 25),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildCircleAction(Icons.description, 'Marine Bill', () => Navigator.pushNamed(context, AppRouter.viewMarineBill), Colors.teal),
-                          _buildCircleAction(Icons.account_balance_wallet, 'Marine MR', () => Navigator.pushNamed(context, AppRouter.viewMarineMoneyReceipt), Colors.purple),
-                          _buildCircleAction(Icons.assessment, 'Reports', () => Navigator.pushNamed(context, AppRouter.firePolicyReport), Colors.pink),
-                          _buildCircleAction(Icons.analytics, 'Combined', () => Navigator.pushNamed(context, AppRouter.combinedReport), Colors.cyan),
+                          _buildCircleAction(context, Icons.description_rounded, 'Marine Bill', () => Navigator.pushNamed(context, AppRouter.viewMarineBill), Colors.teal),
+                          _buildCircleAction(context, Icons.account_balance_wallet_rounded, 'Marine Receipt', () => Navigator.pushNamed(context, AppRouter.viewMarineMoneyReceipt), Colors.purple),
+                          _buildCircleAction(context, Icons.assessment_rounded, 'Reports', () => Navigator.pushNamed(context, AppRouter.firePolicyReport), Colors.pink),
+                          _buildCircleAction(context, Icons.analytics_rounded, 'Combined', () => Navigator.pushNamed(context, AppRouter.combinedReport), Colors.cyan),
                         ],
                       ),
                     ],
@@ -210,7 +249,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 25),
-              // Pending Transactions (FFLIPY Short View)
+              // Pending Requests
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
@@ -223,16 +262,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               const SizedBox(height: 10),
               SizedBox(
-                height: 75,
+                height: 80,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: 3,
-                  itemBuilder: (context, index) => _buildPendingCardShort(),
+                  itemBuilder: (context, index) => _buildPendingCardShort(index),
                 ),
               ),
               const SizedBox(height: 20),
-              // Expandable Calculator Card
+              // Expandable Calculator Card (FFLIPY style)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Container(
@@ -249,12 +288,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         onTap: () => setState(() => _isCalculatorExpanded = !_isCalculatorExpanded),
                         child: Container(
                           padding: const EdgeInsets.all(12),
-                          color: Colors.blue.withOpacity(0.05),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Colors.blue.withOpacity(0.05), Colors.white],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
                           child: Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(color: Colors.blue.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(color: Colors.blue.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
                                 child: const Icon(Icons.calculate_rounded, color: Colors.blue, size: 24),
                               ),
                               const SizedBox(width: 12),
@@ -263,35 +308,59 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Premium Calculator', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                                    Text('Check rates instantly', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                                    Text('Check rates instantly', style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.w500)),
                                   ],
                                 ),
                               ),
-                              Icon(_isCalculatorExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded, color: Colors.blue),
+                              AnimatedRotation(
+                                turns: _isCalculatorExpanded ? 0.5 : 0,
+                                duration: const Duration(milliseconds: 300),
+                                child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: BoxDecoration(color: Colors.blue.withOpacity(0.1), shape: BoxShape.circle),
+                                  child: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.blue, size: 18),
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       ),
                       if (_isCalculatorExpanded)
-                        const Padding(padding: EdgeInsets.all(16), child: Text('Calculator UI will be here...', style: TextStyle(fontSize: 12, color: Colors.grey))),
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            children: [
+                              Text('Quick Premium Estimation', style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.bold)),
+                              const SizedBox(height: 10),
+                              const Text('Premium calculator form will be implemented here to allow instant calculations.', 
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 11, color: Colors.grey)),
+                            ],
+                          ),
+                        ),
                     ],
                   ),
                 ),
               ),
               const SizedBox(height: 25),
-              // Recent Activity
+              // Recent Activity Section
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text('Recent Activity', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Recent Activity', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
+                    TextButton(onPressed: () {}, child: const Text('View All')),
+                  ],
+                ),
               ),
-              const SizedBox(height: 10),
               policyState.isLoading
                   ? const Center(child: Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator()))
                   : ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: policyState.policies.take(10).length,
+                      itemCount: policyState.policies.take(5).length,
                       itemBuilder: (context, index) => _buildActivityTile(policyState.policies[index], index),
                     ),
               const SizedBox(height: 30),
@@ -302,7 +371,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildCircleAction(IconData icon, String label, VoidCallback onTap, Color color) {
+  Widget _buildCircleAction(BuildContext context, IconData icon, String label, VoidCallback onTap, Color color) {
     return Column(
       children: [
         InkWell(
@@ -313,42 +382,67 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             decoration: BoxDecoration(
               color: color.withOpacity(0.12),
               shape: BoxShape.circle,
-              boxShadow: [BoxShadow(color: color.withOpacity(0.12), blurRadius: 12, offset: const Offset(0, 4))]
+              boxShadow: [
+                BoxShadow(
+                  color: color.withOpacity(0.12),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: Icon(icon, color: color, size: 24),
           ),
         ),
         const SizedBox(height: 8),
         SizedBox(
-          width: 80,
-          child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: Colors.black54), textAlign: TextAlign.center, maxLines: 2),
+          width: 86,
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 11,
+              color: Colors.black54,
+              height: 1.1,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildPendingCardShort() {
+  Widget _buildPendingCardShort(int index) {
     return Container(
-      width: 160,
+      width: 170,
       margin: const EdgeInsets.only(right: 12, bottom: 4),
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(15),
         border: Border.all(color: Colors.grey.shade100),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 4)],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('Fire Policy #102', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), maxLines: 1, overflow: TextOverflow.ellipsis),
+          Text(index == 0 ? 'Fire Policy #102' : index == 1 ? 'Marine Bill #50' : 'MR #203', 
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13), 
+            maxLines: 1, overflow: TextOverflow.ellipsis),
           const SizedBox(height: 4),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Pending', style: TextStyle(color: Colors.orange, fontSize: 9, fontWeight: FontWeight.bold)),
-              Text('TK 5,000', style: TextStyle(color: Colors.blue.shade700, fontSize: 11, fontWeight: FontWeight.bold)),
+              const Text('Pending', style: TextStyle(color: Colors.orange, fontSize: 10, fontWeight: FontWeight.bold)),
+              Text('TK ${5000 * (index + 1)}', style: TextStyle(color: Colors.blue.shade700, fontSize: 12, fontWeight: FontWeight.bold)),
             ],
           ),
         ],
@@ -359,32 +453,63 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildActivityTile(dynamic policy, int index) {
     final bgColor = index % 2 == 0 ? Colors.white : Colors.blue.withOpacity(0.02);
     return Container(
-      margin: const EdgeInsets.only(bottom: 6),
+      margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.blue.withOpacity(0.08)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
-        leading: Container(
-          width: 36, height: 36,
-          decoration: BoxDecoration(color: Colors.blue.withOpacity(0.08), borderRadius: BorderRadius.circular(10)),
-          child: const Icon(Icons.security, color: Colors.blue, size: 18),
-        ),
-        title: Text(policy.policyholder ?? 'N/A', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13.5)),
-        subtitle: Text(policy.bankName ?? 'N/A', style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text('TK ${policy.sumInsured}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue, fontSize: 14)),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(color: Colors.green.withOpacity(0.12), borderRadius: BorderRadius.circular(6)),
-              child: const Text('Paid', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 9)),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {},
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            child: Row(
+              children: [
+                Container(
+                  width: 40, height: 40,
+                  decoration: BoxDecoration(color: Colors.blue.withOpacity(0.08), borderRadius: BorderRadius.circular(12)),
+                  child: const Icon(Icons.security, color: Colors.blue, size: 20),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(policy.policyholder ?? 'N/A', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                      Text(policy.bank?.name ?? 'N/A',
+                        style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold),
+                        maxLines: 1, overflow: TextOverflow.ellipsis),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text('TK ${NumberFormat('#,##,###').format(policy.sumInsured ?? 0)}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue, fontSize: 14)),
+                    const SizedBox(height: 2),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(color: Colors.green.withOpacity(0.12), borderRadius: BorderRadius.circular(8)),
+                      child: const Text('Processed', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 9)),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -402,37 +527,94 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: ListView(
               padding: const EdgeInsets.symmetric(vertical: 12),
               children: [
+                _buildDrawerSectionTitle('Dashboard'),
                 _buildDrawerItem(Icons.home_rounded, 'Home', () => Navigator.pop(context), Colors.blue),
                 _buildDrawerItem(Icons.security_rounded, 'Fire Insurance', () => Navigator.pushNamed(context, AppRouter.viewFirePolicy), Colors.orange),
                 _buildDrawerItem(Icons.directions_boat_rounded, 'Marine Insurance', () => Navigator.pushNamed(context, AppRouter.viewMarinePolicy), Colors.teal),
                 _buildDrawerItem(Icons.assessment_rounded, 'View Reports', () => Navigator.pushNamed(context, AppRouter.firePolicyReport), Colors.purple),
-                const Divider(indent: 24, endIndent: 24),
+                const Padding(padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8), child: Divider(thickness: 1, height: 1)),
+                _buildDrawerSectionTitle('App Settings'),
+                _buildDrawerItem(Icons.person_outline_rounded, 'My Profile', () => Navigator.pushNamed(context, AppRouter.profile), Colors.blue),
+                _buildDrawerItem(Icons.notifications_none_rounded, 'Notifications', () {}, Colors.indigo),
+                _buildDrawerItem(Icons.help_outline_rounded, 'Help & Support', () {}, Colors.green),
+                const SizedBox(height: 16),
                 _buildDrawerItem(Icons.logout_rounded, 'Log Out', () {
                   ref.read(authViewModelProvider.notifier).logout().then((_) => Navigator.pushReplacementNamed(context, AppRouter.login));
                 }, Colors.redAccent),
+                const SizedBox(height: 20),
               ],
             ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(bottom: 20),
+            child: Text('Version 1.0.2', style: TextStyle(fontSize: 10, color: Colors.grey)),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDrawerHeader(dynamic user) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 20, bottom: 20),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(colors: [Color(0xFFF3BED9), Color(0xFF39D1B8)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-        borderRadius: BorderRadius.only(topRight: Radius.circular(32)),
+  Widget _buildDrawerSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
+      child: Text(
+        title.toUpperCase(),
+        style: TextStyle(
+          color: Colors.blue.withOpacity(0.7),
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.2,
+          fontSize: 11,
+        ),
       ),
-      child: Column(
-        children: [
-          const CircleAvatar(radius: 38, backgroundColor: Colors.white, child: Icon(Icons.person, size: 38, color: Colors.blue)),
-          const SizedBox(height: 12),
-          Text(user?.name ?? 'Admin User', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-          Text(user?.email ?? 'admin@gims.com', style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.85))),
-        ],
+    );
+  }
+
+  Widget _buildDrawerHeader(dynamic user) {
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, AppRouter.profile),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 20, bottom: 20),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF2563EB), Color(0xFF3B82F6)], 
+            begin: Alignment.topLeft, 
+            end: Alignment.bottomRight
+          ),
+          borderRadius: BorderRadius.only(topRight: Radius.circular(32)),
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(0.2), width: 3)),
+              child: const CircleAvatar(radius: 38, backgroundColor: Colors.white, child: Icon(Icons.person, size: 38, color: Colors.blue)),
+            ),
+            const SizedBox(height: 12),
+            Text(user?.name ?? 'Admin User', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 0.5)),
+            Text(user?.email ?? 'admin@gims.com', style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.85), fontWeight: FontWeight.w500)),
+            const SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Column(
+                children: [
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Data Completion', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                      Text('85%', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: const LinearProgressIndicator(value: 0.85, minHeight: 4, backgroundColor: Colors.white24, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -443,6 +625,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: ListTile(
         onTap: onTap,
         dense: true,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
@@ -450,6 +633,62 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
         trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Colors.grey),
+      ),
+    );
+  }
+}
+
+class _PulsingLiveBadge extends StatefulWidget {
+  final String label;
+  const _PulsingLiveBadge({required this.label});
+
+  @override
+  State<_PulsingLiveBadge> createState() => _PulsingLiveBadgeState();
+}
+
+class _PulsingLiveBadgeState extends State<_PulsingLiveBadge> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000))..repeat(reverse: true);
+    _animation = Tween<double>(begin: 0.4, end: 1.0).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _animation,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          color: Colors.red.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.red.withOpacity(0.3), width: 1.2),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 8, height: 8,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+                boxShadow: [BoxShadow(color: Colors.red.withOpacity(0.6), blurRadius: 6, spreadRadius: 2)],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(widget.label, style: const TextStyle(color: Colors.red, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 0.5)),
+          ],
+        ),
       ),
     );
   }

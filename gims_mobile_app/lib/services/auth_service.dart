@@ -3,11 +3,11 @@ import 'dart:developer';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import '../core/constants/api_constants.dart';
+import '../core/constants/api_config.dart';
 
 class AuthService {
   Future<Map<String, dynamic>?> login(String username, String password) async {
-    final url = Uri.parse(ApiConstants.login);
+    final url = Uri.parse(ApiConfig.loginUrl);
     log('API Request: POST $url');
     
     try {
@@ -39,7 +39,7 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>> register(Map<String, dynamic> userData) async {
-    final url = Uri.parse(ApiConstants.register);
+    final url = Uri.parse(ApiConfig.registerUrl);
     log('API Request: POST $url');
 
     try {
@@ -59,7 +59,7 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>> verifyOtp(String code) async {
-    final url = Uri.parse(ApiConstants.verifyOtp);
+    final url = Uri.parse(ApiConfig.verifyOtpUrl);
     log('API Request: POST $url');
 
     try {
@@ -79,7 +79,7 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>> forgotPassword(String email) async {
-    final url = Uri.parse(ApiConstants.forgotPassword);
+    final url = Uri.parse(ApiConfig.forgotPasswordUrl);
     log('API Request: POST $url');
 
     try {
@@ -99,7 +99,7 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>> verifyResetCode(String code) async {
-    final url = Uri.parse(ApiConstants.verifyResetCode);
+    final url = Uri.parse(ApiConfig.verifyResetCodeUrl);
     log('API Request: POST $url');
 
     try {
@@ -119,7 +119,7 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>> resetPassword(String code, String newPassword) async {
-    final url = Uri.parse(ApiConstants.resetPassword);
+    final url = Uri.parse(ApiConfig.resetPasswordUrl);
     log('API Request: POST $url');
 
     try {

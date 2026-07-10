@@ -6,8 +6,8 @@ class Bank {
 
   factory Bank.fromJson(Map<String, dynamic> json) {
     return Bank(
-      id: json['id'],
-      name: json['name'],
+      id: json['id'] ?? json['bankId'] ?? 0,
+      name: json['name']?.toString() ?? 'N/A',
     );
   }
 }
@@ -20,8 +20,8 @@ class Branch {
 
   factory Branch.fromJson(Map<String, dynamic> json) {
     return Branch(
-      id: json['id'],
-      name: json['name'],
+      id: json['id'] ?? json['branchId'] ?? 0,
+      name: json['name']?.toString() ?? 'N/A',
     );
   }
 }
@@ -29,22 +29,22 @@ class Branch {
 class InsuranceCompany {
   final int id;
   final String name;
-  final String type;
-  final String sector;
+  final String? type;
+  final String? sector;
 
   InsuranceCompany({
     required this.id,
     required this.name,
-    required this.type,
-    required this.sector,
+    this.type,
+    this.sector,
   });
 
   factory InsuranceCompany.fromJson(Map<String, dynamic> json) {
     return InsuranceCompany(
-      id: json['id'],
-      name: json['name'],
-      type: json['type'],
-      sector: json['sector'],
+      id: json['id'] ?? json['companyId'] ?? 0,
+      name: json['name']?.toString() ?? 'N/A',
+      type: json['type']?.toString(),
+      sector: json['sector']?.toString(),
     );
   }
 }
