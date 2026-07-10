@@ -11,10 +11,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.kutub</groupId>
-    <artifactId>InsuranceManagement</artifactId>
+    <artifactId>gims-backend-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>InsuranceManagement</name>
-    <description>InsuranceManagement</description>
+    <name>GIMS Backend API</name>
+    <description>General Insurance Management System - Backend API</description>
     <url/>
     <licenses>
         <license/>

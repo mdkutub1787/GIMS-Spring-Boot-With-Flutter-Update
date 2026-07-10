@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:general_insurance_management/models/marine_policy_model.dart';
-import 'package:general_insurance_management/services/api_service.dart';
+import 'package:gims_mobile_app/models/marine_policy_model.dart';
+import 'package:gims_mobile_app/services/api_service.dart';
 
 class MarinePolicyRepository {
   final ApiService _apiService;

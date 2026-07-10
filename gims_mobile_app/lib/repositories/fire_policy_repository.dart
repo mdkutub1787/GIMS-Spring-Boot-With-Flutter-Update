@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:general_insurance_management/models/policy_model.dart';
-import 'package:general_insurance_management/services/api_service.dart';
+import 'package:gims_mobile_app/models/policy_model.dart';
+import 'package:gims_mobile_app/services/api_service.dart';
 
 class FirePolicyRepository {
   final ApiService _apiService;
