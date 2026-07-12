@@ -17,10 +17,13 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  bool _isBalanceVisible = false;
   bool _isCalculatorExpanded = false;
-  Timer? _balanceTimer;
   final ScrollController _scrollController = ScrollController();
+  
+  final TextEditingController _calcSumController = TextEditingController();
+  final TextEditingController _calcRateController = TextEditingController();
+  double _calcNet = 0.0;
+  double _calcGross = 0.0;
 
   @override
   void initState() {
@@ -32,19 +35,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   void dispose() {
-    _balanceTimer?.cancel();
     _scrollController.dispose();
+    _calcSumController.dispose();
+    _calcRateController.dispose();
     super.dispose();
   }
 
-  void _toggleBalance() {
-    setState(() => _isBalanceVisible = !_isBalanceVisible);
-    if (_isBalanceVisible) {
-      _balanceTimer?.cancel();
-      _balanceTimer = Timer(const Duration(seconds: 3), () {
-        if (mounted) setState(() => _isBalanceVisible = false);
-      });
-    }
+  void _calculatePremium() {
+    double sum = double.tryParse(_calcSumController.text) ?? 0.0;
+    double rate = double.tryParse(_calcRateController.text) ?? 0.0;
+    double net = (sum * rate) / 100;
+    double gross = net + (net * 0.15); // assuming 15% tax
+    setState(() {
+      _calcNet = net;
+      _calcGross = gross;
+    });
   }
 
   String _getGreeting() {
@@ -115,36 +120,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
         ),
-        title: GestureDetector(
-          onTap: _toggleBalance,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(50),
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 5)]
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.account_balance_wallet, color: Colors.blue, size: 18),
-                const SizedBox(width: 8),
-                AnimatedCrossFade(
-                  firstChild: const Text(
-                    'BALANCE',
-                    style: TextStyle(color: Color(0xFFE91E63), fontWeight: FontWeight.bold, fontSize: 13, letterSpacing: 1),
-                  ),
-                  secondChild: const Text(
-                    'TK 2,45,000',
-                    style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 13),
-                  ),
-                  crossFadeState: _isBalanceVisible ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                  duration: const Duration(milliseconds: 300),
-                ),
-              ],
-            ),
-          ),
-        ),
+        title: const Text('Dashboard', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 18)),
         actions: [
           IconButton(
             onPressed: () {},
@@ -228,20 +204,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildCircleAction(context, Icons.security_rounded, 'Fire Policy', () => Navigator.pushNamed(context, AppRouter.viewFirePolicy), Colors.blue),
-                          _buildCircleAction(context, Icons.receipt_long_rounded, 'Fire Bill', () => Navigator.pushNamed(context, AppRouter.viewFireBill), Colors.green),
-                          _buildCircleAction(context, Icons.payments_rounded, 'Money Receipt', () => Navigator.pushNamed(context, AppRouter.viewFireMoneyReceipt), Colors.orange),
-                          _buildCircleAction(context, Icons.directions_boat_rounded, 'Marine Policy', () => Navigator.pushNamed(context, AppRouter.viewMarinePolicy), Colors.indigo),
+                          _buildCircleAction(context, Icons.security_rounded, 'Fire Policy', () => Navigator.pushNamed(context, AppRouter.viewFirePolicy), theme.colorScheme.primary),
+                          _buildCircleAction(context, Icons.receipt_long_rounded, 'Fire Bill', () => Navigator.pushNamed(context, AppRouter.viewFireBill), theme.colorScheme.success),
+                          _buildCircleAction(context, Icons.payments_rounded, 'Money Receipt', () => Navigator.pushNamed(context, AppRouter.viewFireMoneyReceipt), theme.colorScheme.warning),
+                          _buildCircleAction(context, Icons.directions_boat_rounded, 'Marine Policy', () => Navigator.pushNamed(context, AppRouter.viewMarinePolicy), theme.colorScheme.secondary),
                         ],
                       ),
                       const SizedBox(height: 25),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildCircleAction(context, Icons.description_rounded, 'Marine Bill', () => Navigator.pushNamed(context, AppRouter.viewMarineBill), Colors.teal),
-                          _buildCircleAction(context, Icons.account_balance_wallet_rounded, 'Marine Receipt', () => Navigator.pushNamed(context, AppRouter.viewMarineMoneyReceipt), Colors.purple),
-                          _buildCircleAction(context, Icons.assessment_rounded, 'Reports', () => Navigator.pushNamed(context, AppRouter.firePolicyReport), Colors.pink),
-                          _buildCircleAction(context, Icons.analytics_rounded, 'Combined', () => Navigator.pushNamed(context, AppRouter.combinedReport), Colors.cyan),
+                          _buildCircleAction(context, Icons.description_rounded, 'Marine Bill', () => Navigator.pushNamed(context, AppRouter.viewMarineBill), theme.colorScheme.success),
+                          _buildCircleAction(context, Icons.account_balance_wallet_rounded, 'Marine Receipt', () => Navigator.pushNamed(context, AppRouter.viewMarineMoneyReceipt), theme.colorScheme.warning),
+                          _buildCircleAction(context, Icons.assessment_rounded, 'Reports', () => Navigator.pushNamed(context, AppRouter.firePolicyReport), theme.colorScheme.tertiary),
+                          _buildCircleAction(context, Icons.analytics_rounded, 'Combined', () => Navigator.pushNamed(context, AppRouter.combinedReport), theme.colorScheme.info),
                         ],
                       ),
                     ],
@@ -330,11 +306,61 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           padding: const EdgeInsets.all(20),
                           child: Column(
                             children: [
-                              Text('Quick Premium Estimation', style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.bold)),
-                              const SizedBox(height: 10),
-                              const Text('Premium calculator form will be implemented here to allow instant calculations.', 
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 11, color: Colors.grey)),
+                              Text('Quick Premium Estimation', style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.blue.shade700)),
+                              const SizedBox(height: 15),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _calcSumController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        labelText: 'Sum Insured',
+                                        isDense: true,
+                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                                      ),
+                                      onChanged: (_) => _calculatePremium(),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _calcRateController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        labelText: 'Rate (%)',
+                                        isDense: true,
+                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                                      ),
+                                      onChanged: (_) => _calculatePremium(),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 15),
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(10)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text('Net Premium', style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold)),
+                                        Text('TK ${_calcNet.toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
+                                      ],
+                                    ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        const Text('Gross (incl 15% VAT)', style: TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold)),
+                                        Text('TK ${_calcGross.toStringAsFixed(0)}', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green.shade700, fontSize: 16)),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -575,20 +601,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 20, bottom: 20),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF2563EB), Color(0xFF3B82F6)], 
+            colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary], 
             begin: Alignment.topLeft, 
             end: Alignment.bottomRight
           ),
-          borderRadius: BorderRadius.only(topRight: Radius.circular(32)),
+          borderRadius: const BorderRadius.only(topRight: Radius.circular(32)),
         ),
         child: Column(
           children: [
             Container(
               padding: const EdgeInsets.all(3),
               decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(0.2), width: 3)),
-              child: const CircleAvatar(radius: 38, backgroundColor: Colors.white, child: Icon(Icons.person, size: 38, color: Colors.blue)),
+              child: CircleAvatar(radius: 38, backgroundColor: Colors.white, child: Icon(Icons.person, size: 38, color: Theme.of(context).colorScheme.primary)),
             ),
             const SizedBox(height: 12),
             Text(user?.name ?? 'Admin User', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 0.5)),

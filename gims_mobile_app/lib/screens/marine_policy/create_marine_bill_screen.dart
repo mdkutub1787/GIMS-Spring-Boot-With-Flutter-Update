@@ -1,48 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../models/fire/fire_bill.dart';
-import '../../models/fire/fire_policy.dart';
-import '../../viewmodels/fire_bill_viewmodel.dart';
-import '../../viewmodels/fire_policy_viewmodel.dart';
+import '../../models/marine/marine_bill.dart';
+import '../../models/marine/marine_policy.dart';
+import '../../viewmodels/marine_bill_viewmodel.dart';
+import '../../viewmodels/marine_policy_viewmodel.dart';
 
-class CreateFireBillScreen extends ConsumerStatefulWidget {
-  const CreateFireBillScreen({super.key});
+class CreateMarineBillScreen extends ConsumerStatefulWidget {
+  const CreateMarineBillScreen({super.key});
 
   @override
-  ConsumerState<CreateFireBillScreen> createState() => _CreateFireBillScreenState();
+  ConsumerState<CreateMarineBillScreen> createState() => _CreateMarineBillScreenState();
 }
 
-class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
+class _CreateMarineBillScreenState extends ConsumerState<CreateMarineBillScreen> {
   final _formKey = GlobalKey<FormState>();
   
-  final TextEditingController fireController = TextEditingController();
-  final TextEditingController rsdController = TextEditingController();
+  final TextEditingController marineRateController = TextEditingController();
+  final TextEditingController warSrccRateController = TextEditingController();
   final TextEditingController netPremiumController = TextEditingController();
   final TextEditingController taxController = TextEditingController();
+  final TextEditingController stampDutyController = TextEditingController();
   final TextEditingController grossPremiumController = TextEditingController();
 
-  FirePolicy? selectedPolicy;
+  MarinePolicy? selectedPolicy;
 
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => ref.read(firePolicyViewModelProvider.notifier).fetchPolicies());
-    fireController.addListener(_updateCalculatedFields);
-    rsdController.addListener(_updateCalculatedFields);
+    Future.microtask(() => ref.read(marinePolicyViewModelProvider.notifier).fetchPolicies());
+    marineRateController.addListener(_updateCalculatedFields);
+    warSrccRateController.addListener(_updateCalculatedFields);
+    stampDutyController.addListener(_updateCalculatedFields);
   }
 
   void _updateCalculatedFields() {
     if (selectedPolicy == null) return;
     double sumInsured = selectedPolicy!.sumInsured ?? 0.0;
-    double fire = double.tryParse(fireController.text) ?? 0.0;
-    double rsd = double.tryParse(rsdController.text) ?? 0.0;
+    double marineRate = double.tryParse(marineRateController.text) ?? 0.0;
+    double warSrccRate = double.tryParse(warSrccRateController.text) ?? 0.0;
+    double stampDuty = double.tryParse(stampDutyController.text) ?? 0.0;
     const double taxRate = 15.0;
 
-    double netPremium = (sumInsured * (fire + rsd)) / 100;
-    double grossPremium = netPremium + (netPremium * taxRate) / 100;
+    double netPremium = (sumInsured * (marineRate + warSrccRate)) / 100;
+    double tax = (netPremium * taxRate) / 100;
+    double grossPremium = netPremium + tax + stampDuty;
 
     netPremium = (netPremium + 0.5).toInt().toDouble();
+    tax = (tax + 0.5).toInt().toDouble();
     grossPremium = (grossPremium + 0.5).toInt().toDouble();
 
     setState(() {
@@ -54,20 +59,21 @@ class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
 
   void _submit() async {
     if (_formKey.currentState!.validate() && selectedPolicy != null) {
-      final bill = FireBill(
-        fire: double.parse(fireController.text),
-        rsd: double.parse(rsdController.text),
+      final bill = MarineBill(
+        marineRate: double.parse(marineRateController.text),
+        warSrccRate: double.parse(warSrccRateController.text),
         netPremium: double.parse(netPremiumController.text),
         tax: 15.0,
+        stampDuty: double.parse(stampDutyController.text),
         grossPremium: double.parse(grossPremiumController.text),
-        policy: selectedPolicy!,
+        marineDetails: selectedPolicy!,
       );
 
-      final success = await ref.read(fireBillViewModelProvider.notifier).saveBill(bill);
+      final success = await ref.read(marineBillViewModelProvider.notifier).saveBill(bill);
       if (success && mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Bill Created Successfully!'), backgroundColor: Colors.green),
+          const SnackBar(content: Text('Marine Bill Created Successfully!'), backgroundColor: Colors.green),
         );
       }
     }
@@ -75,14 +81,14 @@ class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final policyState = ref.watch(firePolicyViewModelProvider);
-    final billState = ref.watch(fireBillViewModelProvider);
+    final policyState = ref.watch(marinePolicyViewModelProvider);
+    final billState = ref.watch(marineBillViewModelProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Create Fire Bill', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+        title: Text('Create Marine Bill', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -94,11 +100,11 @@ class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
             children: [
               Text('Policy Selection', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
               const SizedBox(height: 15),
-              DropdownButtonFormField<FirePolicy>(
+              DropdownButtonFormField<MarinePolicy>(
                 value: selectedPolicy,
                 isExpanded: true,
                 decoration: _inputDecoration('Select Policy', Icons.person_outline),
-                items: policyState.policies.map((p) => DropdownMenuItem<FirePolicy>(value: p, child: Text(p.policyholder ?? 'N/A'))).toList(),
+                items: policyState.policies.map((p) => DropdownMenuItem<MarinePolicy>(value: p, child: Text(p.policyholder ?? 'N/A'))).toList(),
                 onChanged: (val) {
                   setState(() {
                     selectedPolicy = val;
@@ -113,11 +119,13 @@ class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
                 Text('Sum Insured: TK ${selectedPolicy!.sumInsured}', style: GoogleFonts.poppins(fontSize: 12, color: Colors.green)),
               ],
               const SizedBox(height: 30),
-              Text('Rates', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
+              Text('Rates & Duties', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
               const SizedBox(height: 15),
-              _buildField(fireController, 'Fire Rate (%)', Icons.percent),
+              _buildField(marineRateController, 'Marine Rate (%)', Icons.percent),
               const SizedBox(height: 15),
-              _buildField(rsdController, 'RSD Rate (%)', Icons.percent),
+              _buildField(warSrccRateController, 'War/SRCC Rate (%)', Icons.percent),
+              const SizedBox(height: 15),
+              _buildField(stampDutyController, 'Stamp Duty (TK)', Icons.receipt),
               const SizedBox(height: 30),
               Text('Calculated Premiums', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
               const SizedBox(height: 15),
@@ -139,7 +147,7 @@ class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
                   ),
                   child: billState.isLoading 
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : Text('Create Bill', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
+                    : Text('Create Marine Bill', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
               ),
             ],

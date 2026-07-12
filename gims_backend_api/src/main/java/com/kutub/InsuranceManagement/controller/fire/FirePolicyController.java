@@ -33,14 +33,14 @@ public class FirePolicyController {
         policyMap.put("date", policy.getDate());
 
         Map<String, Object> bankMap = new LinkedHashMap<>();
-        bankMap.put("id", policy.getBank().getId());
-        bankMap.put("name", policy.getBank().getName());
+        bankMap.put("id", policy.getBank().getBnkKeyCode());
+        bankMap.put("name", policy.getBank().getBank());
         policyMap.put("bank", bankMap);
 
         if (policy.getBranch() != null) {
             Map<String, Object> branchMap = new LinkedHashMap<>();
-            branchMap.put("id", policy.getBranch().getId());
-            branchMap.put("name", policy.getBranch().getName());
+            branchMap.put("id", policy.getBranch().getBrKeyCode());
+            branchMap.put("name", policy.getBranch().getBranchName());
             policyMap.put("branch", branchMap);
         } else {
             policyMap.put("branch", null);

@@ -1,13 +1,13 @@
 package com.kutub.InsuranceManagement.service.fire;
 
 import com.kutub.InsuranceManagement.entity.fire.FirePolicy;
-import com.kutub.InsuranceManagement.entity.utility.Bank;
-import com.kutub.InsuranceManagement.entity.utility.Branch;
-import com.kutub.InsuranceManagement.entity.utility.InsuranceCompany;
+import com.kutub.InsuranceManagement.entity.utility.BnkInfo;
+import com.kutub.InsuranceManagement.entity.utility.BnkBrInfo;
+import com.kutub.InsuranceManagement.entity.utility.InsInfo;
 import com.kutub.InsuranceManagement.repository.fire.FirePolicyRepository;
-import com.kutub.InsuranceManagement.repository.utility.BankRepository;
-import com.kutub.InsuranceManagement.repository.utility.BranchRepository;
-import com.kutub.InsuranceManagement.repository.utility.InsuranceCompanyRepository;
+import com.kutub.InsuranceManagement.repository.utility.BnkInfoRepository;
+import com.kutub.InsuranceManagement.repository.utility.BnkBrInfoRepository;
+import com.kutub.InsuranceManagement.repository.utility.InsInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,13 +25,13 @@ public class FirePolicyService {
     private FireBillService billService;
 
     @Autowired
-    private InsuranceCompanyRepository insuranceCompanyRepository;
+    private InsInfoRepository InsInfoRepository;
 
     @Autowired
-    private BankRepository bankRepository;
+    private BnkInfoRepository BnkInfoRepository;
 
     @Autowired
-    private BranchRepository branchRepository;
+    private BnkBrInfoRepository BnkBrInfoRepository;
 
     // Fetch all policies
     public List<FirePolicy> getAllPolicy() {
@@ -47,22 +47,22 @@ public class FirePolicyService {
 
         // Fetch and set the persistent InsuranceCompany instance
         if (policy.getCompany() != null && policy.getCompany().getId() != null) {
-            InsuranceCompany company = insuranceCompanyRepository.findById(policy.getCompany().getId())
+            InsInfo company = InsInfoRepository.findById(policy.getCompany().getId())
                     .orElseThrow(() -> new RuntimeException("InsuranceCompany not found with ID: " + policy.getCompany().getId()));
             policy.setCompany(company);
         }
 
         // Fetch and set the persistent Bank instance
-        if (policy.getBank() != null && policy.getBank().getId() != null) {
-            Bank bank = bankRepository.findById(policy.getBank().getId())
-                    .orElseThrow(() -> new RuntimeException("Bank not found with ID: " + policy.getBank().getId()));
+        if (policy.getBank() != null && policy.getBank().getBnkKeyCode() != null) {
+            BnkInfo bank = BnkInfoRepository.findById(policy.getBank().getBnkKeyCode())
+                    .orElseThrow(() -> new RuntimeException("Bank not found with ID: " + policy.getBank().getBnkKeyCode()));
             policy.setBank(bank);
         }
 
         // Fetch and set the persistent Branch instance
-        if (policy.getBranch() != null && policy.getBranch().getId() != null) {
-            Branch branch = branchRepository.findById(policy.getBranch().getId())
-                    .orElseThrow(() -> new RuntimeException("Branch not found with ID: " + policy.getBranch().getId()));
+        if (policy.getBranch() != null && policy.getBranch().getBrKeyCode() != null) {
+            BnkBrInfo branch = BnkBrInfoRepository.findById(policy.getBranch().getBrKeyCode())
+                    .orElseThrow(() -> new RuntimeException("Branch not found with ID: " + policy.getBranch().getBrKeyCode()));
             policy.setBranch(branch);
         }
 
@@ -85,20 +85,20 @@ public class FirePolicyService {
 
         // Update fields from the request
         if (updatedPolicy.getCompany() != null && updatedPolicy.getCompany().getId() != null) {
-            InsuranceCompany company = insuranceCompanyRepository.findById(updatedPolicy.getCompany().getId())
+            InsInfo company = InsInfoRepository.findById(updatedPolicy.getCompany().getId())
                     .orElseThrow(() -> new RuntimeException("InsuranceCompany not found with ID: " + updatedPolicy.getCompany().getId()));
             existingPolicy.setCompany(company);
         }
 
-        if (updatedPolicy.getBank() != null && updatedPolicy.getBank().getId() != null) {
-            Bank bank = bankRepository.findById(updatedPolicy.getBank().getId())
-                    .orElseThrow(() -> new RuntimeException("Bank not found with ID: " + updatedPolicy.getBank().getId()));
+        if (updatedPolicy.getBank() != null && updatedPolicy.getBank().getBnkKeyCode() != null) {
+            BnkInfo bank = BnkInfoRepository.findById(updatedPolicy.getBank().getBnkKeyCode())
+                    .orElseThrow(() -> new RuntimeException("Bank not found with ID: " + updatedPolicy.getBank().getBnkKeyCode()));
             existingPolicy.setBank(bank);
         }
 
-        if (updatedPolicy.getBranch() != null && updatedPolicy.getBranch().getId() != null) {
-            Branch branch = branchRepository.findById(updatedPolicy.getBranch().getId())
-                    .orElseThrow(() -> new RuntimeException("Branch not found with ID: " + updatedPolicy.getBranch().getId()));
+        if (updatedPolicy.getBranch() != null && updatedPolicy.getBranch().getBrKeyCode() != null) {
+            BnkBrInfo branch = BnkBrInfoRepository.findById(updatedPolicy.getBranch().getBrKeyCode())
+                    .orElseThrow(() -> new RuntimeException("Branch not found with ID: " + updatedPolicy.getBranch().getBrKeyCode()));
             existingPolicy.setBranch(branch);
         }
 

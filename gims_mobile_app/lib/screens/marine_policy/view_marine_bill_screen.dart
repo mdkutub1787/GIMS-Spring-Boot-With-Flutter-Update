@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../viewmodels/marine_bill_viewmodel.dart';
 import '../../models/marine/marine_bill.dart';
 import '../../core/widgets/brand_app_bar.dart';
+import '../../core/routing/app_router.dart';
 
 class ViewMarineBillScreen extends ConsumerStatefulWidget {
   const ViewMarineBillScreen({super.key});
@@ -68,6 +69,11 @@ class _ViewMarineBillScreenState extends ConsumerState<ViewMarineBillScreen> {
                       ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.pushNamed(context, AppRouter.createMarineBill).then((_) => ref.read(marineBillViewModelProvider.notifier).fetchBills()),
+        backgroundColor: const Color(0xFF007AFF),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

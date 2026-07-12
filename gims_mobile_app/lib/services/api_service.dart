@@ -47,6 +47,10 @@ class ApiService {
     return response;
   }
 
+  // User
+  Future<http.Response> getUserProfile() => get(ApiConfig.userProfileUrl);
+  Future<http.Response> updateUserProfile(Map<String, dynamic> data) => put(ApiConfig.userProfileUpdateUrl, data);
+
   // Fire Policy & Bill
   Future<http.Response> getFirePolicies() => get(ApiConfig.firePolicyListUrl);
   Future<http.Response> getFirePolicyById(int id) => get(ApiConfig.firePolicyGetUrl(id));

@@ -92,11 +92,35 @@ class AppTheme {
       ),
       cardTheme: CardThemeData(
         color: lightSurface,
-        elevation: 1,
+        elevation: 2,
+        shadowColor: Colors.black.withOpacity(0.05),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           side: const BorderSide(color: neutralGrey100),
         ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: neutralGrey50,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: neutralGrey300),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: neutralGrey200),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: lightPrimary, width: 2),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: lightError),
+        ),
+        labelStyle: GoogleFonts.poppins(color: neutralGrey600, fontSize: 14),
+        hintStyle: GoogleFonts.poppins(color: neutralGrey400, fontSize: 14),
       ),
     );
   }

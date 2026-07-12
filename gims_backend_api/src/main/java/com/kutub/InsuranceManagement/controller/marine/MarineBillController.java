@@ -40,8 +40,8 @@ public class MarineBillController {
         policyDetails.put("policy_id", policy.getId());
         policyDetails.put("sys_number", policy.getSysNumber());
         Map<String, Object> bankMap = new LinkedHashMap<>();
-        bankMap.put("id", policy.getBank().getId());
-        bankMap.put("name", policy.getBank().getName());
+        bankMap.put("id", policy.getBank().getBnkKeyCode());
+        bankMap.put("name", policy.getBank().getBank());
         policyDetails.put("bank", bankMap);
         policyDetails.put("date", policy.getDate());
         policyDetails.put("policyholder", policy.getPolicyholder());

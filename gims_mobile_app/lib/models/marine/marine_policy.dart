@@ -5,6 +5,7 @@ class MarinePolicy {
   String? sysNumber;
   DateTime? date;
   Bank? bank;
+  Branch? branch;
   String? policyholder;
   String? address;
   String? voyageFrom;
@@ -22,6 +23,7 @@ class MarinePolicy {
     this.sysNumber,
     this.date,
     this.bank,
+    this.branch,
     this.policyholder,
     this.address,
     this.voyageFrom,
@@ -47,6 +49,7 @@ class MarinePolicy {
       sysNumber: json['sys_number']?.toString(),
       date: json['date'] != null ? DateTime.tryParse(json['date'].toString()) : null,
       bank: json['bank'] != null ? Bank.fromJson(json['bank']) : null,
+      branch: json['branch'] != null ? Branch.fromJson(json['branch']) : null,
       policyholder: json['policyholder']?.toString() ?? 'N/A',
       address: json['address']?.toString() ?? '',
       voyageFrom: (json['voyage_from'] ?? json['voyageFrom'])?.toString() ?? '',
@@ -66,6 +69,7 @@ class MarinePolicy {
     if (sysNumber != null) data['sysNumber'] = sysNumber;
     if (date != null) data['date'] = date?.toIso8601String();
     if (bank != null) data['bank'] = {'id': bank!.id};
+    if (branch != null) data['branch'] = {'id': branch!.id};
     data['policyholder'] = policyholder;
     data['address'] = address;
     data['voyageFrom'] = voyageFrom;

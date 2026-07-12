@@ -1,8 +1,8 @@
 package com.kutub.InsuranceManagement.controller.utility;
 
-import com.kutub.InsuranceManagement.entity.utility.Bank;
-import com.kutub.InsuranceManagement.entity.utility.Branch;
-import com.kutub.InsuranceManagement.entity.utility.InsuranceCompany;
+import com.kutub.InsuranceManagement.entity.utility.BnkInfo;
+import com.kutub.InsuranceManagement.entity.utility.BnkBrInfo;
+import com.kutub.InsuranceManagement.entity.utility.InsInfo;
 import com.kutub.InsuranceManagement.model.ApiResponse;
 import com.kutub.InsuranceManagement.service.utility.UtilityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +19,21 @@ public class UtilityController {
     @Autowired
     private UtilityService utilityService;
 
-    @GetMapping("/banks") // নতুন RESTful এন্ডপয়েন্ট
-    public ResponseEntity<ApiResponse<List<Bank>>> getAllBanks() {
-        List<Bank> banks = utilityService.getAllBanks();
+    @GetMapping("/banks")
+    public ResponseEntity<ApiResponse<List<BnkInfo>>> getAllBanks() {
+        List<BnkInfo> banks = utilityService.getAllBanks();
         return ResponseEntity.ok(ApiResponse.success(banks));
     }
 
-    @GetMapping("/banks/{bankId}/branches") // নতুন RESTful এন্ডপয়েন্ট
-    public ResponseEntity<ApiResponse<List<Branch>>> getBranchesByBankId(@PathVariable Long bankId) {
-        List<Branch> branches = utilityService.getBranchesByBankId(bankId);
+    @GetMapping("/banks/{bankId}/branches")
+    public ResponseEntity<ApiResponse<List<BnkBrInfo>>> getBranchesByBankId(@PathVariable Integer bankId) {
+        List<BnkBrInfo> branches = utilityService.getBranchesByBankId(bankId);
         return ResponseEntity.ok(ApiResponse.success(branches));
     }
 
     @GetMapping("/insurance-companies")
-    public ResponseEntity<ApiResponse<List<InsuranceCompany>>> getAllInsuranceCompanies() {
-        List<InsuranceCompany> companies = utilityService.getAllInsuranceCompanies();
+    public ResponseEntity<ApiResponse<List<InsInfo>>> getAllInsuranceCompanies() {
+        List<InsInfo> companies = utilityService.getAllInsuranceCompanies();
         return ResponseEntity.ok(ApiResponse.success(companies));
     }
 }

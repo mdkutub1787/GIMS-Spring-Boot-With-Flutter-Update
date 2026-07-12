@@ -28,6 +28,7 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
   final TextEditingController coverageController = TextEditingController();
 
   String? selectedBank;
+  String? selectedBranch;
 
   @override
   void initState() {
@@ -49,10 +50,12 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
     if (_formKey.currentState!.validate()) {
       final utilityState = ref.read(utilityViewModelProvider);
       final bank = utilityState.banks.firstWhere((e) => e.name == selectedBank);
+      final branch = utilityState.branches.firstWhere((e) => e.name == selectedBranch);
 
       final policy = MarinePolicy(
         date: DateTime.now(),
         bank: bank,
+        branch: branch,
         policyholder: policyholderController.text,
         address: addressController.text,
         voyageFrom: voyageFromController.text,
@@ -109,9 +112,28 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
               _buildDropdownField(
                 label: 'Select Bank',
                 icon: Icons.account_balance_rounded,
-                items: utilityState.banks.map((e) => e.name).toList(),
+                items: utilityState.banks.map((e) => e.name).where((e) => e != null).cast<String>().toSet().toList(),
                 value: selectedBank,
-                onChanged: (val) => setState(() => selectedBank = val),
+                onChanged: (val) {
+                  setState(() {
+                    selectedBank = val;
+                    selectedBranch = null; // reset branch
+                  });
+                  if (val != null) {
+                    final bank = utilityState.banks.firstWhere((e) => e.name == val);
+                    if (bank.id != null) {
+                      ref.read(utilityViewModelProvider.notifier).fetchBranches(bank.id!);
+                    }
+                  }
+                },
+              ),
+              const SizedBox(height: 15),
+              _buildDropdownField(
+                label: 'Select Branch',
+                icon: Icons.account_tree_rounded,
+                items: utilityState.branches.map((e) => e.name).where((e) => e != null).cast<String>().toSet().toList(),
+                value: selectedBranch,
+                onChanged: (val) => setState(() => selectedBranch = val),
               ),
               const SizedBox(height: 15),
               _buildField(policyholderController, 'Policyholder', Icons.person_outline),
@@ -203,11 +225,7 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
   InputDecoration _inputDecoration(String label, IconData icon) {
     return InputDecoration(
       labelText: label,
-      prefixIcon: Icon(icon, size: 20, color: Colors.indigo),
-      filled: true,
-      fillColor: Colors.grey[50],
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      prefixIcon: Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary.withOpacity(0.8)),
     );
   }
 }

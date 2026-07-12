@@ -122,7 +122,7 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
               _buildDropdownField(
                 label: 'Insurance Company',
                 icon: Icons.store_rounded,
-                items: utilityState.insuranceCompanies.map((e) => e.name).toList(),
+                items: utilityState.insuranceCompanies.map((e) => e.name).where((e) => e != null).cast<String>().toSet().toList(),
                 value: selectedCompany,
                 onChanged: (val) => setState(() => selectedCompany = val),
               ),
@@ -131,7 +131,7 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
               _buildDropdownField(
                 label: 'Select Bank',
                 icon: Icons.account_balance_rounded,
-                items: utilityState.banks.map((e) => e.name).toList(),
+                items: utilityState.banks.map((e) => e.name).where((e) => e != null).cast<String>().toSet().toList(),
                 value: selectedBank,
                 onChanged: (val) {
                   setState(() {
@@ -147,7 +147,7 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
               _buildDropdownField(
                 label: 'Select Branch',
                 icon: Icons.account_tree_rounded,
-                items: utilityState.branches.map((e) => e.name).toList(),
+                items: utilityState.branches.map((e) => e.name).where((e) => e != null).cast<String>().toSet().toList(),
                 value: selectedBranch,
                 onChanged: (val) => setState(() => selectedBranch = val),
               ),
@@ -264,14 +264,7 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
   InputDecoration _inputDecoration(String label, IconData icon) {
     return InputDecoration(
       labelText: label,
-      labelStyle: GoogleFonts.poppins(color: Colors.grey[600], fontSize: 13),
-      prefixIcon: Icon(icon, size: 20, color: Colors.blue.withOpacity(0.7)),
-      filled: true,
-      fillColor: const Color(0xFFF8FAFC),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Colors.blue, width: 1.5)),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      prefixIcon: Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary.withOpacity(0.8)),
     );
   }
 }

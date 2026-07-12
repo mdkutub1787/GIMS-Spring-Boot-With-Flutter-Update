@@ -3,7 +3,8 @@ package com.kutub.InsuranceManagement.entity.marine;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kutub.InsuranceManagement.entity.utility.Bank;
+import com.kutub.InsuranceManagement.entity.utility.BnkBrInfo;
+import com.kutub.InsuranceManagement.entity.utility.BnkInfo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -35,7 +36,11 @@ public class MarinePolicy {
 
     @ManyToOne
     @JoinColumn(name = "bank_id", nullable = false)
-    private Bank bank;
+    private BnkInfo bank;
+
+    @ManyToOne
+    @JoinColumn(name = "branch_id")
+    private BnkBrInfo branch;
 
     @Column(nullable = false)
     private String policyholder;

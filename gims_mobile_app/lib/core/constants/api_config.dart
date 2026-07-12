@@ -16,6 +16,10 @@ class ApiConfig {
   static String get verifyResetCodeUrl => '$baseUrl/api/auth/verify-reset-code';
   static String get resetPasswordUrl => '$baseUrl/api/auth/reset-password';
   
+  /// User API endpoints
+  static String get userProfileUrl => '$baseUrl/api/user/me';
+  static String get userProfileUpdateUrl => '$baseUrl/api/user/update';
+  
   /// Fire Policy API endpoints
   static String get firePolicySaveUrl => '$baseUrl/api/policy/save';
   static String get firePolicyListUrl => '$baseUrl/api/policy/list';

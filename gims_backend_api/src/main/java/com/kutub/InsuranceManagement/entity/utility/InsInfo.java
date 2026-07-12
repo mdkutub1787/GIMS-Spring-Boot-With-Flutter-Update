@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "insurance_companies")
-public class InsuranceCompany {
+public class InsInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("companyId")
     @JsonAlias("id")
-    private Long id;
+    private Integer id;
 
     @Column(nullable = false)
     private String name;
@@ -28,7 +28,7 @@ public class InsuranceCompany {
     @Column(nullable = false)
     private String sector; // Private, Public
 
-    public InsuranceCompany(String name, String type, String sector) {
+    public InsInfo(String name, String type, String sector) {
         this.name = name;
         this.type = type;
         this.sector = sector;

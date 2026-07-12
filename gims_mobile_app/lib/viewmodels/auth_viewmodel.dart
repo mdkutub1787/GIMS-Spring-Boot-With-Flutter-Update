@@ -135,6 +135,42 @@ class AuthViewModel extends StateNotifier<AuthState> {
     await _authService.logout();
     state = AuthState();
   }
+
+  Future<bool> fetchProfile() async {
+    state = state.copyWith(isLoading: true, error: null);
+    try {
+      final response = await _authService.fetchProfile();
+      final user = UserModel.fromJson(response);
+        state = state.copyWith(
+          isLoading: false,
+          user: user,
+          role: user.role?.toString().split('.').last,
+        );
+        return true;
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString().replaceAll('Exception: ', ''));
+      return false;
+    }
+  }
+
+  Future<bool> updateProfile(Map<String, dynamic> data) async {
+    state = state.copyWith(isLoading: true, error: null);
+    try {
+      final response = await _authService.updateProfile(data);
+      if (response['success'] == true) {
+        state = state.copyWith(isLoading: false, message: response['message']);
+        // Fetch updated profile
+        await fetchProfile();
+        return true;
+      } else {
+        state = state.copyWith(isLoading: false, error: response['message'] ?? 'Failed to update profile');
+        return false;
+      }
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString().replaceAll('Exception: ', ''));
+      return false;
+    }
+  }
 }
 
 final authViewModelProvider = StateNotifierProvider<AuthViewModel, AuthState>((ref) {

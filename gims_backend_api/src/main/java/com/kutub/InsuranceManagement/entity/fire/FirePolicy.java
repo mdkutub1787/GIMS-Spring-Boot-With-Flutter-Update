@@ -3,9 +3,9 @@ package com.kutub.InsuranceManagement.entity.fire;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kutub.InsuranceManagement.entity.utility.Bank;
-import com.kutub.InsuranceManagement.entity.utility.Branch;
-import com.kutub.InsuranceManagement.entity.utility.InsuranceCompany;
+import com.kutub.InsuranceManagement.entity.utility.BnkInfo;
+import com.kutub.InsuranceManagement.entity.utility.BnkBrInfo;
+import com.kutub.InsuranceManagement.entity.utility.InsInfo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,7 +33,7 @@ public class FirePolicy {
 
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
-    private InsuranceCompany company;
+    private InsInfo company;
 
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
@@ -41,11 +41,11 @@ public class FirePolicy {
 
     @ManyToOne
     @JoinColumn(name = "bank_id", nullable = false)
-    private Bank bank;
+    private BnkInfo bank;
 
     @ManyToOne
     @JoinColumn(name = "branch_id", nullable = true)
-    private Branch branch;
+    private BnkBrInfo branch;
 
     @Column(nullable = false)
     private String policyholder;

@@ -6,6 +6,7 @@ import 'package:gims_mobile_app/screens/auth/verify_otp_screen.dart';
 import 'package:gims_mobile_app/screens/auth/reset_password_screen.dart';
 import 'package:gims_mobile_app/screens/home/home_screen.dart';
 import 'package:gims_mobile_app/screens/profile/profile_screen.dart';
+import 'package:gims_mobile_app/screens/splash/splash_screen.dart';
 import 'package:gims_mobile_app/screens/fire_policy/view_fire_policy_screen.dart';
 import 'package:gims_mobile_app/screens/fire_policy/create_fire_policy_screen.dart';
 import 'package:gims_mobile_app/screens/fire_policy/view_fire_bill_screen.dart';
@@ -15,6 +16,7 @@ import 'package:gims_mobile_app/screens/fire_policy/create_fire_money_receipt_sc
 import 'package:gims_mobile_app/screens/marine_policy/view_marine_policy_screen.dart';
 import 'package:gims_mobile_app/screens/marine_policy/create_marine_policy_screen.dart';
 import 'package:gims_mobile_app/screens/marine_policy/view_marine_bill_screen.dart';
+import 'package:gims_mobile_app/screens/marine_policy/create_marine_bill_screen.dart';
 import 'package:gims_mobile_app/screens/marine_policy/view_marine_money_receipt_screen.dart';
 import 'package:gims_mobile_app/screens/marine_policy/create_marine_money_receipt_screen.dart';
 import 'package:gims_mobile_app/models/marine/marine_money_receipt.dart';
@@ -28,6 +30,7 @@ import 'package:gims_mobile_app/screens/reports/combined_report_screen.dart';
 import 'package:gims_mobile_app/screens/reports/combined_money_receipt_report_screen.dart';
 
 class AppRouter {
+  static const String splash = '/';
   static const String login = '/login';
   static const String registration = '/registration';
   static const String forgotPassword = '/forgot-password';
@@ -61,6 +64,8 @@ class AppRouter {
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case splash:
+        return MaterialPageRoute(builder: (_) => const SplashScreen());
       case login:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
       case registration:
@@ -102,6 +107,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const CreateMarinePolicyScreen());
       case viewMarineBill:
         return MaterialPageRoute(builder: (_) => const ViewMarineBillScreen());
+      case createMarineBill:
+        return MaterialPageRoute(builder: (_) => const CreateMarineBillScreen());
       case viewMarineMoneyReceipt:
         return MaterialPageRoute(builder: (_) => const ViewMarineMoneyReceiptScreen());
       case createMarineMoneyReceipt:

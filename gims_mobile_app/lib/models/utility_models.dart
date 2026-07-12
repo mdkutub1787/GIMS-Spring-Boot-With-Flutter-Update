@@ -6,8 +6,8 @@ class Bank {
 
   factory Bank.fromJson(Map<String, dynamic> json) {
     return Bank(
-      id: json['id'] ?? json['bankId'] ?? 0,
-      name: json['name']?.toString() ?? 'N/A',
+      id: json['id'] ?? json['bankId'] ?? json['bnkKeyCode'] ?? 0,
+      name: json['bank']?.toString() ?? json['name']?.toString() ?? 'N/A',
     );
   }
 }
@@ -20,8 +20,8 @@ class Branch {
 
   factory Branch.fromJson(Map<String, dynamic> json) {
     return Branch(
-      id: json['id'] ?? json['branchId'] ?? 0,
-      name: json['name']?.toString() ?? 'N/A',
+      id: json['id'] ?? json['branchId'] ?? json['brKeyCode'] ?? 0,
+      name: json['branchName']?.toString() ?? json['name']?.toString() ?? 'N/A',
     );
   }
 }

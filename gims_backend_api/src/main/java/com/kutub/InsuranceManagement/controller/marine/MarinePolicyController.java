@@ -27,8 +27,8 @@ public class MarinePolicyController {
         policyMap.put("sys_number", policy.getSysNumber());
 
         Map<String, Object> bankMap = new LinkedHashMap<>();
-        bankMap.put("id", policy.getBank().getId());
-        bankMap.put("name", policy.getBank().getName());
+        bankMap.put("id", policy.getBank().getBnkKeyCode());
+        bankMap.put("name", policy.getBank().getBank());
         policyMap.put("bank", bankMap);
 
         policyMap.put("date", policy.getDate());

@@ -206,14 +206,7 @@ class _CreateMarineMoneyReceiptScreenState extends ConsumerState<CreateMarineMon
   InputDecoration _inputDecoration(String label, IconData icon) {
     return InputDecoration(
       labelText: label,
-      labelStyle: GoogleFonts.poppins(color: Colors.grey[600], fontSize: 14),
-      prefixIcon: Icon(icon, size: 20, color: const Color(0xFFF59E0B)),
-      filled: true,
-      fillColor: Colors.grey[50],
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide(color: Colors.grey[200]!)),
-      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: const BorderSide(color: Color(0xFFF59E0B))),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      prefixIcon: Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary.withOpacity(0.8)),
     );
   }
 }

@@ -1,11 +1,11 @@
 package com.kutub.InsuranceManagement.service.utility;
 
-import com.kutub.InsuranceManagement.entity.utility.Bank;
-import com.kutub.InsuranceManagement.entity.utility.Branch;
-import com.kutub.InsuranceManagement.entity.utility.InsuranceCompany;
-import com.kutub.InsuranceManagement.repository.utility.BankRepository;
-import com.kutub.InsuranceManagement.repository.utility.BranchRepository;
-import com.kutub.InsuranceManagement.repository.utility.InsuranceCompanyRepository;
+import com.kutub.InsuranceManagement.entity.utility.BnkInfo;
+import com.kutub.InsuranceManagement.entity.utility.BnkBrInfo;
+import com.kutub.InsuranceManagement.entity.utility.InsInfo;
+import com.kutub.InsuranceManagement.repository.utility.BnkInfoRepository;
+import com.kutub.InsuranceManagement.repository.utility.BnkBrInfoRepository;
+import com.kutub.InsuranceManagement.repository.utility.InsInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,27 +15,27 @@ import java.util.List;
 public class UtilityService {
 
     @Autowired
-    private BankRepository bankRepository;
+    private BnkInfoRepository bnkInfoRepository;
 
     @Autowired
-    private BranchRepository branchRepository;
+    private BnkBrInfoRepository bnkBrInfoRepository;
 
     @Autowired
-    private InsuranceCompanyRepository insuranceCompanyRepository;
+    private InsInfoRepository insInfoRepository;
 
-    public List<Bank> getAllBanks() {
-        return bankRepository.findAll();
+    public List<BnkInfo> getAllBanks() {
+        return bnkInfoRepository.findAll();
     }
 
-    public List<Branch> getBranchesByBankId(Long bankId) {
-        return branchRepository.findByBankId(bankId);
+    public List<BnkBrInfo> getBranchesByBankId(Integer bankId) {
+        return bnkBrInfoRepository.findByBnkInfo_bnkKeyCode(bankId);
     }
 
-    public List<InsuranceCompany> getAllInsuranceCompanies() {
-        return insuranceCompanyRepository.findAll();
+    public List<InsInfo> getAllInsuranceCompanies() {
+        return insInfoRepository.findAll();
     }
 
-    public List<InsuranceCompany> getInsuranceCompaniesByType(String type) {
-        return insuranceCompanyRepository.findByType(type);
+    public List<InsInfo> getInsuranceCompaniesByType(String type) {
+        return insInfoRepository.findByType(type);
     }
 }

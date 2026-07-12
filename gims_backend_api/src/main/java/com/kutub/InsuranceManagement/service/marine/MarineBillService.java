@@ -62,7 +62,7 @@ public class MarineBillService {
     }
 
     private String generateSysNumber(MarinePolicy policy) {
-        String companyAcronym = getCompanyAcronym(policy.getBank().getName()); // Assuming bank name is used for company
+        String companyAcronym = getCompanyAcronym(policy.getBank().getBank()); // Assuming bank name is used for company
         String insuranceType = "MI"; // For Marine insurance
         int year = Calendar.getInstance().get(Calendar.YEAR) % 100;
         long count = policyRepository.count();

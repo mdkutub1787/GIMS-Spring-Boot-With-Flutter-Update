@@ -155,11 +155,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
   InputDecoration _inputDecoration(String label, IconData icon) {
     return InputDecoration(
       labelText: label,
-      prefixIcon: Icon(icon, size: 20),
-      filled: true,
-      fillColor: Colors.grey[50],
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+      prefixIcon: Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary.withOpacity(0.8)),
     );
   }
 }

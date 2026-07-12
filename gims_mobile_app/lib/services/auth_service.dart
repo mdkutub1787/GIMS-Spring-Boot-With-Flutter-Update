@@ -161,4 +161,46 @@ class AuthService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
   }
+
+  Future<Map<String, dynamic>> fetchProfile() async {
+    final url = Uri.parse(ApiConfig.userProfileUrl);
+    log('API Request: GET $url');
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('authToken');
+    try {
+      final response = await http.get(url, headers: {
+        'Content-Type': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      });
+      log('API Response Status: ${response.statusCode}');
+      log('API Response Body: ${response.body}');
+      return _handleResponse(response);
+    } catch (e) {
+      log('API Error (fetchProfile): $e');
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>> updateProfile(Map<String, dynamic> data) async {
+    final url = Uri.parse(ApiConfig.userProfileUpdateUrl);
+    log('API Request: PUT $url');
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('authToken');
+    try {
+      final response = await http.put(
+        url, 
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(data)
+      );
+      log('API Response Status: ${response.statusCode}');
+      log('API Response Body: ${response.body}');
+      return _handleResponse(response);
+    } catch (e) {
+      log('API Error (updateProfile): $e');
+      rethrow;
+    }
+  }
 }
