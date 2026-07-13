@@ -58,6 +58,9 @@ class ApiService {
   Future<http.Response> updateFirePolicy(int id, Map<String, dynamic> data) => put(ApiConfig.firePolicyUpdateUrl(id), data);
   Future<http.Response> deleteFirePolicy(int id) => delete(ApiConfig.firePolicyDeleteUrl(id));
   Future<http.Response> searchFirePoliciesByHolder(String holder) => get(ApiConfig.firePolicySearchHolderUrl(holder));
+
+  // Currency
+  Future<http.Response> getCurrencyRate() => get(ApiConfig.currencyRateUrl);
   Future<http.Response> searchFirePoliciesByBank(String bank) => get(ApiConfig.firePolicySearchBankUrl(bank));
   
   Future<http.Response> getFireBills() => get(ApiConfig.fireBillListUrl);

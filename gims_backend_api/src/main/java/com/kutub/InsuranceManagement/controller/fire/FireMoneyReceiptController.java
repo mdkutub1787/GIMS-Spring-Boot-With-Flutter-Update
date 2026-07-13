@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.stream.Collectors;
+import com.kutub.InsuranceManagement.entity.fire.FireBill;
 
 @RestController
 @RequestMapping("api/moneyreceipt")
@@ -21,9 +24,52 @@ public class FireMoneyReceiptController {
 
     // Get all Receipt
     @GetMapping("/list")
-    public ResponseEntity<ApiResponse<List<FireMoneyReceipt>>> getAllMoneyReceipt() {
+    public ResponseEntity<ApiResponse<List<Map<String, Object>>>> getAllMoneyReceipt() {
         List<FireMoneyReceipt> receipts = moneyReceiptService.getAllMoneyReceipt();
-        return ResponseEntity.ok(ApiResponse.success(receipts));
+        
+        List<Map<String, Object>> responseList = receipts.stream().map(receipt -> {
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("id", receipt.getId());
+            map.put("issuingOffice", receipt.getIssuingOffice());
+            map.put("classOfInsurance", receipt.getClassOfInsurance());
+            map.put("date", receipt.getDate());
+            map.put("modeOfPayment", receipt.getModeOfPayment());
+            map.put("issuedAgainst", receipt.getIssuedAgainst());
+            
+            if (receipt.getBill() != null) {
+                FireBill bill = receipt.getBill();
+                Map<String, Object> billMap = new LinkedHashMap<>();
+                billMap.put("id", bill.getId());
+                
+                double sumInsured = bill.getPolicy() != null ? bill.getPolicy().getSumInsured() : 0.0;
+                
+                Map<String, Object> fireDetails = new LinkedHashMap<>();
+                fireDetails.put("percentage", bill.getFire());
+                fireDetails.put("amount", Math.round((sumInsured * (bill.getFire() / 100.0)) * 100.0) / 100.0);
+                billMap.put("fire", fireDetails);
+                
+                Map<String, Object> rsdDetails = new LinkedHashMap<>();
+                rsdDetails.put("percentage", bill.getRsd());
+                rsdDetails.put("amount", Math.round((sumInsured * (bill.getRsd() / 100.0)) * 100.0) / 100.0);
+                billMap.put("rsd", rsdDetails);
+                
+                Map<String, Object> taxDetails = new LinkedHashMap<>();
+                taxDetails.put("percentage", bill.getTax());
+                taxDetails.put("amount", Math.round((bill.getNetPremium() * (bill.getTax() / 100.0)) * 100.0) / 100.0);
+                billMap.put("tax", taxDetails);
+                
+                billMap.put("netPremium", bill.getNetPremium());
+                billMap.put("grossPremium", bill.getGrossPremium());
+                billMap.put("policy", bill.getPolicy());
+                
+                map.put("bill", billMap);
+            } else {
+                map.put("bill", null);
+            }
+            return map;
+        }).collect(Collectors.toList());
+        
+        return ResponseEntity.ok(ApiResponse.success(responseList));
     }
 
     // Create a new Receipt

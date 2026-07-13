@@ -63,8 +63,8 @@ public class MarineBillController {
             billMap.put("billId", bill.getId());
 
             double sumInsured = policy.getSumInsured();
-            double marineAmount = sumInsured * (bill.getMarineRate() / 100.0);
-            double warSrccAmount = sumInsured * (bill.getWarSrccRate() / 100.0);
+            double marineAmount = Math.round((sumInsured * (bill.getMarineRate() / 100.0)) * 100.0) / 100.0;
+            double warSrccAmount = Math.round((sumInsured * (bill.getWarSrccRate() / 100.0)) * 100.0) / 100.0;
 
             Map<String, Object> marineDetails = new LinkedHashMap<>();
             marineDetails.put("percentage", bill.getMarineRate());
@@ -75,6 +75,11 @@ public class MarineBillController {
             warSrccDetails.put("percentage", bill.getWarSrccRate());
             warSrccDetails.put("amount", warSrccAmount);
             billMap.put("warSrcc", warSrccDetails);
+
+            Map<String, Object> taxDetails = new LinkedHashMap<>();
+            taxDetails.put("percentage", bill.getTax());
+            taxDetails.put("amount", Math.round((bill.getNetPremium() * (bill.getTax() / 100.0)) * 100.0) / 100.0);
+            billMap.put("tax", taxDetails);
 
             billMap.put("stampDuty", bill.getStampDuty());
             billMap.put("netPremium", bill.getNetPremium());

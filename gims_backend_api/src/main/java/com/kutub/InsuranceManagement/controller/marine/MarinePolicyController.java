@@ -31,6 +31,13 @@ public class MarinePolicyController {
         bankMap.put("name", policy.getBank().getBank());
         policyMap.put("bank", bankMap);
 
+        if (policy.getBranch() != null) {
+            Map<String, Object> branchMap = new LinkedHashMap<>();
+            branchMap.put("id", policy.getBranch().getBrKeyCode());
+            branchMap.put("name", policy.getBranch().getBranchName());
+            policyMap.put("branch", branchMap);
+        }
+
         policyMap.put("date", policy.getDate());
         policyMap.put("policyholder", policy.getPolicyholder());
         policyMap.put("address", policy.getAddress());

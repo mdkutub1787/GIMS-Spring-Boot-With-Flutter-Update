@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Primary & Accent Colors (Aczone Style)
-  static const Color primaryColor = Color(0xFF7C3AED); // Deep Purple
-  static const Color secondaryColor = Color(0xFF8B5CF6); // Lighter Purple
-  static const Color accentColor = Color(0xFFEC4899); // Pink Accent
+  // Primary & Accent Colors (Modern Teal Style)
+  static const Color primaryColor = Color(0xFF20B2AA); // Teal
+  static const Color secondaryColor = Color(0xFFE8F6F5); // Light Mint
+  static const Color accentColor = Color(0xFF2C3E50); // Navy Slate
   
   // Light Theme Colors
-  static const Color lightBackground = Color(0xFFFAFAFA);
+  static const Color lightBackground = Color(0xFFF3F9F8);
   static const Color lightSurface = Color(0xFFFFFFFF);
   static const Color lightError = Color(0xFFDC2626);
   static const Color lightErrorContainer = Color(0xFFFFE5E0);
@@ -108,9 +108,10 @@ class AppTheme {
           backgroundColor: primaryColor,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          elevation: 0,
+          elevation: 2,
+          shadowColor: primaryColor.withOpacity(0.3),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(30),
           ),
           textStyle: GoogleFonts.poppins(
             fontSize: 16,
@@ -129,30 +130,30 @@ class AppTheme {
       ),
       cardTheme: CardThemeData(
         color: lightSurface,
-        elevation: 4,
-        shadowColor: primaryColor.withOpacity(0.08), // Soft purple shadow
+        elevation: 8,
+        shadowColor: const Color(0xFF20B2AA).withOpacity(0.08),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: lightSurface,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: neutralGrey200, width: 1),
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(30),
           borderSide: const BorderSide(color: primaryColor, width: 2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(30),
           borderSide: const BorderSide(color: lightError, width: 1),
         ),
         labelStyle: GoogleFonts.poppins(color: neutralGrey500, fontSize: 14),

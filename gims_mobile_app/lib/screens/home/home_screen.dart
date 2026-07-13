@@ -31,9 +31,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final user = ref.watch(authViewModelProvider).user;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB), // Very light gray like Aczone
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: BrandAppBar(
-        height: 60,
+        height: 80,
         leading: Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.menu_rounded, color: Colors.black87),
@@ -44,20 +44,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(6),
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: const Color(0xFF7C3AED), // Primary Purple
-                borderRadius: BorderRadius.circular(8),
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.shield_rounded, color: Colors.white, size: 16),
+              child: const Icon(Icons.shield_rounded, color: Colors.white, size: 20),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 10),
             Text(
               'GIMS',
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.bold,
-                fontSize: 18,
-                color: Colors.black87,
+                fontSize: 20,
+                color: Colors.white,
               ),
             ),
           ],
@@ -67,7 +67,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             alignment: Alignment.center,
             children: [
               IconButton(
-                icon: const Icon(Icons.notifications_none_rounded, color: Colors.black87),
+                icon: const Icon(Icons.notifications_none_rounded, color: Colors.white),
                 onPressed: () {},
               ),
               Positioned(
@@ -91,7 +91,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       drawer: _buildDrawer(context),
       body: RefreshIndicator(
         onRefresh: () => ref.read(firePolicyViewModelProvider.notifier).fetchPolicies(),
-        color: const Color(0xFF7C3AED),
+        color: theme.colorScheme.primary,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
@@ -119,14 +119,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 runSpacing: 24,
                 alignment: WrapAlignment.spaceBetween,
                 children: [
-                  SizedBox(width: 70, child: _buildActionIcon(Icons.security, 'Fire Policy', const Color(0xFF7C3AED), () => Navigator.pushNamed(context, AppRouter.viewFirePolicy))),
-                  SizedBox(width: 70, child: _buildActionIcon(Icons.receipt, 'Fire Bill', const Color(0xFFF59E0B), () => Navigator.pushNamed(context, AppRouter.viewFireBill))),
-                  SizedBox(width: 70, child: _buildActionIcon(Icons.request_quote, 'Fire MR', const Color(0xFFEC4899), () => Navigator.pushNamed(context, AppRouter.viewFireMoneyReceipt))),
-                  SizedBox(width: 70, child: _buildActionIcon(Icons.assessment, 'Reports', const Color(0xFF3B82F6), () => Navigator.pushNamed(context, AppRouter.combinedReport))),
-                  SizedBox(width: 70, child: _buildActionIcon(Icons.directions_boat, 'Marine', const Color(0xFF10B981), () => Navigator.pushNamed(context, AppRouter.viewMarinePolicy))),
-                  SizedBox(width: 70, child: _buildActionIcon(Icons.receipt_long, 'Marine Bill', const Color(0xFF06B6D4), () => Navigator.pushNamed(context, AppRouter.viewMarineBill))),
-                  SizedBox(width: 70, child: _buildActionIcon(Icons.monetization_on, 'Marine MR', const Color(0xFF8B5CF6), () => Navigator.pushNamed(context, AppRouter.viewMarineMoneyReceipt))),
-                  SizedBox(width: 70, child: _buildActionIcon(Icons.person, 'Profile', const Color(0xFF64748B), () => Navigator.pushNamed(context, AppRouter.profile))),
+                  SizedBox(width: 70, child: _buildActionIcon(Icons.security, 'Fire Policy', const Color(0xFF20B2AA), () => Navigator.pushNamed(context, AppRouter.viewFirePolicy))),
+                  SizedBox(width: 70, child: _buildActionIcon(Icons.receipt, 'Fire Bill', const Color(0xFF28B9A9), () => Navigator.pushNamed(context, AppRouter.viewFireBill))),
+                  SizedBox(width: 70, child: _buildActionIcon(Icons.request_quote, 'Fire MR', const Color(0xFF1CB1A1), () => Navigator.pushNamed(context, AppRouter.viewFireMoneyReceipt))),
+                  SizedBox(width: 70, child: _buildActionIcon(Icons.assessment, 'Reports', const Color(0xFF0F9485), () => Navigator.pushNamed(context, AppRouter.combinedReport))),
+                  SizedBox(width: 70, child: _buildActionIcon(Icons.directions_boat, 'Marine', const Color(0xFF20B2AA), () => Navigator.pushNamed(context, AppRouter.viewMarinePolicy))),
+                  SizedBox(width: 70, child: _buildActionIcon(Icons.receipt_long, 'Marine Bill', const Color(0xFF28B9A9), () => Navigator.pushNamed(context, AppRouter.viewMarineBill))),
+                  SizedBox(width: 70, child: _buildActionIcon(Icons.monetization_on, 'Marine MR', const Color(0xFF1CB1A1), () => Navigator.pushNamed(context, AppRouter.viewMarineMoneyReceipt))),
+                  SizedBox(width: 70, child: _buildActionIcon(Icons.person, 'Profile', const Color(0xFF2C3E50), () => Navigator.pushNamed(context, AppRouter.profile))),
                 ],
               ),
               const SizedBox(height: 35),
@@ -136,12 +136,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Recent Activity',
+                    'Projects / Activity',
                     style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
                   ),
                   Text(
                     'View All',
-                    style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600, color: const Color(0xFF7C3AED)),
+                    style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600, color: theme.colorScheme.primary),
                   ),
                 ],
               ),
@@ -177,14 +177,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       height: 190,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
+          colors: [Color(0xFF28B9A9), Color(0xFF1CB1A1)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF7C3AED).withOpacity(0.3),
+            color: const Color(0xFF28B9A9).withOpacity(0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),

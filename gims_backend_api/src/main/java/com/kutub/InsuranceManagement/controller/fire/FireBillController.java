@@ -82,9 +82,9 @@ public class FireBillController {
             billMap.put("billId", bill.getId());
 
             double sumInsured = policy.getSumInsured();
-            double fireAmount = sumInsured * (bill.getFire() / 100.0);
-            double rsdAmount = sumInsured * (bill.getRsd() / 100.0);
-            double taxAmount = bill.getNetPremium() * (bill.getTax() / 100.0);
+            double fireAmount = Math.round((sumInsured * (bill.getFire() / 100.0)) * 100.0) / 100.0;
+            double rsdAmount = Math.round((sumInsured * (bill.getRsd() / 100.0)) * 100.0) / 100.0;
+            double taxAmount = Math.round((bill.getNetPremium() * (bill.getTax() / 100.0)) * 100.0) / 100.0;
 
             Map<String, Object> fireDetails = new LinkedHashMap<>();
             fireDetails.put("percentage", bill.getFire());

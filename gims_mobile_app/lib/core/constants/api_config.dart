@@ -60,7 +60,7 @@ class ApiConfig {
 
   /// Marine Money Receipt API endpoints
   static String get marineReceiptSaveUrl => '$baseUrl/api/marinemoneyreceipt/save';
-  static String get marineReceiptListUrl => '$baseUrl/api/marinemoneyreceipt/';
+  static String get marineReceiptListUrl => '$baseUrl/api/marinemoneyreceipt/list';
   static String marineReceiptUpdateUrl(int id) => '$baseUrl/api/marinemoneyreceipt/update/$id';
   static String marineReceiptDeleteUrl(int id) => '$baseUrl/api/marinemoneyreceipt/delete/$id';
 
@@ -68,4 +68,7 @@ class ApiConfig {
   static String get banksUrl => '$baseUrl/api/banks';
   static String branchesUrl(int bankId) => '$baseUrl/api/banks/$bankId/branches';
   static String get insuranceCompaniesUrl => '$baseUrl/api/insurance-companies';
+  
+  /// Currency API endpoints
+  static String get currencyRateUrl => '$baseUrl/api/currency/rate';
 }

@@ -56,6 +56,10 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
 
     Future.microtask(() {
       ref.read(utilityViewModelProvider.notifier).fetchBanks();
+      ref.read(utilityViewModelProvider.notifier).fetchCurrencyRate();
+      if (widget.policy?.bank?.id != null) {
+        ref.read(utilityViewModelProvider.notifier).fetchBranches(widget.policy!.bank!.id!);
+      }
     });
   }
 
@@ -65,11 +69,31 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
     sumInsuredController.text = (usd * rate).toStringAsFixed(0);
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Listen to currency rate changes if not editing an existing policy
+    if (widget.policy == null) {
+      final utilityState = ref.watch(utilityViewModelProvider);
+      if (utilityState.currencyRate > 0 && usdRateController.text.isEmpty) {
+        usdRateController.text = utilityState.currencyRate.toString();
+        _calculateTk();
+      }
+    }
+  }
+
+
   Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
       final utilityState = ref.read(utilityViewModelProvider);
-      final bank = utilityState.banks.firstWhere((e) => e.name == selectedBank);
-      final branch = utilityState.branches.firstWhere((e) => e.name == selectedBranch);
+      final bank = utilityState.banks.firstWhere(
+        (e) => e.name == selectedBank, 
+        orElse: () => widget.policy!.bank!
+      );
+      final branch = utilityState.branches.firstWhere(
+        (e) => e.name == selectedBranch, 
+        orElse: () => widget.policy!.branch!
+      );
 
       final policy = MarinePolicy(
         date: DateTime.now(),
@@ -187,7 +211,7 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
                 children: [
                   Expanded(child: _buildField(sumInsuredUsdController, 'Sum (USD)', Icons.attach_money, keyboardType: TextInputType.number)),
                   const SizedBox(width: 15),
-                  Expanded(child: _buildField(usdRateController, 'USD Rate', Icons.trending_up, keyboardType: TextInputType.number)),
+                  Expanded(child: _buildField(usdRateController, 'USD Rate', Icons.trending_up, keyboardType: TextInputType.number, readOnly: true)),
                 ],
               ),
               const SizedBox(height: 15),

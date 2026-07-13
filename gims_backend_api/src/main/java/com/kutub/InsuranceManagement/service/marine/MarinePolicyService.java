@@ -59,6 +59,18 @@ public class MarinePolicyService {
         if (updatedDetails.getPolicyholder() != null && !updatedDetails.getPolicyholder().equals(existingPolicy.getPolicyholder())) {
             existingPolicy.setPolicyholder(updatedDetails.getPolicyholder());
         }
+        if (updatedDetails.getBranch() != null) {
+            existingPolicy.setBranch(updatedDetails.getBranch());
+        }
+        if (updatedDetails.getBank() != null) {
+            existingPolicy.setBank(updatedDetails.getBank());
+        }
+        if (updatedDetails.getAddress() != null) existingPolicy.setAddress(updatedDetails.getAddress());
+        if (updatedDetails.getVoyageFrom() != null) existingPolicy.setVoyageFrom(updatedDetails.getVoyageFrom());
+        if (updatedDetails.getVoyageTo() != null) existingPolicy.setVoyageTo(updatedDetails.getVoyageTo());
+        if (updatedDetails.getVia() != null) existingPolicy.setVia(updatedDetails.getVia());
+        if (updatedDetails.getStockItem() != null) existingPolicy.setStockItem(updatedDetails.getStockItem());
+        if (updatedDetails.getCoverage() != null) existingPolicy.setCoverage(updatedDetails.getCoverage());
 
         // Save the updated policy
         MarinePolicy savedPolicy = policyRepository.save(existingPolicy);

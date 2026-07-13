@@ -7,12 +7,14 @@ class UtilityState {
   final List<Bank> banks;
   final List<Branch> branches;
   final List<InsuranceCompany> insuranceCompanies;
+  final double currencyRate;
   final bool isLoading;
 
   UtilityState({
     this.banks = const [],
     this.branches = const [],
     this.insuranceCompanies = const [],
+    this.currencyRate = 0.0,
     this.isLoading = false,
   });
 
@@ -20,12 +22,14 @@ class UtilityState {
     List<Bank>? banks,
     List<Branch>? branches,
     List<InsuranceCompany>? insuranceCompanies,
+    double? currencyRate,
     bool? isLoading,
   }) {
     return UtilityState(
       banks: banks ?? this.banks,
       branches: branches ?? this.branches,
       insuranceCompanies: insuranceCompanies ?? this.insuranceCompanies,
+      currencyRate: currencyRate ?? this.currencyRate,
       isLoading: isLoading ?? this.isLoading,
     );
   }
@@ -69,6 +73,15 @@ class UtilityViewModel extends StateNotifier<UtilityState> {
       state = state.copyWith(insuranceCompanies: companies, isLoading: false);
     } else {
       state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> fetchCurrencyRate() async {
+    final response = await ref.read(apiServiceProvider).getCurrencyRate();
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final rate = data['data']['usd_rate'] as double;
+      state = state.copyWith(currencyRate: rate);
     }
   }
 }

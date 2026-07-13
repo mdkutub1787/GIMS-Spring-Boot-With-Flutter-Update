@@ -49,7 +49,9 @@ public class SecurityConfig {
                                         "/api/bill/**",
                                         "/api/marinebill/**",
                                         "/api/moneyreceipt/**",
-                                        "/api/marinebillmoneyreceipt/**"
+                                        "/api/marinemoneyreceipt/**",
+                                        "/api/marinebillmoneyreceipt/**",
+                                        "/api/currency/**"
                                 ).permitAll()
                                 // Any other request must be authenticated
                                 .anyRequest().authenticated()

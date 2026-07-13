@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BrandAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? title;
@@ -27,26 +28,32 @@ class BrandAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: theme.colorScheme.primary,
       elevation: 0,
-      systemOverlayStyle: SystemUiOverlayStyle(
+      systemOverlayStyle: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: theme.brightness == Brightness.light 
-            ? Brightness.dark 
-            : Brightness.light,
+        statusBarIconBrightness: Brightness.light, 
       ),
       toolbarHeight: height,
       leadingWidth: leadingWidth,
       automaticallyImplyLeading: automaticallyImplyLeading,
-      iconTheme: IconThemeData(
-        color: theme.brightness == Brightness.light ? Colors.black87 : Colors.white,
-      ),
-      foregroundColor: theme.brightness == Brightness.light ? Colors.black87 : Colors.white,
+      iconTheme: const IconThemeData(color: Colors.white),
+      foregroundColor: Colors.white,
       leading: leading,
-      title: title,
+      title: title != null 
+          ? DefaultTextStyle(
+              style: GoogleFonts.poppins(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+              child: title!,
+            )
+          : null,
       centerTitle: centerTitle,
       actions: actions,
       bottom: bottom,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(30),
+        ),
+      ),
     );
   }
 
