@@ -106,13 +106,19 @@ class _CreateMarineMoneyReceiptScreenState extends ConsumerState<CreateMarineMon
               Text('Bill Selection', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFFD97706))),
               const SizedBox(height: 15),
               DropdownButtonFormField<MarineBill>(
-                value: selectedBill,
+                value: selectedBill != null && billState.bills.any((b) => b.id == selectedBill!.id)
+                       ? billState.bills.firstWhere((b) => b.id == selectedBill!.id)
+                       : (billState.bills.isNotEmpty && selectedBill != null ? selectedBill : null),
                 isExpanded: true,
                 decoration: _inputDecoration('Select Marine Bill', Icons.receipt_long_outlined),
-                items: billState.bills.map((b) => DropdownMenuItem<MarineBill>(
-                  value: b, 
-                  child: Text('${b.marineDetails?.policyholder ?? 'N/A'} (#${b.id})', overflow: TextOverflow.ellipsis)
-                )).toList(),
+                items: [
+                  if (selectedBill != null && !billState.bills.any((b) => b.id == selectedBill!.id))
+                    DropdownMenuItem<MarineBill>(value: selectedBill, child: Text('${selectedBill!.marineDetails?.policyholder ?? 'N/A'} (#${selectedBill!.id})', overflow: TextOverflow.ellipsis)),
+                  ...billState.bills.map((b) => DropdownMenuItem<MarineBill>(
+                    value: b, 
+                    child: Text('${b.marineDetails?.policyholder ?? 'N/A'} (#${b.id})', overflow: TextOverflow.ellipsis)
+                  ))
+                ],
                 onChanged: (val) => setState(() => selectedBill = val),
                 validator: (val) => val == null ? 'Required' : null,
               ),

@@ -8,7 +8,9 @@ import '../../viewmodels/fire_bill_viewmodel.dart';
 import '../../viewmodels/fire_receipt_viewmodel.dart';
 
 class CreateFireMoneyReceiptScreen extends ConsumerStatefulWidget {
-  const CreateFireMoneyReceiptScreen({super.key});
+  final FireMoneyReceipt? receipt;
+  
+  const CreateFireMoneyReceiptScreen({super.key, this.receipt});
 
   @override
   ConsumerState<CreateFireMoneyReceiptScreen> createState() => _CreateFireMoneyReceiptScreenState();
@@ -32,7 +34,18 @@ class _CreateFireMoneyReceiptScreenState extends ConsumerState<CreateFireMoneyRe
   void initState() {
     super.initState();
     Future.microtask(() => ref.read(fireBillViewModelProvider.notifier).fetchBills());
-    dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    
+    if (widget.receipt != null) {
+      final r = widget.receipt!;
+      issuingOfficeController.text = r.issuingOffice ?? '';
+      selectedClassOfInsurance = r.classOfInsurance;
+      selectedModeOfPayment = r.modeOfPayment;
+      dateController.text = r.date != null ? DateFormat('yyyy-MM-dd').format(r.date!) : DateFormat('yyyy-MM-dd').format(DateTime.now());
+      issuedAgainstController.text = r.issuedAgainst ?? '';
+      selectedBill = r.bill;
+    } else {
+      dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    }
   }
 
   void _submit() async {
@@ -46,11 +59,17 @@ class _CreateFireMoneyReceiptScreenState extends ConsumerState<CreateFireMoneyRe
         bill: selectedBill!,
       );
 
-      final success = await ref.read(fireReceiptViewModelProvider.notifier).saveReceipt(receipt);
+      bool success;
+      if (widget.receipt != null) {
+        success = await ref.read(fireReceiptViewModelProvider.notifier).updateReceipt(widget.receipt!.id!, receipt);
+      } else {
+        success = await ref.read(fireReceiptViewModelProvider.notifier).saveReceipt(receipt);
+      }
+      
       if (success && mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Receipt Created Successfully!'), backgroundColor: Colors.green),
+          SnackBar(content: Text(widget.receipt != null ? 'Receipt Updated Successfully!' : 'Receipt Created Successfully!'), backgroundColor: Colors.green),
         );
       }
     }
@@ -65,7 +84,7 @@ class _CreateFireMoneyReceiptScreenState extends ConsumerState<CreateFireMoneyRe
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('New Money Receipt', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+        title: Text(widget.receipt != null ? 'Edit Money Receipt' : 'New Money Receipt', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -78,10 +97,16 @@ class _CreateFireMoneyReceiptScreenState extends ConsumerState<CreateFireMoneyRe
               Text('Bill Selection', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
               const SizedBox(height: 15),
               DropdownButtonFormField<FireBill>(
-                value: selectedBill,
+                value: selectedBill != null && billState.bills.any((b) => b.id == selectedBill!.id)
+                       ? billState.bills.firstWhere((b) => b.id == selectedBill!.id)
+                       : (billState.bills.isNotEmpty && selectedBill != null ? selectedBill : null),
                 isExpanded: true,
                 decoration: _inputDecoration('Select Bill', Icons.receipt_long_outlined),
-                items: billState.bills.map((b) => DropdownMenuItem<FireBill>(value: b, child: Text('${b.policy?.policyholder ?? 'N/A'} (#${b.id})'))).toList(),
+                items: [
+                  if (selectedBill != null && !billState.bills.any((b) => b.id == selectedBill!.id))
+                    DropdownMenuItem<FireBill>(value: selectedBill, child: Text('${selectedBill!.policy?.policyholder ?? 'N/A'} (#${selectedBill!.id})')),
+                  ...billState.bills.map((b) => DropdownMenuItem<FireBill>(value: b, child: Text('${b.policy?.policyholder ?? 'N/A'} (#${b.id})')))
+                ],
                 onChanged: (val) => setState(() => selectedBill = val),
                 validator: (val) => val == null ? 'Required' : null,
               ),
@@ -110,7 +135,7 @@ class _CreateFireMoneyReceiptScreenState extends ConsumerState<CreateFireMoneyRe
                   ),
                   child: receiptState.isLoading 
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : Text('Create Receipt', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
+                    : Text(widget.receipt != null ? 'Update Receipt' : 'Create Receipt', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
               ),
             ],
@@ -143,8 +168,9 @@ class _CreateFireMoneyReceiptScreenState extends ConsumerState<CreateFireMoneyRe
   }
 
   Widget _buildDropdown(String label, IconData icon, List<String> items, String? value, Function(String?) onChanged) {
+    final validValue = (value != null && items.contains(value)) ? value : null;
     return DropdownButtonFormField<String>(
-      value: value,
+      value: validValue,
       isExpanded: true,
       style: GoogleFonts.poppins(fontSize: 14, color: Colors.black87),
       decoration: _inputDecoration(label, icon),

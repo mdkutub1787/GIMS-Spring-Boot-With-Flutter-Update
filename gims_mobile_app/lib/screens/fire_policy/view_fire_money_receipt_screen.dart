@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import '../../services/pdf_service.dart';
 import '../../viewmodels/fire_receipt_viewmodel.dart';
 import '../../core/routing/app_router.dart';
 import '../../core/widgets/brand_app_bar.dart';
@@ -36,7 +37,7 @@ class _ViewFireMoneyReceiptScreenState extends ConsumerState<ViewFireMoneyReceip
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
             fontSize: 20,
-            color: Colors.white,
+            color: theme.appBarTheme.foregroundColor!,
           ),
         ),
         leading: IconButton(
@@ -192,7 +193,7 @@ class _ViewFireMoneyReceiptScreenState extends ConsumerState<ViewFireMoneyReceip
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF007AFF).withOpacity(0.1),
+                        color: const Color(0xFF7C3AED).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -200,13 +201,17 @@ class _ViewFireMoneyReceiptScreenState extends ConsumerState<ViewFireMoneyReceip
                         style: GoogleFonts.poppins(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF007AFF),
+                          color: const Color(0xFF7C3AED),
                         ),
                       ),
                     ),
                     Row(
                       children: [
-                        _buildActionBtn(Icons.print_rounded, Colors.blue, () {}),
+                        _buildActionBtn(Icons.print_rounded, const Color(0xFF7C3AED), () {}),
+                        const SizedBox(width: 10),
+                        _buildActionBtn(Icons.edit_note_rounded, Colors.orange, () {
+                           Navigator.pushNamed(context, AppRouter.createFireMoneyReceipt, arguments: receipt);
+                        }),
                         const SizedBox(width: 10),
                         _buildActionBtn(Icons.delete_outline_rounded, Colors.redAccent, () => _confirmDelete(receipt.id!)),
                       ],
@@ -281,7 +286,7 @@ class _ViewFireMoneyReceiptScreenState extends ConsumerState<ViewFireMoneyReceip
                     _buildDetailRow('Issued Against', receipt.issuedAgainst),
                     const SizedBox(height: 30),
                     ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: () => PdfService.generateFireMoneyReceiptPdf(receipt),
                       icon: const Icon(Icons.print_rounded),
                       label: const Text('Download Receipt PDF'),
                       style: ElevatedButton.styleFrom(

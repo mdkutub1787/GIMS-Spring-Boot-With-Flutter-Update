@@ -16,6 +16,8 @@ class MyApp extends StatelessWidget {
       title: 'Insurance Management',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme(),
+      darkTheme: AppTheme.darkTheme(),
+      themeMode: ThemeMode.system, // Will follow system settings
       onGenerateRoute: AppRouter.generateRoute,
       initialRoute: AppRouter.splash,
     );

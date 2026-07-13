@@ -53,7 +53,7 @@ class _FireMoneyReceiptReportScreenState extends ConsumerState<FireMoneyReceiptR
                   child: PieChart(
                     dataMap: dataMap,
                     chartType: ChartType.disc,
-                    colorList: [Colors.blue.shade300, Colors.orange.shade300],
+                    colorList: [Color(0xFFA57CFA), Colors.orange.shade300],
                     legendOptions: LegendOptions(legendPosition: LegendPosition.bottom, legendTextStyle: GoogleFonts.poppins()),
                   ),
                 ),
@@ -86,7 +86,7 @@ class _FireMoneyReceiptReportScreenState extends ConsumerState<FireMoneyReceiptR
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text('Total Value', style: GoogleFonts.poppins(color: Colors.grey, fontSize: 12)),
-              Text('TK ${total.toStringAsFixed(0)}', style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blue)),
+              Text('TK ${total.toStringAsFixed(0)}', style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.bold, color: const Color(0xFF7C3AED))),
             ],
           ),
         ],

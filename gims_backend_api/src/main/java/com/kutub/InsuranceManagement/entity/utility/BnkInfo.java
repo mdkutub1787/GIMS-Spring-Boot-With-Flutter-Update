@@ -2,6 +2,7 @@ package com.kutub.InsuranceManagement.entity.utility;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -49,6 +50,7 @@ public class BnkInfo {
     @Column(name = "npsb")
     private Integer npsb;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "bnkInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BnkBrInfo> branches;
 }

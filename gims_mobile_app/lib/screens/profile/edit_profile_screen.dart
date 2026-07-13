@@ -112,7 +112,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       appBar: BrandAppBar(
         title: Text(
           'Edit Profile',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 20, color: theme.appBarTheme.foregroundColor!),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),

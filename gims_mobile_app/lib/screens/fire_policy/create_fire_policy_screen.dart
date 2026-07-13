@@ -8,7 +8,9 @@ import '../../viewmodels/utility_viewmodel.dart';
 import '../../core/widgets/brand_app_bar.dart';
 
 class CreateFirePolicyScreen extends ConsumerStatefulWidget {
-  const CreateFirePolicyScreen({super.key});
+  final FirePolicy? policy;
+  
+  const CreateFirePolicyScreen({super.key, this.policy});
 
   @override
   ConsumerState<CreateFirePolicyScreen> createState() => _CreateFirePolicyScreenState();
@@ -38,9 +40,27 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
   @override
   void initState() {
     super.initState();
-    periodFromController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    DateTime nextYear = DateTime.now().add(const Duration(days: 365));
-    periodToController.text = DateFormat('yyyy-MM-dd').format(nextYear);
+    
+    if (widget.policy != null) {
+      final p = widget.policy!;
+      policyholderController.text = p.policyholder ?? '';
+      addressController.text = p.address ?? '';
+      stockInsuredController.text = p.stockInsured ?? '';
+      sumInsuredController.text = p.sumInsured?.toString() ?? '';
+      interestInsuredController.text = p.interestInsured ?? '';
+      locationController.text = p.location ?? '';
+      selectedCompany = p.company?.name;
+      selectedBank = p.bank?.name;
+      selectedBranch = p.branch?.name;
+      selectedConstruction = p.construction;
+      selectedUsage = p.usedAs;
+      periodFromController.text = p.periodFrom != null ? DateFormat('yyyy-MM-dd').format(p.periodFrom!) : DateFormat('yyyy-MM-dd').format(DateTime.now());
+      periodToController.text = p.periodTo != null ? DateFormat('yyyy-MM-dd').format(p.periodTo!) : DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 365)));
+    } else {
+      periodFromController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      DateTime nextYear = DateTime.now().add(const Duration(days: 365));
+      periodToController.text = DateFormat('yyyy-MM-dd').format(nextYear);
+    }
 
     Future.microtask(() {
       ref.read(utilityViewModelProvider.notifier).fetchBanks();
@@ -77,17 +97,23 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
         periodTo: DateTime.parse(periodToController.text),
       );
 
-      final success = await ref.read(firePolicyViewModelProvider.notifier).savePolicy(policy);
+      bool success;
+      if (widget.policy != null) {
+        success = await ref.read(firePolicyViewModelProvider.notifier).updatePolicy(widget.policy!.id!, policy);
+      } else {
+        success = await ref.read(firePolicyViewModelProvider.notifier).savePolicy(policy);
+      }
+      
       if (mounted) {
         if (success) {
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Policy Created Successfully!'), backgroundColor: Colors.green, behavior: SnackBarBehavior.floating),
+            SnackBar(content: Text(widget.policy != null ? 'Policy Updated Successfully!' : 'Policy Created Successfully!'), backgroundColor: Colors.green, behavior: SnackBarBehavior.floating),
           );
         } else {
           final error = ref.read(firePolicyViewModelProvider).error;
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(error ?? 'Failed to create policy'), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating),
+            SnackBar(content: Text(error ?? (widget.policy != null ? 'Failed to update policy' : 'Failed to create policy')), backgroundColor: Colors.red, behavior: SnackBarBehavior.floating),
           );
         }
       }
@@ -103,7 +129,7 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: BrandAppBar(
-        title: Text('New Fire Policy', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black87)),
+        title: Text(widget.policy != null ? 'Edit Fire Policy' : 'New Fire Policy', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black87)),
         leading: IconButton(
           icon: const Icon(Icons.close_rounded, color: Colors.black87),
           onPressed: () => Navigator.pop(context),
@@ -203,7 +229,7 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
                   ),
                   child: (fireState.isLoading || utilityState.isLoading)
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : Text('Generate Policy', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
+                    : Text(widget.policy != null ? 'Update Policy' : 'Generate Policy', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
               ),
               const SizedBox(height: 30),
@@ -217,7 +243,7 @@ class _CreateFirePolicyScreenState extends ConsumerState<CreateFirePolicyScreen>
   Widget _buildSectionTitle(String title, IconData icon) {
     return Row(
       children: [
-        Icon(icon, size: 20, color: Colors.blue),
+        Icon(icon, size: 20, color: const Color(0xFF7C3AED)),
         const SizedBox(width: 10),
         Text(title, style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87)),
       ],

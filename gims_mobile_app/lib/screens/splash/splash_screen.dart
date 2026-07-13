@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 width: 150,
                 height: 150,
                 errorBuilder: (context, error, stackTrace) => 
-                    const Icon(Icons.shield, size: 100, color: Colors.blue),
+                    const Icon(Icons.shield, size: 100, color: const Color(0xFF7C3AED)),
               ),
               const SizedBox(height: 24),
               const Text(
@@ -71,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 2,
-                  color: Colors.blue,
+                  color: const Color(0xFF7C3AED),
                 ),
               ),
               const SizedBox(height: 8),
@@ -85,7 +85,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               ),
               const SizedBox(height: 48),
               const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF7C3AED)),
               ),
             ],
           ),

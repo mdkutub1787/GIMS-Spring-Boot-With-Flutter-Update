@@ -39,11 +39,11 @@ class FireMoneyReceipt {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (id != null) data['id'] = id;
-    data['issuing_office'] = issuingOffice;
-    data['class_of_insurance'] = classOfInsurance;
+    data['issuingOffice'] = issuingOffice;
+    data['classOfInsurance'] = classOfInsurance;
     if (date != null) data['date'] = date?.toIso8601String();
-    data['mode_of_payment'] = modeOfPayment;
-    data['issued_against'] = issuedAgainst;
+    data['modeOfPayment'] = modeOfPayment;
+    data['issuedAgainst'] = issuedAgainst;
     if (bill != null) {
       data['bill'] = {'id': bill!.id};
     }

@@ -62,7 +62,7 @@ class _CombinedReportScreenState extends ConsumerState<CombinedReportScreen> {
                 dataMap: dataMap,
                 chartType: ChartType.ring,
                 ringStrokeWidth: 32,
-                colorList: [Colors.orange.shade400, Colors.blue.shade400],
+                colorList: [Colors.orange.shade400, Color(0xFF915CEB)],
                 legendOptions: LegendOptions(legendPosition: LegendPosition.bottom, legendTextStyle: GoogleFonts.poppins()),
               ),
             ),

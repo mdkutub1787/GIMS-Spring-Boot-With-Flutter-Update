@@ -41,6 +41,7 @@ class ApiConfig {
   /// Fire Money Receipt API endpoints
   static String get fireReceiptSaveUrl => '$baseUrl/api/moneyreceipt/save';
   static String get fireReceiptListUrl => '$baseUrl/api/moneyreceipt/list';
+  static String fireReceiptUpdateUrl(int id) => '$baseUrl/api/moneyreceipt/update/$id';
   static String fireReceiptDeleteUrl(int id) => '$baseUrl/api/moneyreceipt/delete/$id';
   
   /// Marine Policy API endpoints

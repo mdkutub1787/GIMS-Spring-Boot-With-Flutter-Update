@@ -6,6 +6,7 @@ import '../../viewmodels/marine_bill_viewmodel.dart';
 import '../../models/marine/marine_bill.dart';
 import '../../core/widgets/brand_app_bar.dart';
 import '../../core/routing/app_router.dart';
+import '../../services/pdf_service.dart';
 
 class ViewMarineBillScreen extends ConsumerStatefulWidget {
   const ViewMarineBillScreen({super.key});
@@ -36,7 +37,7 @@ class _ViewMarineBillScreenState extends ConsumerState<ViewMarineBillScreen> {
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
             fontSize: 20,
-            color: Colors.white,
+            color: theme.appBarTheme.foregroundColor!,
           ),
         ),
         leading: IconButton(
@@ -72,7 +73,7 @@ class _ViewMarineBillScreenState extends ConsumerState<ViewMarineBillScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.pushNamed(context, AppRouter.createMarineBill).then((_) => ref.read(marineBillViewModelProvider.notifier).fetchBills()),
-        backgroundColor: const Color(0xFF007AFF),
+        backgroundColor: const Color(0xFF7C3AED),
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );
@@ -98,7 +99,7 @@ class _ViewMarineBillScreenState extends ConsumerState<ViewMarineBillScreen> {
         decoration: InputDecoration(
           hintText: 'Search by client or bill ID...',
           hintStyle: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[400]),
-          prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFF007AFF)),
+          prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFF7C3AED)),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         ),
@@ -136,14 +137,14 @@ class _ViewMarineBillScreenState extends ConsumerState<ViewMarineBillScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF007AFF).withOpacity(0.1),
+                        color: const Color(0xFF7C3AED).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
                         'BILL #${bill.id}',
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF007AFF),
+                          color: const Color(0xFF7C3AED),
                           fontSize: 12,
                         ),
                       ),
@@ -211,7 +212,11 @@ class _ViewMarineBillScreenState extends ConsumerState<ViewMarineBillScreen> {
                     ),
                     Row(
                       children: [
-                        _buildActionBtn(Icons.visibility_rounded, Colors.blue, () => _showBillDetails(bill)),
+                        _buildActionBtn(Icons.visibility_rounded, const Color(0xFF7C3AED), () => _showBillDetails(bill)),
+                        const SizedBox(width: 10),
+                        _buildActionBtn(Icons.edit_note_rounded, Colors.orange, () {
+                           Navigator.pushNamed(context, AppRouter.createMarineBill, arguments: bill);
+                        }),
                         const SizedBox(width: 10),
                         _buildActionBtn(Icons.delete_outline_rounded, Colors.redAccent, () => _confirmDelete(bill.id!)),
                       ],
@@ -285,11 +290,11 @@ class _ViewMarineBillScreenState extends ConsumerState<ViewMarineBillScreen> {
                     _buildDetailRow('Stamp Duty', 'TK ${NumberFormat('#,##,###').format(bill.stampDuty)}'),
                     const SizedBox(height: 30),
                     ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: () => PdfService.generateMarineBillPdf(bill),
                       icon: const Icon(Icons.print_rounded),
                       label: const Text('Download PDF'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF007AFF),
+                        backgroundColor: const Color(0xFF7C3AED),
                         foregroundColor: Colors.white,
                         minimumSize: const Size(double.infinity, 55),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),

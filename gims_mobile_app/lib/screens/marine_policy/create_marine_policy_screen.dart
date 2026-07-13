@@ -7,7 +7,9 @@ import '../../viewmodels/marine_policy_viewmodel.dart';
 import '../../viewmodels/utility_viewmodel.dart';
 
 class CreateMarinePolicyScreen extends ConsumerStatefulWidget {
-  const CreateMarinePolicyScreen({super.key});
+  final MarinePolicy? policy;
+  
+  const CreateMarinePolicyScreen({super.key, this.policy});
 
   @override
   ConsumerState<CreateMarinePolicyScreen> createState() => _CreateMarinePolicyScreenState();
@@ -35,6 +37,23 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
     super.initState();
     usdRateController.addListener(_calculateTk);
     sumInsuredUsdController.addListener(_calculateTk);
+    
+    if (widget.policy != null) {
+      final p = widget.policy!;
+      policyholderController.text = p.policyholder ?? '';
+      addressController.text = p.address ?? '';
+      voyageFromController.text = p.voyageFrom ?? '';
+      voyageToController.text = p.voyageTo ?? '';
+      viaController.text = p.via ?? '';
+      stockItemController.text = p.stockItem ?? '';
+      sumInsuredUsdController.text = p.sumInsuredUsd?.toString() ?? '';
+      usdRateController.text = p.usdRate?.toString() ?? '';
+      sumInsuredController.text = p.sumInsured?.toString() ?? '';
+      coverageController.text = p.coverage ?? '';
+      selectedBank = p.bank?.name;
+      selectedBranch = p.branch?.name;
+    }
+
     Future.microtask(() {
       ref.read(utilityViewModelProvider.notifier).fetchBanks();
     });
@@ -68,18 +87,24 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
         coverage: coverageController.text,
       );
 
-      final success = await ref.read(marinePolicyViewModelProvider.notifier).savePolicy(policy);
+      bool success;
+      if (widget.policy != null) {
+        success = await ref.read(marinePolicyViewModelProvider.notifier).updatePolicy(widget.policy!.id!, policy);
+      } else {
+        success = await ref.read(marinePolicyViewModelProvider.notifier).savePolicy(policy);
+      }
+      
       if (mounted) {
         if (success) {
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Marine Policy Created Successfully!'), backgroundColor: Colors.green),
+            SnackBar(content: Text(widget.policy != null ? 'Marine Policy Updated Successfully!' : 'Marine Policy Created Successfully!'), backgroundColor: Colors.green),
           );
         } else {
           final error = ref.read(marinePolicyViewModelProvider).error;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(error ?? 'Failed to create marine policy. Please try again.'),
+              content: Text(error ?? (widget.policy != null ? 'Failed to update marine policy. Please try again.' : 'Failed to create marine policy. Please try again.')),
               backgroundColor: Colors.red,
             ),
           );
@@ -97,7 +122,7 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('New Marine Policy', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+        title: Text(widget.policy != null ? 'Edit Marine Policy' : 'New Marine Policy', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -183,7 +208,7 @@ class _CreateMarinePolicyScreenState extends ConsumerState<CreateMarinePolicyScr
                   ),
                   child: (state.isLoading || utilityState.isLoading)
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : Text('Create Marine Policy', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
+                    : Text(widget.policy != null ? 'Update Marine Policy' : 'Create Marine Policy', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
               ),
               const SizedBox(height: 20),

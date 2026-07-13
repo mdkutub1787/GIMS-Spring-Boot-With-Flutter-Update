@@ -79,7 +79,7 @@ class _FireBillReportScreenState extends ConsumerState<FireBillReportScreen> {
       crossAxisSpacing: 15,
       childAspectRatio: 1.5,
       children: [
-        _statCard('Total Bills', count.toString(), Colors.blue),
+        _statCard('Total Bills', count.toString(), const Color(0xFF7C3AED)),
         _statCard('Net Total', 'TK ${net.toStringAsFixed(0)}', Colors.orange),
         _statCard('Total Tax', 'TK ${tax.toStringAsFixed(0)}', Colors.red),
         _statCard('Gross Total', 'TK ${gross.toStringAsFixed(0)}', Colors.green),

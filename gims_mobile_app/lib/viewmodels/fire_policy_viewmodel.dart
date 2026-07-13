@@ -63,6 +63,22 @@ class FirePolicyViewModel extends StateNotifier<FirePolicyState> {
       return false;
     }
   }
+
+  Future<bool> updatePolicy(int id, FirePolicy policy) async {
+    state = state.copyWith(isLoading: true, error: null);
+    try {
+      final success = await _repository.updatePolicy(id, policy);
+      if (success) {
+        await fetchPolicies();
+      } else {
+        state = state.copyWith(isLoading: false, error: 'Failed to update policy');
+      }
+      return success;
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+      return false;
+    }
+  }
 }
 
 final firePolicyViewModelProvider = StateNotifierProvider<FirePolicyViewModel, FirePolicyState>((ref) {

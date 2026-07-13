@@ -7,7 +7,9 @@ import '../../viewmodels/marine_bill_viewmodel.dart';
 import '../../viewmodels/marine_policy_viewmodel.dart';
 
 class CreateMarineBillScreen extends ConsumerStatefulWidget {
-  const CreateMarineBillScreen({super.key});
+  final MarineBill? bill;
+  
+  const CreateMarineBillScreen({super.key, this.bill});
 
   @override
   ConsumerState<CreateMarineBillScreen> createState() => _CreateMarineBillScreenState();
@@ -29,6 +31,18 @@ class _CreateMarineBillScreenState extends ConsumerState<CreateMarineBillScreen>
   void initState() {
     super.initState();
     Future.microtask(() => ref.read(marinePolicyViewModelProvider.notifier).fetchPolicies());
+    
+    if (widget.bill != null) {
+      final b = widget.bill!;
+      marineRateController.text = b.marineRate?.toString() ?? '';
+      warSrccRateController.text = b.warSrccRate?.toString() ?? '';
+      netPremiumController.text = b.netPremium?.toString() ?? '';
+      taxController.text = "${b.tax?.toStringAsFixed(0) ?? '15'}%";
+      stampDutyController.text = b.stampDuty?.toString() ?? '';
+      grossPremiumController.text = b.grossPremium?.toString() ?? '';
+      selectedPolicy = b.marineDetails;
+    }
+
     marineRateController.addListener(_updateCalculatedFields);
     warSrccRateController.addListener(_updateCalculatedFields);
     stampDutyController.addListener(_updateCalculatedFields);
@@ -69,11 +83,17 @@ class _CreateMarineBillScreenState extends ConsumerState<CreateMarineBillScreen>
         marineDetails: selectedPolicy!,
       );
 
-      final success = await ref.read(marineBillViewModelProvider.notifier).saveBill(bill);
+      bool success;
+      if (widget.bill != null) {
+        success = await ref.read(marineBillViewModelProvider.notifier).updateBill(widget.bill!.id!, bill);
+      } else {
+        success = await ref.read(marineBillViewModelProvider.notifier).saveBill(bill);
+      }
+      
       if (success && mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Marine Bill Created Successfully!'), backgroundColor: Colors.green),
+          SnackBar(content: Text(widget.bill != null ? 'Marine Bill Updated Successfully!' : 'Marine Bill Created Successfully!'), backgroundColor: Colors.green),
         );
       }
     }
@@ -88,7 +108,7 @@ class _CreateMarineBillScreenState extends ConsumerState<CreateMarineBillScreen>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Create Marine Bill', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+        title: Text(widget.bill != null ? 'Edit Marine Bill' : 'Create Marine Bill', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -101,10 +121,16 @@ class _CreateMarineBillScreenState extends ConsumerState<CreateMarineBillScreen>
               Text('Policy Selection', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
               const SizedBox(height: 15),
               DropdownButtonFormField<MarinePolicy>(
-                value: selectedPolicy,
+                value: selectedPolicy != null && policyState.policies.any((p) => p.id == selectedPolicy!.id)
+                       ? policyState.policies.firstWhere((p) => p.id == selectedPolicy!.id)
+                       : (policyState.policies.isNotEmpty && selectedPolicy != null ? selectedPolicy : null),
                 isExpanded: true,
                 decoration: _inputDecoration('Select Policy', Icons.person_outline),
-                items: policyState.policies.map((p) => DropdownMenuItem<MarinePolicy>(value: p, child: Text(p.policyholder ?? 'N/A'))).toList(),
+                items: [
+                  if (selectedPolicy != null && !policyState.policies.any((p) => p.id == selectedPolicy!.id))
+                    DropdownMenuItem<MarinePolicy>(value: selectedPolicy, child: Text(selectedPolicy!.policyholder ?? 'N/A')),
+                  ...policyState.policies.map((p) => DropdownMenuItem<MarinePolicy>(value: p, child: Text(p.policyholder ?? 'N/A')))
+                ],
                 onChanged: (val) {
                   setState(() {
                     selectedPolicy = val;
@@ -115,7 +141,7 @@ class _CreateMarineBillScreenState extends ConsumerState<CreateMarineBillScreen>
               ),
               if (selectedPolicy != null) ...[
                 const SizedBox(height: 10),
-                Text('Bank: ${selectedPolicy!.bank?.name ?? 'N/A'}', style: GoogleFonts.poppins(fontSize: 12, color: Colors.blue)),
+                Text('Bank: ${selectedPolicy!.bank?.name ?? 'N/A'}', style: GoogleFonts.poppins(fontSize: 12, color: const Color(0xFF7C3AED))),
                 Text('Sum Insured: TK ${selectedPolicy!.sumInsured}', style: GoogleFonts.poppins(fontSize: 12, color: Colors.green)),
               ],
               const SizedBox(height: 30),
@@ -147,7 +173,7 @@ class _CreateMarineBillScreenState extends ConsumerState<CreateMarineBillScreen>
                   ),
                   child: billState.isLoading 
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : Text('Create Marine Bill', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
+                    : Text(widget.bill != null ? 'Update Marine Bill' : 'Create Marine Bill', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
               ),
             ],

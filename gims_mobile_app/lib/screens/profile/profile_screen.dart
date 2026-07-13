@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
-import '../../viewmodels/auth_viewmodel.dart';
+import '../../core/routing/app_router.dart';
 import '../../core/widgets/brand_app_bar.dart';
-import 'edit_profile_screen.dart';
+import '../../viewmodels/auth_viewmodel.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -12,224 +11,210 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authViewModelProvider).user;
-    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: const Color(0xFFF9FAFB),
       appBar: BrandAppBar(
-        title: Text(
-          'My Profile',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: Colors.white,
-          ),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
-          onPressed: () => Navigator.pop(context),
+        height: 60,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: const Color(0xFF7C3AED),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: const Icon(Icons.shield_rounded, color: Colors.white, size: 14),
+            ),
+            const SizedBox(width: 8),
+            Text('GIMS', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black87)),
+          ],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.edit, color: Colors.white),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const EditProfileScreen()),
-              );
-            },
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.notifications_none_rounded, color: Colors.black87),
+                onPressed: () {},
+              ),
+              Positioned(
+                right: 12,
+                top: 12,
+                child: Container(
+                  width: 8, height: 8,
+                  decoration: BoxDecoration(
+                    color: Colors.redAccent, shape: BoxShape.circle,
+                    border: Border.all(color: const Color(0xFFF9FAFB), width: 1.5),
+                  ),
+                ),
+              ),
+            ],
           ),
+          const SizedBox(width: 8),
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _buildProfileHeader(user),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            // Top Purple Header & Stats Card Stack
+            SizedBox(
+              height: 260,
+              child: Stack(
+                alignment: Alignment.topCenter,
                 children: [
-                  _buildSectionTitle('Personal Information'),
-                  _buildInfoCard([
-                    _buildInfoTile(Icons.person_outline_rounded, 'Full Name', user?.name ?? 'N/A'),
-                    _buildInfoTile(Icons.alternate_email_rounded, 'Username', user?.username ?? 'N/A'),
-                    _buildInfoTile(Icons.email_outlined, 'Email Address', user?.email ?? 'N/A'),
-                    _buildInfoTile(Icons.phone_iphone_rounded, 'Phone Number', user?.cell ?? 'N/A'),
-                  ]),
-                  const SizedBox(height: 25),
-                  _buildSectionTitle('Account Details'),
-                  _buildInfoCard([
-                    _buildInfoTile(Icons.admin_panel_settings_outlined, 'Role', user?.role?.toString().split('.').last ?? 'USER'),
-                    _buildInfoTile(Icons.location_on_outlined, 'Address', user?.address ?? 'Not provided'),
-                    _buildInfoTile(Icons.cake_outlined, 'Date of Birth', user?.dob != null ? DateFormat('dd MMM, yyyy').format(user!.dob!) : 'Not provided'),
-                    _buildInfoTile(Icons.wc_rounded, 'Gender', user?.gender ?? 'Not provided'),
-                  ]),
-                  const SizedBox(height: 30),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      ref.read(authViewModelProvider.notifier).logout().then((_) {
-                        Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
-                      });
-                    },
-                    icon: const Icon(Icons.logout_rounded),
-                    label: const Text('Log Out'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.redAccent,
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size(double.infinity, 55),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                      elevation: 0,
+                  // Purple Background Header
+                  Container(
+                    height: 180,
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF7C3AED),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(24),
+                        bottomRight: Radius.circular(24),
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          radius: 32,
+                          backgroundColor: Colors.white24,
+                          child: const Icon(Icons.person, size: 40, color: Colors.white),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                user?.name ?? 'Alex Johnson',
+                                style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+                              ),
+                              Text(
+                                user?.email ?? 'alex.johnson@gims.com',
+                                style: GoogleFonts.poppins(fontSize: 12, color: Colors.white70),
+                              ),
+                              const SizedBox(height: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.verified, color: Colors.white, size: 14),
+                                    const SizedBox(width: 4),
+                                    Text('Pro Plan', style: GoogleFonts.poppins(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(Icons.chevron_right, color: Colors.white, size: 24),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  
+                  // Overlapping Stats Card
+                  Positioned(
+                    top: 130,
+                    left: 24,
+                    right: 24,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          _buildStatItem(Icons.security, '12', 'Policies', const Color(0xFF7C3AED)),
+                          _buildStatItem(Icons.receipt_long, '28', 'Bills', const Color(0xFFF59E0B)),
+                          _buildStatItem(Icons.monetization_on, '10', 'Receipts', const Color(0xFF10B981)),
+                          _buildStatItem(Icons.check_circle_outline, '24', 'Completed', const Color(0xFF3B82F6)),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
+            
+            const SizedBox(height: 10),
+
+            // Settings List
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                children: [
+                  _buildListTile(Icons.person_outline, 'Account Settings', () {}),
+                  _buildListTile(Icons.notifications_none, 'Notifications', () {}),
+                  _buildListTile(Icons.people_outline, 'Team Management', () {}),
+                  _buildListTile(Icons.extension_outlined, 'Integrations', () {}),
+                  _buildListTile(Icons.palette_outlined, 'Appearance', () {}),
+                  _buildListTile(Icons.help_outline, 'Help & Support', () {}),
+                  _buildListTile(Icons.logout, 'Log Out', () {
+                    ref.read(authViewModelProvider.notifier).logout().then((_) {
+                      Navigator.pushReplacementNamed(context, AppRouter.login);
+                    });
+                  }, isDestructive: true),
+                ],
+              ),
+            ),
+            const SizedBox(height: 40),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildProfileHeader(dynamic user) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 30),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF2563EB), Color(0xFF3B82F6)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(40),
-          bottomRight: Radius.circular(40),
-        ),
-      ),
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white.withOpacity(0.3), width: 4),
-                ),
-                child: const CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.person, size: 60, color: Colors.blue),
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: const BoxDecoration(
-                    color: Colors.orange,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.camera_alt_rounded, color: Colors.white, size: 18),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 15),
-          Text(
-            user?.name ?? 'User Name',
-            style: GoogleFonts.poppins(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          Text(
-            user?.email ?? 'user@email.com',
+  Widget _buildStatItem(IconData icon, String value, String label, Color color) {
+    return Column(
+      children: [
+        Icon(icon, color: color, size: 20),
+        const SizedBox(height: 8),
+        Text(value, style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87)),
+        const SizedBox(height: 4),
+        Text(label, style: GoogleFonts.poppins(fontSize: 11, color: Colors.grey[600])),
+      ],
+    );
+  }
+
+  Widget _buildListTile(IconData icon, String title, VoidCallback onTap, {bool isDestructive = false}) {
+    final color = isDestructive ? Colors.redAccent : Colors.black87;
+    return Column(
+      children: [
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: Icon(icon, color: color, size: 24),
+          title: Text(
+            title,
             style: GoogleFonts.poppins(
               fontSize: 14,
-              color: Colors.white.withOpacity(0.9),
+              fontWeight: FontWeight.w500,
+              color: color,
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 4, bottom: 12),
-      child: Text(
-        title,
-        style: GoogleFonts.poppins(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: Colors.black87,
+          trailing: isDestructive ? null : const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
+          onTap: onTap,
         ),
-      ),
-    );
-  }
-
-  Widget _buildInfoCard(List<Widget> children) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Column(
-        children: children,
-      ),
-    );
-  }
-
-  Widget _buildInfoTile(IconData icon, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: Colors.blue, size: 20),
-          ),
-          const SizedBox(width: 15),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: GoogleFonts.poppins(
-                    fontSize: 11,
-                    color: Colors.grey[500],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  value,
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+        if (!isDestructive)
+          Divider(color: Colors.grey[200], height: 1, thickness: 1),
+      ],
     );
   }
 }

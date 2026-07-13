@@ -38,7 +38,7 @@ class _FirePolicyReportScreenState extends ConsumerState<FirePolicyReportScreen>
           children: [
             Row(
               children: [
-                _buildStatCard('Total Policies', state.policies.length.toString(), Icons.policy, Colors.blue),
+                _buildStatCard('Total Policies', state.policies.length.toString(), Icons.policy, const Color(0xFF7C3AED)),
                 const SizedBox(width: 15),
                 _buildStatCard('Sum Insured', 'TK ${totalSum.toStringAsFixed(0)}', Icons.monetization_on, Colors.green),
               ],
@@ -58,7 +58,7 @@ class _FirePolicyReportScreenState extends ConsumerState<FirePolicyReportScreen>
                   decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
                   child: Row(
                     children: [
-                      CircleAvatar(backgroundColor: Colors.blue.withOpacity(0.1), child: Text('#${policy.id}', style: const TextStyle(fontSize: 10))),
+                      CircleAvatar(backgroundColor: const Color(0xFF7C3AED).withOpacity(0.1), child: Text('#${policy.id}', style: const TextStyle(fontSize: 10))),
                       const SizedBox(width: 15),
                       Expanded(
                         child: Column(

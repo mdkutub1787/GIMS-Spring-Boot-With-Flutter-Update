@@ -36,11 +36,11 @@ class _ViewMarinePolicyScreenState extends ConsumerState<ViewMarinePolicyScreen>
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
             fontSize: 20,
-            color: Colors.white,
+            color: theme.appBarTheme.foregroundColor,
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: theme.appBarTheme.foregroundColor, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -99,7 +99,7 @@ class _ViewMarinePolicyScreenState extends ConsumerState<ViewMarinePolicyScreen>
         decoration: InputDecoration(
           hintText: 'Search by policyholder or bank...',
           hintStyle: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[400]),
-          prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFF007AFF)),
+          prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFF7C3AED)),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         ),
@@ -137,14 +137,14 @@ class _ViewMarinePolicyScreenState extends ConsumerState<ViewMarinePolicyScreen>
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF007AFF).withOpacity(0.1),
+                        color: const Color(0xFF7C3AED).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
                         'ID: #${policy.id}',
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF007AFF),
+                          color: const Color(0xFF7C3AED),
                           fontSize: 12,
                         ),
                       ),
@@ -212,7 +212,9 @@ class _ViewMarinePolicyScreenState extends ConsumerState<ViewMarinePolicyScreen>
                     ),
                     Row(
                       children: [
-                        _buildActionBtn(Icons.edit_note_rounded, Colors.blue, () {}),
+                        _buildActionBtn(Icons.edit_note_rounded, const Color(0xFF7C3AED), () {
+                          Navigator.pushNamed(context, AppRouter.createMarinePolicy, arguments: policy);
+                        }),
                         const SizedBox(width: 10),
                         _buildActionBtn(Icons.delete_outline_rounded, Colors.redAccent, () => _confirmDelete(policy.id!)),
                       ],
@@ -292,7 +294,7 @@ class _ViewMarinePolicyScreenState extends ConsumerState<ViewMarinePolicyScreen>
                     ElevatedButton(
                       onPressed: () => Navigator.pop(context),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF007AFF),
+                        backgroundColor: const Color(0xFF7C3AED),
                         minimumSize: const Size(double.infinity, 55),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                       ),

@@ -42,18 +42,15 @@ public class SecurityConfig {
                                         "/api/auth/**",
                                         "/api/banks/**",
                                         "/api/location/**",
-                                        "/images/**"
+                                        "/images/**",
+                                        // Temporarily allowing all Fire (policy) and Marine APIs
+                                        "/api/policy/**",
+                                        "/api/marine/**",
+                                        "/api/bill/**",
+                                        "/api/marinebill/**",
+                                        "/api/moneyreceipt/**",
+                                        "/api/marinebillmoneyreceipt/**"
                                 ).permitAll()
-                                // Policies: GET is public, others require ADMIN, USER or OFFICER role
-                                .requestMatchers(HttpMethod.GET, "/api/policy/**", "/api/marine/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/policy/save", "/api/marine/save").hasAnyAuthority("ADMIN", "USER", "OFFICER")
-                                .requestMatchers(HttpMethod.PUT, "/api/policy/update/**", "/api/marine/update/**").hasAnyAuthority("ADMIN", "USER", "OFFICER")
-                                .requestMatchers(HttpMethod.DELETE, "/api/policy/delete/**", "/api/marine/delete/**").hasAuthority("ADMIN")
-                                // Bills: Some are for ADMIN, others for USER/ADMIN
-                                .requestMatchers("/api/bill/save", "/api/marinebill/save").hasAnyAuthority("ADMIN", "USER", "OFFICER")
-                                .requestMatchers("/api/bill/**", "/api/marinebill/**").hasAnyAuthority("ADMIN", "USER", "OFFICER")
-                                // Receipts
-                                .requestMatchers("/api/moneyreceipt/**", "/api/marinebillmoneyreceipt/**").hasAnyAuthority("ADMIN", "USER", "OFFICER")
                                 // Any other request must be authenticated
                                 .anyRequest().authenticated()
                 )

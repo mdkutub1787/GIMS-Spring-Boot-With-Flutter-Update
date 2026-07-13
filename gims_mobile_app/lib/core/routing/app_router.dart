@@ -5,6 +5,7 @@ import 'package:gims_mobile_app/screens/auth/forgot_password_screen.dart';
 import 'package:gims_mobile_app/screens/auth/verify_otp_screen.dart';
 import 'package:gims_mobile_app/screens/auth/reset_password_screen.dart';
 import 'package:gims_mobile_app/screens/home/home_screen.dart';
+import 'package:gims_mobile_app/screens/main/main_screen.dart';
 import 'package:gims_mobile_app/screens/profile/profile_screen.dart';
 import 'package:gims_mobile_app/screens/splash/splash_screen.dart';
 import 'package:gims_mobile_app/screens/fire_policy/view_fire_policy_screen.dart';
@@ -20,6 +21,11 @@ import 'package:gims_mobile_app/screens/marine_policy/create_marine_bill_screen.
 import 'package:gims_mobile_app/screens/marine_policy/view_marine_money_receipt_screen.dart';
 import 'package:gims_mobile_app/screens/marine_policy/create_marine_money_receipt_screen.dart';
 import 'package:gims_mobile_app/models/marine/marine_money_receipt.dart';
+import 'package:gims_mobile_app/models/fire/fire_policy.dart';
+import 'package:gims_mobile_app/models/fire/fire_bill.dart';
+import 'package:gims_mobile_app/models/fire/fire_money_receipt.dart';
+import 'package:gims_mobile_app/models/marine/marine_policy.dart';
+import 'package:gims_mobile_app/models/marine/marine_bill.dart';
 import 'package:gims_mobile_app/screens/reports/fire_policy_report_screen.dart';
 import 'package:gims_mobile_app/screens/reports/fire_bill_report_screen.dart';
 import 'package:gims_mobile_app/screens/reports/fire_money_receipt_report_screen.dart';
@@ -84,31 +90,36 @@ class AppRouter {
         final email = settings.arguments as String?;
         return MaterialPageRoute(builder: (_) => ResetPasswordScreen(email: email));
       case home:
-        return MaterialPageRoute(builder: (_) => const HomeScreen());
+        return MaterialPageRoute(builder: (_) => const MainScreen());
       case profile:
         return MaterialPageRoute(builder: (_) => const ProfileScreen());
         
       case viewFirePolicy:
         return MaterialPageRoute(builder: (_) => const ViewFirePolicyScreen());
       case createFirePolicy:
-        return MaterialPageRoute(builder: (_) => const CreateFirePolicyScreen());
+        final policy = settings.arguments as FirePolicy?;
+        return MaterialPageRoute(builder: (_) => CreateFirePolicyScreen(policy: policy));
       case viewFireBill:
         return MaterialPageRoute(builder: (_) => const ViewFireBillScreen());
       case createFireBill:
-        return MaterialPageRoute(builder: (_) => const CreateFireBillScreen());
+        final bill = settings.arguments as FireBill?;
+        return MaterialPageRoute(builder: (_) => CreateFireBillScreen(bill: bill));
       case viewFireMoneyReceipt:
         return MaterialPageRoute(builder: (_) => const ViewFireMoneyReceiptScreen());
       case createFireMoneyReceipt:
-        return MaterialPageRoute(builder: (_) => const CreateFireMoneyReceiptScreen());
+        final receipt = settings.arguments as FireMoneyReceipt?;
+        return MaterialPageRoute(builder: (_) => CreateFireMoneyReceiptScreen(receipt: receipt));
         
       case viewMarinePolicy:
         return MaterialPageRoute(builder: (_) => const ViewMarinePolicyScreen());
       case createMarinePolicy:
-        return MaterialPageRoute(builder: (_) => const CreateMarinePolicyScreen());
+        final policy = settings.arguments as MarinePolicy?;
+        return MaterialPageRoute(builder: (_) => CreateMarinePolicyScreen(policy: policy));
       case viewMarineBill:
         return MaterialPageRoute(builder: (_) => const ViewMarineBillScreen());
       case createMarineBill:
-        return MaterialPageRoute(builder: (_) => const CreateMarineBillScreen());
+        final bill = settings.arguments as MarineBill?;
+        return MaterialPageRoute(builder: (_) => CreateMarineBillScreen(bill: bill));
       case viewMarineMoneyReceipt:
         return MaterialPageRoute(builder: (_) => const ViewMarineMoneyReceiptScreen());
       case createMarineMoneyReceipt:

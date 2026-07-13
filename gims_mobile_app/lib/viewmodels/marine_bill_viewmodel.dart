@@ -58,6 +58,22 @@ class MarineBillViewModel extends StateNotifier<MarineBillState> {
       return false;
     }
   }
+
+  Future<bool> updateBill(int id, MarineBill bill) async {
+    state = state.copyWith(isLoading: true, error: null);
+    try {
+      final success = await _repository.updateBill(id, bill);
+      if (success) {
+        await fetchBills();
+      } else {
+        state = state.copyWith(isLoading: false, error: 'Failed to update bill');
+      }
+      return success;
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+      return false;
+    }
+  }
 }
 
 final marineBillViewModelProvider = StateNotifierProvider<MarineBillViewModel, MarineBillState>((ref) {

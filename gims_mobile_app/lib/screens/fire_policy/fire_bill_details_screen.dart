@@ -104,7 +104,7 @@ class FireBillDetailsScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, size: 18, color: Colors.blue),
+              Icon(icon, size: 18, color: const Color(0xFF7C3AED)),
               const SizedBox(width: 8),
               Text(title, style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87)),
             ],

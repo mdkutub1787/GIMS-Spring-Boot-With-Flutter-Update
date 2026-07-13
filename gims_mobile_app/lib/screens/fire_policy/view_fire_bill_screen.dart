@@ -37,7 +37,7 @@ class _ViewFireBillScreenState extends ConsumerState<ViewFireBillScreen> {
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
             fontSize: 20,
-            color: Colors.white,
+            color: theme.appBarTheme.foregroundColor!,
           ),
         ),
         leading: IconButton(
@@ -215,7 +215,11 @@ class _ViewFireBillScreenState extends ConsumerState<ViewFireBillScreen> {
                     ),
                     Row(
                       children: [
-                        _buildActionBtn(Icons.visibility_rounded, Colors.blue, () => _showBillDetails(bill)),
+                        _buildActionBtn(Icons.visibility_rounded, const Color(0xFF7C3AED), () => _showBillDetails(bill)),
+                        const SizedBox(width: 10),
+                        _buildActionBtn(Icons.edit_note_rounded, Colors.orange, () {
+                           Navigator.pushNamed(context, AppRouter.createFireBill, arguments: bill);
+                        }),
                         const SizedBox(width: 10),
                         _buildActionBtn(Icons.delete_outline_rounded, Colors.redAccent, () => _confirmDelete(bill.id!)),
                       ],
@@ -292,7 +296,7 @@ class _ViewFireBillScreenState extends ConsumerState<ViewFireBillScreen> {
                       _buildDetailRow('RSD Premium', 'TK ${NumberFormat('#,##,###').format(bill.rsdAmount)} (${bill.rsd}%)'),
                       _buildDetailRow('Net Premium', 'TK ${NumberFormat('#,##,###').format(bill.netPremium)}'),
                       _buildDetailRow('VAT (15%)', 'TK ${NumberFormat('#,##,###').format(bill.taxAmount)}'),
-                      _buildDetailRow('Total Payable', 'TK ${NumberFormat('#,##,###').format(bill.grossPremium)}', isBold: true, color: const Color(0xFF007AFF)),
+                      _buildDetailRow('Total Payable', 'TK ${NumberFormat('#,##,###').format(bill.grossPremium)}', isBold: true, color: const Color(0xFF7C3AED)),
                     ]),
                     const SizedBox(height: 30),
                     ElevatedButton.icon(
@@ -300,7 +304,7 @@ class _ViewFireBillScreenState extends ConsumerState<ViewFireBillScreen> {
                       icon: const Icon(Icons.print_rounded),
                       label: const Text('Download PDF'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF007AFF),
+                        backgroundColor: const Color(0xFF7C3AED),
                         foregroundColor: Colors.white,
                         minimumSize: const Size(double.infinity, 55),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),

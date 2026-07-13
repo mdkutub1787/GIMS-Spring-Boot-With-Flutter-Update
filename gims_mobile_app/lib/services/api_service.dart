@@ -71,6 +71,7 @@ class ApiService {
   // Fire Money Receipt
   Future<http.Response> getFireReceipts() => get(ApiConfig.fireReceiptListUrl);
   Future<http.Response> saveFireReceipt(Map<String, dynamic> data) => post(ApiConfig.fireReceiptSaveUrl, data);
+  Future<http.Response> updateFireReceipt(int id, Map<String, dynamic> data) => put(ApiConfig.fireReceiptUpdateUrl(id), data);
   Future<http.Response> deleteFireReceipt(int id) => delete(ApiConfig.fireReceiptDeleteUrl(id));
 
   // Marine Policy & Bill

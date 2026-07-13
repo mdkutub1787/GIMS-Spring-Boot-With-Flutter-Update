@@ -58,6 +58,22 @@ class FireReceiptViewModel extends StateNotifier<FireReceiptState> {
       return false;
     }
   }
+
+  Future<bool> updateReceipt(int id, FireMoneyReceipt receipt) async {
+    state = state.copyWith(isLoading: true, error: null);
+    try {
+      final success = await _repository.updateReceipt(id, receipt);
+      if (success) {
+        await fetchReceipts();
+      } else {
+        state = state.copyWith(isLoading: false, error: 'Failed to update receipt');
+      }
+      return success;
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+      return false;
+    }
+  }
 }
 
 final fireReceiptViewModelProvider = StateNotifierProvider<FireReceiptViewModel, FireReceiptState>((ref) {

@@ -6,6 +6,7 @@ import '../../viewmodels/marine_receipt_viewmodel.dart';
 import '../../models/marine/marine_money_receipt.dart';
 import '../../core/routing/app_router.dart';
 import '../../core/widgets/brand_app_bar.dart';
+import '../../services/pdf_service.dart';
 
 class ViewMarineMoneyReceiptScreen extends ConsumerStatefulWidget {
   const ViewMarineMoneyReceiptScreen({super.key});
@@ -44,7 +45,7 @@ class _ViewMarineMoneyReceiptScreenState extends ConsumerState<ViewMarineMoneyRe
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
             fontSize: 20,
-            color: Colors.white,
+            color: theme.appBarTheme.foregroundColor!,
           ),
         ),
         leading: IconButton(
@@ -226,7 +227,7 @@ class _ViewMarineMoneyReceiptScreenState extends ConsumerState<ViewMarineMoneyRe
                       children: [
                         _buildActionBtn(Icons.edit_outlined, Colors.orange, () => Navigator.pushNamed(context, AppRouter.createMarineMoneyReceipt, arguments: receipt)),
                         const SizedBox(width: 8),
-                        _buildActionBtn(Icons.print_rounded, Colors.blue, () {}),
+                        _buildActionBtn(Icons.print_rounded, const Color(0xFF7C3AED), () {}),
                         const SizedBox(width: 8),
                         _buildActionBtn(Icons.delete_outline_rounded, Colors.redAccent, () => _confirmDelete(receipt.id!)),
                       ],
@@ -301,7 +302,7 @@ class _ViewMarineMoneyReceiptScreenState extends ConsumerState<ViewMarineMoneyRe
                     _buildDetailRow('Issued Against', receipt.issuedAgainst),
                     const SizedBox(height: 30),
                     ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: () => PdfService.generateMarineMoneyReceiptPdf(receipt),
                       icon: const Icon(Icons.print_rounded),
                       label: const Text('Download PDF'),
                       style: ElevatedButton.styleFrom(

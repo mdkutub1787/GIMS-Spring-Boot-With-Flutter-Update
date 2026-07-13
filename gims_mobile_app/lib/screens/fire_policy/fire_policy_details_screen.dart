@@ -56,7 +56,7 @@ class FirePolicyDetailsScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const Icon(Icons.security_rounded, size: 50, color: Colors.blue),
+          const Icon(Icons.security_rounded, size: 50, color: const Color(0xFF7C3AED)),
           const SizedBox(height: 10),
           Text(policy.sysNumber ?? 'Policy #${policy.id}', style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold)),
           Text(policy.company?.name ?? 'N/A', style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.blueGrey)),

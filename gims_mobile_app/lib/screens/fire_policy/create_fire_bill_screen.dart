@@ -7,7 +7,9 @@ import '../../viewmodels/fire_bill_viewmodel.dart';
 import '../../viewmodels/fire_policy_viewmodel.dart';
 
 class CreateFireBillScreen extends ConsumerStatefulWidget {
-  const CreateFireBillScreen({super.key});
+  final FireBill? bill;
+  
+  const CreateFireBillScreen({super.key, this.bill});
 
   @override
   ConsumerState<CreateFireBillScreen> createState() => _CreateFireBillScreenState();
@@ -28,6 +30,17 @@ class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
   void initState() {
     super.initState();
     Future.microtask(() => ref.read(firePolicyViewModelProvider.notifier).fetchPolicies());
+    
+    if (widget.bill != null) {
+      final b = widget.bill!;
+      fireController.text = b.fire?.toString() ?? '';
+      rsdController.text = b.rsd?.toString() ?? '';
+      netPremiumController.text = b.netPremium?.toString() ?? '';
+      taxController.text = "${b.tax?.toStringAsFixed(0) ?? '15'}%";
+      grossPremiumController.text = b.grossPremium?.toString() ?? '';
+      selectedPolicy = b.policy;
+    }
+
     fireController.addListener(_updateCalculatedFields);
     rsdController.addListener(_updateCalculatedFields);
   }
@@ -63,11 +76,17 @@ class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
         policy: selectedPolicy!,
       );
 
-      final success = await ref.read(fireBillViewModelProvider.notifier).saveBill(bill);
+      bool success;
+      if (widget.bill != null) {
+        success = await ref.read(fireBillViewModelProvider.notifier).updateBill(widget.bill!.id!, bill);
+      } else {
+        success = await ref.read(fireBillViewModelProvider.notifier).saveBill(bill);
+      }
+      
       if (success && mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Bill Created Successfully!'), backgroundColor: Colors.green),
+          SnackBar(content: Text(widget.bill != null ? 'Bill Updated Successfully!' : 'Bill Created Successfully!'), backgroundColor: Colors.green),
         );
       }
     }
@@ -82,7 +101,7 @@ class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Create Fire Bill', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+        title: Text(widget.bill != null ? 'Edit Fire Bill' : 'Create Fire Bill', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -95,10 +114,16 @@ class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
               Text('Policy Selection', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
               const SizedBox(height: 15),
               DropdownButtonFormField<FirePolicy>(
-                value: selectedPolicy,
+                value: selectedPolicy != null && policyState.policies.any((p) => p.id == selectedPolicy!.id) 
+                       ? policyState.policies.firstWhere((p) => p.id == selectedPolicy!.id) 
+                       : (policyState.policies.isNotEmpty && selectedPolicy != null ? selectedPolicy : null),
                 isExpanded: true,
                 decoration: _inputDecoration('Select Policy', Icons.person_outline),
-                items: policyState.policies.map((p) => DropdownMenuItem<FirePolicy>(value: p, child: Text(p.policyholder ?? 'N/A'))).toList(),
+                items: [
+                  if (selectedPolicy != null && !policyState.policies.any((p) => p.id == selectedPolicy!.id))
+                    DropdownMenuItem<FirePolicy>(value: selectedPolicy, child: Text(selectedPolicy!.policyholder ?? 'N/A')),
+                  ...policyState.policies.map((p) => DropdownMenuItem<FirePolicy>(value: p, child: Text(p.policyholder ?? 'N/A')))
+                ],
                 onChanged: (val) {
                   setState(() {
                     selectedPolicy = val;
@@ -109,7 +134,7 @@ class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
               ),
               if (selectedPolicy != null) ...[
                 const SizedBox(height: 10),
-                Text('Bank: ${selectedPolicy!.bank?.name ?? 'N/A'}', style: GoogleFonts.poppins(fontSize: 12, color: Colors.blue)),
+                Text('Bank: ${selectedPolicy!.bank?.name ?? 'N/A'}', style: GoogleFonts.poppins(fontSize: 12, color: const Color(0xFF7C3AED))),
                 Text('Sum Insured: TK ${selectedPolicy!.sumInsured}', style: GoogleFonts.poppins(fontSize: 12, color: Colors.green)),
               ],
               const SizedBox(height: 30),
@@ -139,7 +164,7 @@ class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
                   ),
                   child: billState.isLoading 
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : Text('Create Bill', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
+                    : Text(widget.bill != null ? 'Update Bill' : 'Create Bill', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
               ),
             ],

@@ -81,7 +81,7 @@ class _CombinedMoneyReceiptReportScreenState extends ConsumerState<CombinedMoney
       child: Column(
         children: [
           Text('Grand Total Collection', style: GoogleFonts.poppins(color: Colors.grey, fontSize: 13)),
-          Text('TK ${total.toStringAsFixed(0)}', style: GoogleFonts.poppins(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.blue)),
+          Text('TK ${total.toStringAsFixed(0)}', style: GoogleFonts.poppins(fontSize: 28, fontWeight: FontWeight.bold, color: const Color(0xFF7C3AED))),
           const SizedBox(height: 10),
           Text('Total MR: $count', style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.grey[700])),
         ],
