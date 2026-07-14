@@ -45,31 +45,48 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authViewModelProvider);
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, elevation: 0, iconTheme: const IconThemeData(color: Colors.black)),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Reset Password', style: GoogleFonts.poppins(fontSize: 28, fontWeight: FontWeight.bold)),
+              Text(
+                'Reset Password', 
+                style: GoogleFonts.poppins(
+                  fontSize: 28, 
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
               const SizedBox(height: 10),
-              Text('Create a new strong password for your account', style: GoogleFonts.poppins(color: Colors.grey)),
+              Text(
+                'Create a new strong password for your account', 
+                style: GoogleFonts.poppins(color: Colors.grey),
+              ),
               const SizedBox(height: 50),
               TextField(
                 controller: codeController,
-                decoration: _inputDecoration('Verification Code', Icons.verified_user_outlined),
+                style: GoogleFonts.poppins(fontSize: 14, color: theme.colorScheme.onSurface),
+                decoration: _inputDecoration('Verification Code', Icons.verified_user_outlined, isDark, theme),
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: passwordController,
                 obscureText: obscurePassword,
-                decoration: _inputDecoration('New Password', Icons.lock_outline).copyWith(
+                style: GoogleFonts.poppins(fontSize: 14, color: theme.colorScheme.onSurface),
+                decoration: _inputDecoration('New Password', Icons.lock_outline, isDark, theme).copyWith(
                   suffixIcon: IconButton(
-                    icon: Icon(obscurePassword ? Icons.visibility_off : Icons.visibility, size: 20),
+                    icon: Icon(obscurePassword ? Icons.visibility_off : Icons.visibility, size: 20, color: Colors.grey),
                     onPressed: () => setState(() => obscurePassword = !obscurePassword),
                   ),
                 ),
@@ -78,7 +95,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
               TextField(
                 controller: confirmPasswordController,
                 obscureText: obscurePassword,
-                decoration: _inputDecoration('Confirm Password', Icons.lock_outline),
+                style: GoogleFonts.poppins(fontSize: 14, color: theme.colorScheme.onSurface),
+                decoration: _inputDecoration('Confirm Password', Icons.lock_outline, isDark, theme),
               ),
               const SizedBox(height: 40),
               SizedBox(
@@ -89,11 +107,16 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: theme.colorScheme.primary,
                     foregroundColor: Colors.white,
+                    elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                   ),
                   child: authState.isLoading 
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : Text('Reset Password', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+                    ? const SizedBox(
+                        height: 20, 
+                        width: 20, 
+                        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
+                      )
+                    : Text('Reset Password', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16)),
                 ),
               ),
             ],
@@ -103,10 +126,25 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
     );
   }
 
-  InputDecoration _inputDecoration(String label, IconData icon) {
+  InputDecoration _inputDecoration(String label, IconData icon, bool isDark, ThemeData theme) {
     return InputDecoration(
       labelText: label,
-      prefixIcon: Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary.withOpacity(0.8)),
+      labelStyle: GoogleFonts.poppins(color: Colors.grey),
+      prefixIcon: Icon(icon, size: 20, color: theme.colorScheme.primary),
+      filled: true,
+      fillColor: isDark ? theme.colorScheme.surface : Colors.grey[50],
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15), 
+        borderSide: BorderSide(color: isDark ? Colors.grey[800]! : Colors.grey[200]!),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15), 
+        borderSide: BorderSide(color: isDark ? Colors.grey[800]! : Colors.grey[200]!),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(15), 
+        borderSide: BorderSide(color: theme.colorScheme.primary),
+      ),
     );
   }
 }

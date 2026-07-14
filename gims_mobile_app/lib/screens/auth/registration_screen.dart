@@ -128,33 +128,53 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
           },
           controlsBuilder: (context, details) {
             return Padding(
-              padding: const EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.only(top: 30),
               child: Row(
                 children: [
                   Expanded(
-                    child: ElevatedButton(
-                      onPressed: authState.isLoading ? null : details.onStepContinue,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.colorScheme.primary,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF7C3AED).withOpacity(0.3),
+                            blurRadius: 15,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
                       ),
-                      child: authState.isLoading && currentStep == 2
-                          ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                          : Text(currentStep == 2 ? 'Complete Registration' : 'Continue', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+                      child: ElevatedButton(
+                        onPressed: authState.isLoading ? null : details.onStepContinue,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        ),
+                        child: authState.isLoading && currentStep == 2
+                            ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5))
+                            : Text(currentStep == 2 ? 'Complete' : 'Continue', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white)),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 15),
                   if (currentStep > 0)
                     Expanded(
-                      child: OutlinedButton(
-                        onPressed: details.onStepCancel,
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      child: SizedBox(
+                        height: 50,
+                        child: OutlinedButton(
+                          onPressed: details.onStepCancel,
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Color(0xFF7C3AED)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          ),
+                          child: Text('Back', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: const Color(0xFF7C3AED))),
                         ),
-                        child: Text('Back', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
                       ),
                     ),
                 ],
@@ -275,13 +295,14 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
   InputDecoration _inputDecoration(String label, IconData icon) {
     return InputDecoration(
       labelText: label,
-      prefixIcon: Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary.withOpacity(0.8)),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey.shade300)),
-      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey.shade300)),
-      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2)),
+      labelStyle: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
+      prefixIcon: Icon(icon, size: 20, color: const Color(0xFF7C3AED)),
       filled: true,
-      fillColor: Colors.grey.shade50,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      fillColor: Colors.grey[100],
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Color(0xFF7C3AED), width: 1.5)),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     );
   }
 }

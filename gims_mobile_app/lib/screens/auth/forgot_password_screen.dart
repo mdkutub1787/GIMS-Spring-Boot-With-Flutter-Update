@@ -44,29 +44,56 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authViewModelProvider);
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, elevation: 0, iconTheme: const IconThemeData(color: Colors.black)),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Forgot Password', style: GoogleFonts.poppins(fontSize: 28, fontWeight: FontWeight.bold)),
+              Text(
+                'Forgot Password', 
+                style: GoogleFonts.poppins(
+                  fontSize: 28, 
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
               const SizedBox(height: 10),
-              Text('Enter your email to receive a verification code', style: GoogleFonts.poppins(color: Colors.grey)),
+              Text(
+                'Enter your email to receive a verification code', 
+                style: GoogleFonts.poppins(color: Colors.grey),
+              ),
               const SizedBox(height: 50),
               TextField(
                 controller: emailController,
-                style: GoogleFonts.poppins(fontSize: 14),
+                style: GoogleFonts.poppins(fontSize: 14, color: theme.colorScheme.onSurface),
                 decoration: InputDecoration(
                   labelText: 'Email Address',
-                  prefixIcon: const Icon(Icons.email_outlined, size: 20),
+                  labelStyle: GoogleFonts.poppins(color: Colors.grey),
+                  prefixIcon: Icon(Icons.email_outlined, size: 20, color: theme.colorScheme.primary),
                   filled: true,
-                  fillColor: Colors.grey[50],
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                  fillColor: isDark ? theme.colorScheme.surface : Colors.grey[50],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15), 
+                    borderSide: BorderSide(color: isDark ? Colors.grey[800]! : Colors.grey[200]!),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15), 
+                    borderSide: BorderSide(color: isDark ? Colors.grey[800]! : Colors.grey[200]!),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15), 
+                    borderSide: BorderSide(color: theme.colorScheme.primary),
+                  ),
                 ),
               ),
               const SizedBox(height: 40),
@@ -78,11 +105,16 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: theme.colorScheme.primary,
                     foregroundColor: Colors.white,
+                    elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                   ),
                   child: authState.isLoading 
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : Text('Send Code', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+                    ? const SizedBox(
+                        height: 20, 
+                        width: 20, 
+                        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
+                      )
+                    : Text('Send Code', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16)),
                 ),
               ),
             ],

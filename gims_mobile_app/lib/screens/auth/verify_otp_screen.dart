@@ -46,30 +46,57 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authViewModelProvider);
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, elevation: 0, iconTheme: const IconThemeData(color: Colors.black)),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Verify Code', style: GoogleFonts.poppins(fontSize: 28, fontWeight: FontWeight.bold)),
+              Text(
+                'Verify Code', 
+                style: GoogleFonts.poppins(
+                  fontSize: 28, 
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onSurface,
+                ),
+              ),
               const SizedBox(height: 10),
-              Text('Enter the 6-digit code sent to ${widget.email ?? 'your email'}', style: GoogleFonts.poppins(color: Colors.grey)),
+              Text(
+                'Enter the 6-digit code sent to ${widget.email ?? 'your email'}', 
+                style: GoogleFonts.poppins(color: Colors.grey),
+              ),
               const SizedBox(height: 50),
               TextField(
                 controller: codeController,
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold, letterSpacing: 10),
+                style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold, letterSpacing: 10, color: theme.colorScheme.onSurface),
                 decoration: InputDecoration(
                   hintText: '000000',
+                  hintStyle: GoogleFonts.poppins(color: Colors.grey.withOpacity(0.5)),
                   filled: true,
-                  fillColor: Colors.grey[50],
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                  fillColor: isDark ? theme.colorScheme.surface : Colors.grey[50],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15), 
+                    borderSide: BorderSide(color: isDark ? Colors.grey[800]! : Colors.grey[200]!),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15), 
+                    borderSide: BorderSide(color: isDark ? Colors.grey[800]! : Colors.grey[200]!),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15), 
+                    borderSide: BorderSide(color: theme.colorScheme.primary),
+                  ),
                 ),
               ),
               const SizedBox(height: 40),
@@ -81,11 +108,16 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: theme.colorScheme.primary,
                     foregroundColor: Colors.white,
+                    elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                   ),
                   child: authState.isLoading 
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : Text('Verify Code', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+                    ? const SizedBox(
+                        height: 20, 
+                        width: 20, 
+                        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
+                      )
+                    : Text('Verify Code', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16)),
                 ),
               ),
             ],

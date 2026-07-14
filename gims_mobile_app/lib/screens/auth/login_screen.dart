@@ -115,9 +115,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   TextField(
                     controller: emailController,
                     style: GoogleFonts.poppins(fontSize: 14),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: 'Enter your username',
-                      prefixIcon: Icon(Icons.person_outline),
+                      prefixIcon: const Icon(Icons.person_outline, color: Color(0xFF7C3AED)),
+                      filled: true,
+                      fillColor: Colors.grey[100],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: Color(0xFF7C3AED), width: 1.5),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -126,10 +140,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     obscureText: obscurePassword,
                     style: GoogleFonts.poppins(fontSize: 14),
                     decoration: InputDecoration(
-                      hintText: 'Confirm your password',
-                      prefixIcon: const Icon(Icons.lock_outline),
+                      hintText: 'Enter your password',
+                      prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF7C3AED)),
+                      filled: true,
+                      fillColor: Colors.grey[100],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: Color(0xFF7C3AED), width: 1.5),
+                      ),
                       suffixIcon: IconButton(
-                        icon: Icon(obscurePassword ? Icons.visibility_off : Icons.visibility, size: 20),
+                        icon: Icon(obscurePassword ? Icons.visibility_off : Icons.visibility, size: 20, color: Colors.grey),
                         onPressed: () => setState(() => obscurePassword = !obscurePassword),
                       ),
                     ),
@@ -142,14 +170,34 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  SizedBox(
+                  Container(
                     width: double.infinity,
                     height: 55,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF7C3AED).withOpacity(0.3),
+                          blurRadius: 15,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
                     child: ElevatedButton(
                       onPressed: authState.isLoading ? null : _handleLogin,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      ),
                       child: authState.isLoading 
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : Text('Login', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+                        ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5))
+                        : Text('Login', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16)),
                     ),
                   ),
                   const SizedBox(height: 20),

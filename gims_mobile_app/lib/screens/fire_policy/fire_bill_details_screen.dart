@@ -12,12 +12,14 @@ class FireBillDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: BrandAppBar(
-        title: Text('Bill Details', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black87)),
+        title: Text('Bill Details', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18, color: theme.colorScheme.onSurface)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black87, size: 20),
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: theme.colorScheme.onSurface, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -28,20 +30,20 @@ class FireBillDetailsScreen extends StatelessWidget {
             _buildAmountHeader(theme),
             const SizedBox(height: 24),
             _buildDetailCard('Client Information', Icons.person_rounded, [
-              _detailRow('Policyholder', bill.policy?.policyholder ?? 'N/A'),
-              _detailRow('Bank Name', bill.policy?.bank?.name ?? 'N/A'),
-              _detailRow('Policy ID', '#${bill.policy?.id ?? 'N/A'}'),
-              _detailRow('Date', bill.policy?.date != null ? DateFormat('dd MMM, yyyy').format(bill.policy!.date!) : 'N/A'),
-            ]),
+              _detailRow('Policyholder', bill.policy?.policyholder ?? 'N/A', theme),
+              _detailRow('Bank Name', bill.policy?.bank?.name ?? 'N/A', theme),
+              _detailRow('Policy ID', '#${bill.policy?.id ?? 'N/A'}', theme),
+              _detailRow('Date', bill.policy?.date != null ? DateFormat('dd MMM, yyyy').format(bill.policy!.date!) : 'N/A', theme),
+            ], theme, isDark),
             const SizedBox(height: 20),
             _buildDetailCard('Premium Summary', Icons.analytics_rounded, [
-              _detailRow('Fire Premium', 'TK ${NumberFormat('#,##,###').format(bill.fireAmount)} (${bill.fire}%)'),
-              _detailRow('RSD Premium', 'TK ${NumberFormat('#,##,###').format(bill.rsdAmount)} (${bill.rsd}%)'),
-              _detailRow('Net Premium', 'TK ${NumberFormat('#,##,###').format(bill.netPremium)}'),
-              _detailRow('VAT (Tax)', 'TK ${NumberFormat('#,##,###').format(bill.taxAmount)} (${bill.tax}%)'),
+              _detailRow('Fire Premium', 'TK ${NumberFormat('#,##,###').format(bill.fireAmount)} (${bill.fire}%)', theme),
+              _detailRow('RSD Premium', 'TK ${NumberFormat('#,##,###').format(bill.rsdAmount)} (${bill.rsd}%)', theme),
+              _detailRow('Net Premium', 'TK ${NumberFormat('#,##,###').format(bill.netPremium)}', theme),
+              _detailRow('VAT (Tax)', 'TK ${NumberFormat('#,##,###').format(bill.taxAmount)} (${bill.tax}%)', theme),
               const Padding(padding: EdgeInsets.symmetric(vertical: 10), child: Divider(height: 1, thickness: 0.5)),
-              _detailRow('Total Payable', 'TK ${NumberFormat('#,##,###').format(bill.grossPremium)}', isBold: true, color: theme.colorScheme.primary),
-            ]),
+              _detailRow('Total Payable', 'TK ${NumberFormat('#,##,###').format(bill.grossPremium)}', theme, isBold: true, color: theme.colorScheme.primary),
+            ], theme, isDark),
             const SizedBox(height: 30),
             SizedBox(
               width: double.infinity,
@@ -51,7 +53,7 @@ class FireBillDetailsScreen extends StatelessWidget {
                 icon: const Icon(Icons.print_rounded),
                 label: Text('Download Bill PDF', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
+                  backgroundColor: isDark ? Colors.transparent : Colors.white,
                   foregroundColor: theme.colorScheme.primary,
                   side: BorderSide(color: theme.colorScheme.primary),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -70,7 +72,7 @@ class FireBillDetailsScreen extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [theme.colorScheme.primary, const Color(0xFF0EA5E9)]),
+        gradient: LinearGradient(colors: [theme.colorScheme.primary, theme.colorScheme.secondary]),
         borderRadius: BorderRadius.circular(25),
         boxShadow: [BoxShadow(color: theme.colorScheme.primary.withOpacity(0.2), blurRadius: 15, offset: const Offset(0, 10))],
       ),
@@ -90,13 +92,14 @@ class FireBillDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailCard(String title, IconData icon, List<Widget> children) {
+  Widget _buildDetailCard(String title, IconData icon, List<Widget> children, ThemeData theme, bool isDark) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: isDark ? Colors.grey[800]! : Colors.grey[200]!),
         boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
@@ -104,9 +107,9 @@ class FireBillDetailsScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, size: 18, color: const Color(0xFF7C3AED)),
+              Icon(icon, size: 18, color: theme.colorScheme.primary),
               const SizedBox(width: 8),
-              Text(title, style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87)),
+              Text(title, style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.bold, color: theme.colorScheme.onSurface)),
             ],
           ),
           const SizedBox(height: 20),
@@ -116,14 +119,14 @@ class FireBillDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _detailRow(String label, String value, {bool isBold = false, Color? color}) {
+  Widget _detailRow(String label, String value, ThemeData theme, {bool isBold = false, Color? color}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[600], fontWeight: FontWeight.w500)),
-          Text(value, style: GoogleFonts.poppins(fontSize: 14, fontWeight: isBold ? FontWeight.bold : FontWeight.w600, color: color ?? Colors.black87)),
+          Text(label, style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey, fontWeight: FontWeight.w500)),
+          Text(value, style: GoogleFonts.poppins(fontSize: 14, fontWeight: isBold ? FontWeight.bold : FontWeight.w600, color: color ?? theme.colorScheme.onSurface)),
         ],
       ),
     );

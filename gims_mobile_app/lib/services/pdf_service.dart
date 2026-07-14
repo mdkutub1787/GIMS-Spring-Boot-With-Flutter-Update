@@ -116,8 +116,8 @@ class PdfService {
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('Crystal', style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, fontStyle: pw.FontStyle.italic, color: PdfColors.blue900)),
-                  pw.Text(issuingOffice?.name ?? bill.policy?.company?.name ?? 'Crystal Insurance PLC', style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
+                  pw.Text((issuingOffice?.name ?? bill.policy?.company?.name ?? 'Insurance').split(' ').first, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, fontStyle: pw.FontStyle.italic, color: PdfColors.blue900)),
+                  pw.Text(issuingOffice?.name ?? bill.policy?.company?.name ?? 'Insurance Company', style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
                   pw.Text(issuingOffice?.address ?? '${bill.policy?.branch?.name ?? ''} Branch', style: pw.TextStyle(fontSize: 10)),
                   pw.Text('Tel: ${issuingOffice?.phone ?? 'N/A'}\nMob: ${issuingOffice?.mobile ?? 'N/A'}', style: pw.TextStyle(fontSize: 9, color: PdfColors.blue)),
                   if (title == "FIRE COVER NOTE") ...[
@@ -132,7 +132,7 @@ class PdfService {
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.center,
                 children: [
-                  pw.Text(issuingOffice?.name ?? bill.policy?.company?.name ?? 'Crystal Insurance PLC', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold, color: PdfColors.blue800)),
+                  pw.Text(issuingOffice?.name ?? bill.policy?.company?.name ?? 'Insurance Company', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold, color: PdfColors.blue800)),
                   if (title == "FIRE COVER NOTE") 
                     pw.Container(
                       padding: const pw.EdgeInsets.symmetric(horizontal: 10, vertical: 2),
@@ -150,7 +150,7 @@ class PdfService {
                 crossAxisAlignment: pw.CrossAxisAlignment.end,
                 children: [
                   pw.Text('Corporate Office', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold)),
-                  pw.Text('DR Tower (14th floor), 65/2/2,\nBox Culvert Road, Purana\nPaltan, Dhaka-1000\nTel: ${issuingOffice?.phone ?? '88-02-55112733-38'}\nFax: ${issuingOffice?.fax ?? '88-029567205'}\nE-mail: ${issuingOffice?.email ?? 'info@crystalins.com'}\nWebsite: ${issuingOffice?.website ?? 'www.crystalins.com'}', 
+                  pw.Text('DR Tower (14th floor), 65/2/2,\nBox Culvert Road, Purana\nPaltan, Dhaka-1000\nTel: ${issuingOffice?.phone ?? '88-02-55112733-38'}\nFax: ${issuingOffice?.fax ?? '88-029567205'}\nE-mail: ${issuingOffice?.email ?? 'info@company.com'}\nWebsite: ${issuingOffice?.website ?? 'www.company.com'}', 
                     textAlign: pw.TextAlign.right, style: pw.TextStyle(fontSize: 8, color: PdfColors.grey700)),
                   pw.SizedBox(height: 5),
                   pw.Text('Date: ${bill.policy?.date != null ? DateFormat('dd-MMM-yy').format(bill.policy!.date!) : 'N/A'}', style: pw.TextStyle(fontSize: 9)),
@@ -304,7 +304,7 @@ class PdfService {
               crossAxisAlignment: pw.CrossAxisAlignment.center,
               children: [
                 pw.Text('For & on behalf of', style: pw.TextStyle(fontSize: 9)),
-                pw.Text(bill.policy?.company?.name ?? 'Crystal Insurance PLC', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold)),
+                pw.Text(bill.policy?.company?.name ?? 'Insurance Company', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold)),
                 pw.SizedBox(height: 30), // Space for signature
                 pw.SizedBox(width: 100, child: pw.Divider(thickness: 1)),
                 pw.Text('Branch-In-charge', style: pw.TextStyle(fontSize: 9)),
@@ -346,8 +346,8 @@ class PdfService {
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
-                        pw.Text('Crystal', style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, fontStyle: pw.FontStyle.italic, color: PdfColors.black)),
-                        pw.Text(receipt.issuingOffice?.name ?? bill.policy?.company?.name ?? 'Crystal Insurance PLC', style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
+                        pw.Text((receipt.issuingOffice?.name ?? bill.policy?.company?.name ?? 'Insurance').split(' ').first, style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, fontStyle: pw.FontStyle.italic, color: PdfColors.black)),
+                        pw.Text(receipt.issuingOffice?.name ?? bill.policy?.company?.name ?? 'Insurance Company', style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
                         pw.Text(receipt.issuingOffice?.address ?? '${bill.policy?.branch?.name ?? ''} Branch', style: pw.TextStyle(fontSize: 10)),
                         pw.Text('Tel: ${receipt.issuingOffice?.phone ?? 'N/A'}\nMob: ${receipt.issuingOffice?.mobile ?? 'N/A'}', style: pw.TextStyle(fontSize: 9, color: PdfColors.blue)),
                       ],
@@ -358,7 +358,7 @@ class PdfService {
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
                       children: [
-                        pw.Text(receipt.issuingOffice?.name ?? bill.policy?.company?.name ?? 'Crystal Insurance PLC', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold, fontStyle: pw.FontStyle.italic)),
+                        pw.Text(receipt.issuingOffice?.name ?? bill.policy?.company?.name ?? 'Insurance Company', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold, fontStyle: pw.FontStyle.italic)),
                         pw.SizedBox(height: 5),
                         pw.Container(
                             padding: const pw.EdgeInsets.symmetric(horizontal: 10, vertical: 2),
@@ -376,7 +376,7 @@ class PdfService {
                       crossAxisAlignment: pw.CrossAxisAlignment.end,
                       children: [
                         pw.Text('Corporate Office', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold)),
-                        pw.Text('DR Tower (14th floor), 65/2/2,\nBox Culvert Road, Purana\nPaltan, Dhaka-1000\nTel: ${receipt.issuingOffice?.phone ?? '88-02-55112733-38'}\nFax: ${receipt.issuingOffice?.fax ?? '88-029567205'}\nE-mail: ${receipt.issuingOffice?.email ?? 'info@crystalins.com'}\nWebsite: ${receipt.issuingOffice?.website ?? 'www.crystalins.com'}', 
+                        pw.Text('DR Tower (14th floor), 65/2/2,\nBox Culvert Road, Purana\nPaltan, Dhaka-1000\nTel: ${receipt.issuingOffice?.phone ?? '88-02-55112733-38'}\nFax: ${receipt.issuingOffice?.fax ?? '88-029567205'}\nE-mail: ${receipt.issuingOffice?.email ?? 'info@company.com'}\nWebsite: ${receipt.issuingOffice?.website ?? 'www.company.com'}', 
                           textAlign: pw.TextAlign.right, style: pw.TextStyle(fontSize: 8, color: PdfColors.grey700)),
                       ],
                     ),
@@ -391,7 +391,7 @@ class PdfService {
                 children: [
                   pw.TableRow(
                     children: [
-                      pw.Padding(padding: const pw.EdgeInsets.all(4), child: pw.Text('The Company : ${bill.policy?.company?.name ?? 'Crystal Insurance PLC'}', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold))),
+                      pw.Padding(padding: const pw.EdgeInsets.all(4), child: pw.Text('The Company : ${bill.policy?.company?.name ?? 'Insurance Company'}', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold))),
                       pw.Padding(padding: const pw.EdgeInsets.all(4), child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.center, children: [
                           pw.Text('POLICY NUMBER', style: pw.TextStyle(fontSize: 9)),
                           pw.Text('${bill.policy?.sysNumber ?? 'N/A'}', style: pw.TextStyle(fontSize: 9)),
@@ -554,7 +554,7 @@ class PdfService {
                     crossAxisAlignment: pw.CrossAxisAlignment.center,
                     children: [
                       pw.Text('For & on behalf of', style: pw.TextStyle(fontSize: 8)),
-                      pw.Text(bill.policy?.company?.name ?? 'Crystal Insurance PLC', style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold)),
+                      pw.Text(bill.policy?.company?.name ?? 'Insurance Company', style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold)),
                       pw.SizedBox(height: 30),
                       pw.SizedBox(width: 100, child: pw.Divider(thickness: 1)),
                       pw.Text('Authorized Officer', style: pw.TextStyle(fontSize: 8)),
@@ -594,8 +594,8 @@ class PdfService {
                   pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pw.Text('Crystal', style: pw.TextStyle(fontSize: 28, fontWeight: pw.FontWeight.bold, fontStyle: pw.FontStyle.italic, color: PdfColors.blue900)),
-                      pw.Text(receipt.issuingOffice?.name ?? receipt.bill?.policy?.company?.name ?? 'Crystal Insurance PLC', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
+                      pw.Text((receipt.issuingOffice?.name ?? receipt.bill?.policy?.company?.name ?? 'Insurance').split(' ').first, style: pw.TextStyle(fontSize: 28, fontWeight: pw.FontWeight.bold, fontStyle: pw.FontStyle.italic, color: PdfColors.blue900)),
+                      pw.Text(receipt.issuingOffice?.name ?? receipt.bill?.policy?.company?.name ?? 'Insurance Company', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
                       pw.Text(receipt.issuingOffice?.address ?? '${receipt.bill?.policy?.branch?.name ?? ''} Branch', style: pw.TextStyle(fontSize: 11)),
                       pw.Text('Tel: ${receipt.issuingOffice?.phone ?? 'N/A'}\nMob: ${receipt.issuingOffice?.mobile ?? 'N/A'}', style: pw.TextStyle(fontSize: 10, color: PdfColors.blue)),
                     ],
@@ -1439,3 +1439,4 @@ class PdfService {
     await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => pdf.save());
   }
 }
+

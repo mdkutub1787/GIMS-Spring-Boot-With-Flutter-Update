@@ -46,11 +46,11 @@ class AppTheme {
   static const Color darkGrey200 = Color(0xFFE5E7EB);
   static const Color darkGrey100 = Color(0xFFF3F4F6);
 
-  static ThemeData lightTheme() {
+  static ThemeData lightTheme({Color primaryColor = const Color(0xFF20B2AA)}) {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      colorScheme: const ColorScheme.light(
+      colorScheme: ColorScheme.light(
         primary: primaryColor,
         secondary: secondaryColor,
         tertiary: accentColor,
@@ -150,7 +150,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
-          borderSide: const BorderSide(color: primaryColor, width: 2),
+          borderSide: BorderSide(color: primaryColor, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
@@ -180,11 +180,11 @@ class AppTheme {
     );
   }
 
-  static ThemeData darkTheme() {
+  static ThemeData darkTheme({Color primaryColor = const Color(0xFF20B2AA)}) {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      colorScheme: const ColorScheme.dark(
+      colorScheme: ColorScheme.dark(
         primary: primaryColor,
         secondary: secondaryColor,
         tertiary: accentColor,
@@ -282,7 +282,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: primaryColor, width: 2),
+          borderSide: BorderSide(color: primaryColor, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),

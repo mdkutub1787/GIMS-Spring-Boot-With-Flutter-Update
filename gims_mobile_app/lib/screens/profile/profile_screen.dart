@@ -161,11 +161,15 @@ class ProfileScreen extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 children: [
-                  _buildListTile(Icons.person_outline, 'Account Settings', () {}),
+                  _buildListTile(Icons.person_outline, 'Account Settings', () {
+                    Navigator.pushNamed(context, AppRouter.editProfile);
+                  }),
                   _buildListTile(Icons.notifications_none, 'Notifications', () {}),
                   _buildListTile(Icons.people_outline, 'Team Management', () {}),
                   _buildListTile(Icons.extension_outlined, 'Integrations', () {}),
-                  _buildListTile(Icons.palette_outlined, 'Appearance', () {}),
+                  _buildListTile(Icons.settings_outlined, 'App Settings', () {
+                    Navigator.pushNamed(context, AppRouter.settings);
+                  }),
                   _buildListTile(Icons.help_outline, 'Help & Support', () {}),
                   _buildListTile(Icons.logout, 'Log Out', () {
                     ref.read(authViewModelProvider.notifier).logout().then((_) {

@@ -113,20 +113,33 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               _buildMainCard(policyState),
               const SizedBox(height: 30),
 
-              // Action Buttons Grid (All Pages)
-              Wrap(
-                spacing: 16,
-                runSpacing: 24,
-                alignment: WrapAlignment.spaceBetween,
+              // Fire Section
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(width: 70, child: _buildActionIcon(Icons.security, 'Fire Policy', const Color(0xFF20B2AA), () => Navigator.pushNamed(context, AppRouter.viewFirePolicy))),
                   SizedBox(width: 70, child: _buildActionIcon(Icons.receipt, 'Fire Bill', const Color(0xFF28B9A9), () => Navigator.pushNamed(context, AppRouter.viewFireBill))),
                   SizedBox(width: 70, child: _buildActionIcon(Icons.request_quote, 'Fire MR', const Color(0xFF1CB1A1), () => Navigator.pushNamed(context, AppRouter.viewFireMoneyReceipt))),
-                  SizedBox(width: 70, child: _buildActionIcon(Icons.assessment, 'Reports', const Color(0xFF0F9485), () => Navigator.pushNamed(context, AppRouter.combinedReport))),
+                ],
+              ),
+              const SizedBox(height: 24),
+
+              // Marine Section
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   SizedBox(width: 70, child: _buildActionIcon(Icons.directions_boat, 'Marine', const Color(0xFF20B2AA), () => Navigator.pushNamed(context, AppRouter.viewMarinePolicy))),
                   SizedBox(width: 70, child: _buildActionIcon(Icons.receipt_long, 'Marine Bill', const Color(0xFF28B9A9), () => Navigator.pushNamed(context, AppRouter.viewMarineBill))),
                   SizedBox(width: 70, child: _buildActionIcon(Icons.monetization_on, 'Marine MR', const Color(0xFF1CB1A1), () => Navigator.pushNamed(context, AppRouter.viewMarineMoneyReceipt))),
-                  SizedBox(width: 70, child: _buildActionIcon(Icons.person, 'Profile', const Color(0xFF2C3E50), () => Navigator.pushNamed(context, AppRouter.profile))),
+                ],
+              ),
+              const SizedBox(height: 24),
+
+              // Reports Section
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(width: 70, child: _buildActionIcon(Icons.assessment, 'Reports', const Color(0xFF0F9485), () => Navigator.pushNamed(context, AppRouter.combinedReport))),
                 ],
               ),
               const SizedBox(height: 35),
@@ -317,63 +330,80 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildActivityTile(FirePolicy policy) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey.withOpacity(0.1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
+            color: const Color(0xFF7C3AED).withOpacity(0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: const Color(0xFF7C3AED).withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(Icons.security_rounded, color: Color(0xFF7C3AED), size: 22),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  policy.policyholder ?? 'Unknown',
-                  style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black87),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  policy.date != null ? DateFormat('MMM dd, yyyy').format(policy.date!) : 'Recently added',
-                  style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey[500]),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                'TK ${NumberFormat('#,##,###').format(policy.sumInsured ?? 0)}',
-                style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => Navigator.pushNamed(context, AppRouter.viewFirePolicy),
+            splashColor: const Color(0xFF7C3AED).withOpacity(0.05),
+            highlightColor: const Color(0xFF7C3AED).withOpacity(0.02),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: const BoxDecoration(
+                border: Border(left: BorderSide(color: Color(0xFF7C3AED), width: 4)),
               ),
-              const SizedBox(height: 4),
-              Text(
-                'Processed',
-                style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600, color: const Color(0xFF10B981)),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF7C3AED).withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.security_rounded, color: Color(0xFF7C3AED), size: 22),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          policy.policyholder ?? 'Unknown',
+                          style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          policy.date != null ? DateFormat('MMM dd, yyyy').format(policy.date!) : 'Recently added',
+                          style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey[500]),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        'TK ${NumberFormat('#,##,###').format(policy.sumInsured ?? 0)}',
+                        style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.bold, color: const Color(0xFF7C3AED)),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Processed',
+                        style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600, color: const Color(0xFF10B981)),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }

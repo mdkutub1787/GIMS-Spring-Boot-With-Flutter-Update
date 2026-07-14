@@ -116,34 +116,41 @@ class _ViewFireBillScreenState extends ConsumerState<ViewFireBillScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey.withOpacity(0.1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+            color: const Color(0xFF10B981).withOpacity(0.08),
+            blurRadius: 24,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () => _showBillDetails(bill),
-          borderRadius: BorderRadius.circular(20),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF10B981).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () => _showBillDetails(bill),
+            splashColor: const Color(0xFF10B981).withOpacity(0.05),
+            highlightColor: const Color(0xFF10B981).withOpacity(0.02),
+            child: Container(
+              decoration: const BoxDecoration(
+                border: Border(left: BorderSide(color: Color(0xFF10B981), width: 5)),
+              ),
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF10B981).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
                         'BILL #${bill.id}',
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.bold,
@@ -215,13 +222,13 @@ class _ViewFireBillScreenState extends ConsumerState<ViewFireBillScreen> {
                     ),
                     Row(
                       children: [
-                        _buildActionBtn(Icons.visibility_rounded, const Color(0xFF7C3AED), () => _showBillDetails(bill)),
-                        const SizedBox(width: 10),
-                        _buildActionBtn(Icons.edit_note_rounded, Colors.orange, () {
+                        _buildActionBtn(Icons.visibility_rounded, const Color(0xFF10B981), () => _showBillDetails(bill)),
+                        const SizedBox(width: 12),
+                        _buildActionBtn(Icons.edit_rounded, Colors.orange, () {
                            Navigator.pushNamed(context, AppRouter.createFireBill, arguments: bill);
                         }),
-                        const SizedBox(width: 10),
-                        _buildActionBtn(Icons.delete_outline_rounded, Colors.redAccent, () => _confirmDelete(bill.id!)),
+                        const SizedBox(width: 12),
+                        _buildActionBtn(Icons.delete_rounded, Colors.redAccent, () => _confirmDelete(bill.id!)),
                       ],
                     ),
                   ],
@@ -231,20 +238,22 @@ class _ViewFireBillScreenState extends ConsumerState<ViewFireBillScreen> {
           ),
         ),
       ),
+      ),
     );
   }
 
   Widget _buildActionBtn(IconData icon, Color color, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(10),
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: color.withOpacity(0.2)),
         ),
-        child: Icon(icon, color: color, size: 22),
+        child: Icon(icon, color: color, size: 20),
       ),
     );
   }
