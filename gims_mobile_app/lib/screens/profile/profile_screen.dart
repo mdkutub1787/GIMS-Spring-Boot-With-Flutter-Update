@@ -58,9 +58,9 @@ class ProfileScreen extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Top Purple Header & Stats Card Stack
+            // Top Purple Header & Info Card Stack
             SizedBox(
-              height: 260,
+              height: 280,
               child: Stack(
                 alignment: Alignment.topCenter,
                 children: [
@@ -90,11 +90,11 @@ class ProfileScreen extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                user?.name ?? 'Alex Johnson',
+                                user?.username ?? 'Guest User',
                                 style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
                               ),
                               Text(
-                                user?.email ?? 'alex.johnson@gims.com',
+                                user?.email ?? 'No Email Provided',
                                 style: GoogleFonts.poppins(fontSize: 12, color: Colors.white70),
                               ),
                               const SizedBox(height: 8),
@@ -109,19 +109,18 @@ class ProfileScreen extends ConsumerWidget {
                                   children: [
                                     const Icon(Icons.verified, color: Colors.white, size: 14),
                                     const SizedBox(width: 4),
-                                    Text('Pro Plan', style: GoogleFonts.poppins(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600)),
+                                    Text((user?.role?.toString().split('.').last ?? 'USER').toUpperCase(), style: GoogleFonts.poppins(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600)),
                                   ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        const Icon(Icons.chevron_right, color: Colors.white, size: 24),
                       ],
                     ),
                   ),
                   
-                  // Overlapping Stats Card
+                  // Overlapping User Info Card
                   Positioned(
                     top: 130,
                     left: 24,
@@ -139,13 +138,23 @@ class ProfileScreen extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      child: Column(
                         children: [
-                          _buildStatItem(Icons.security, '12', 'Policies', const Color(0xFF7C3AED)),
-                          _buildStatItem(Icons.receipt_long, '28', 'Bills', const Color(0xFFF59E0B)),
-                          _buildStatItem(Icons.monetization_on, '10', 'Receipts', const Color(0xFF10B981)),
-                          _buildStatItem(Icons.check_circle_outline, '24', 'Completed', const Color(0xFF3B82F6)),
+                          Row(
+                            children: [
+                              _buildInfoItem(Icons.phone, 'Phone', user?.cell ?? 'Not provided', const Color(0xFF10B981)),
+                              const SizedBox(width: 16),
+                              _buildInfoItem(Icons.location_on, 'Address', user?.address ?? 'Not provided', const Color(0xFFF59E0B)),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            children: [
+                              _buildInfoItem(Icons.business, 'Company', user?.companyName ?? 'N/A', const Color(0xFF3B82F6)),
+                              const SizedBox(width: 16),
+                              _buildInfoItem(Icons.work, 'Office', user?.officeName ?? 'N/A', const Color(0xFF7C3AED)),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -186,15 +195,32 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatItem(IconData icon, String value, String label, Color color) {
-    return Column(
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(height: 8),
-        Text(value, style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87)),
-        const SizedBox(height: 4),
-        Text(label, style: GoogleFonts.poppins(fontSize: 11, color: Colors.grey[600])),
-      ],
+  Widget _buildInfoItem(IconData icon, String label, String value, Color color) {
+    return Expanded(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: color, size: 20),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey[600])),
+                const SizedBox(height: 2),
+                Text(value, style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black87), maxLines: 2, overflow: TextOverflow.ellipsis),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 

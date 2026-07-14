@@ -5,7 +5,9 @@ class ApiConfig {
     if (kIsWeb || defaultTargetPlatform == TargetPlatform.windows || defaultTargetPlatform == TargetPlatform.linux || defaultTargetPlatform == TargetPlatform.macOS) {
       return 'http://localhost:8080';
     }
-    return 'http://10.0.2.2:8080';
+    // 192.168.11.120 is the local machine's IP address. 
+    // This allows a real physical phone connected to the same WiFi to access the API.
+    return 'http://192.168.11.120:8080';
   }
   
   /// Auth API endpoints

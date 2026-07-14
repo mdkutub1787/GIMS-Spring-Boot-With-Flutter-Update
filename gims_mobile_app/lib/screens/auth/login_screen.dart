@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../core/routing/app_router.dart';
+import '../../viewmodels/settings_viewmodel.dart';
+import '../../core/localization/app_localizations.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -34,78 +36,74 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authViewModelProvider);
+    final settingsState = ref.watch(settingsViewModelProvider);
     final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Curvy Header
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.only(top: 80, bottom: 60, left: 30, right: 30),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(40),
-                  bottomRight: Radius.circular(40),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Text('Welcome Back!', style: GoogleFonts.poppins(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Login to your account by entering your\nusername and password below, we are really\nhappy to see you come back!',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(color: Colors.white.withOpacity(0.9), fontSize: 13, height: 1.5),
+            // Curvy Header with Language Selector
+            Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(top: 80, bottom: 60, left: 30, right: 30),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary,
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(40),
+                      bottomRight: Radius.circular(40),
+                    ),
                   ),
-                ],
-              ),
-            ),
-            
-            // Biometric / Fingerprint Card (overlapping)
-            Transform.translate(
-              offset: const Offset(0, -30),
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 30),
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.tertiary,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(color: theme.colorScheme.primary.withOpacity(0.2), blurRadius: 15, offset: const Offset(0, 8)),
-                  ],
+                  child: Column(
+                    children: [
+                      Text(loc.get('login_welcome'), style: GoogleFonts.poppins(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
+                      const SizedBox(height: 10),
+                      Text(
+                        loc.get('login_subtitle'),
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(color: Colors.white.withOpacity(0.9), fontSize: 13, height: 1.5),
+                      ),
+                    ],
+                  ),
                 ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.fingerprint, color: Colors.white, size: 30),
-                    const SizedBox(width: 15),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('New! Fingerprint', style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.bold)),
-                          Text('Fast-Login', style: GoogleFonts.poppins(color: Colors.white70, fontSize: 12)),
+                Positioned(
+                  top: MediaQuery.of(context).padding.top + 10,
+                  right: 20,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.white.withOpacity(0.3)),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: settingsState.locale.languageCode,
+                        icon: const Icon(Icons.arrow_drop_down, color: Colors.white, size: 20),
+                        isDense: true,
+                        dropdownColor: theme.colorScheme.primary,
+                        style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                        onChanged: (String? newValue) {
+                          if (newValue != null) {
+                            ref.read(settingsViewModelProvider.notifier).setLocale(Locale(newValue));
+                          }
+                        },
+                        items: const [
+                          DropdownMenuItem(value: 'en', child: Text('EN')),
+                          DropdownMenuItem(value: 'bn', child: Text('BN')),
                         ],
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: theme.colorScheme.primary,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        elevation: 0,
-                      ),
-                      child: Text('Set Up', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 12)),
-                    )
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
+            
+            const SizedBox(height: 30),
 
             // Login Form
             Padding(
@@ -116,7 +114,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     controller: emailController,
                     style: GoogleFonts.poppins(fontSize: 14),
                     decoration: InputDecoration(
-                      hintText: 'Enter your username',
+                      hintText: loc.get('login_email_hint'),
                       prefixIcon: const Icon(Icons.person_outline, color: Color(0xFF7C3AED)),
                       filled: true,
                       fillColor: Colors.grey[100],
@@ -140,7 +138,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     obscureText: obscurePassword,
                     style: GoogleFonts.poppins(fontSize: 14),
                     decoration: InputDecoration(
-                      hintText: 'Enter your password',
+                      hintText: loc.get('login_password_hint'),
                       prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF7C3AED)),
                       filled: true,
                       fillColor: Colors.grey[100],
@@ -166,7 +164,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: () => Navigator.pushNamed(context, AppRouter.forgotPassword),
-                      child: Text('Forgot Password?', style: GoogleFonts.poppins(color: theme.colorScheme.primary, fontSize: 13)),
+                      child: Text(loc.get('login_forgot_password'), style: GoogleFonts.poppins(color: theme.colorScheme.primary, fontSize: 13)),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -197,17 +195,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       child: authState.isLoading 
                         ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5))
-                        : Text('Login', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16)),
+                        : Text(loc.get('login_button'), style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16)),
                     ),
                   ),
                   const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Doesn\'t have an account yet? ', style: GoogleFonts.poppins(color: Colors.grey)),
+                      Text(loc.get('login_no_account'), style: GoogleFonts.poppins(color: Colors.grey)),
                       GestureDetector(
                         onTap: () => Navigator.pushNamed(context, AppRouter.registration),
-                        child: Text('Sign Up', style: GoogleFonts.poppins(color: theme.colorScheme.primary, fontWeight: FontWeight.bold)),
+                        child: Text(loc.get('login_signup'), style: GoogleFonts.poppins(color: theme.colorScheme.primary, fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),

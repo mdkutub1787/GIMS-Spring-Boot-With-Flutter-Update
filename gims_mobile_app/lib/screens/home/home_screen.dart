@@ -152,9 +152,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     'Projects / Activity',
                     style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
                   ),
-                  Text(
-                    'View All',
-                    style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600, color: theme.colorScheme.primary),
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, AppRouter.viewFirePolicy),
+                    child: Text(
+                      'View All',
+                      style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600, color: theme.colorScheme.primary),
+                    ),
                   ),
                 ],
               ),
