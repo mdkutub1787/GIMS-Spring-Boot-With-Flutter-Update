@@ -19,7 +19,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "policies")
+@Table(name = "fire_policy")
 public class FirePolicy {
 
     @Id

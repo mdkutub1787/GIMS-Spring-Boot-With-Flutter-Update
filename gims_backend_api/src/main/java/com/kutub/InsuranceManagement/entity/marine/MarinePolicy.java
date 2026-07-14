@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "marine_insurance_details")
+@Table(name = "marine_policy")
 public class MarinePolicy {
 
     @Id

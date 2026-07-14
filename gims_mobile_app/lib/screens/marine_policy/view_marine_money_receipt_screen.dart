@@ -304,9 +304,33 @@ class _ViewMarineMoneyReceiptScreenState extends ConsumerState<ViewMarineMoneyRe
                     ElevatedButton.icon(
                       onPressed: () => PdfService.generateMarineMoneyReceiptPdf(receipt),
                       icon: const Icon(Icons.print_rounded),
-                      label: const Text('Download PDF'),
+                      label: const Text('Download Receipt PDF'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFF59E0B),
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(double.infinity, 55),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton.icon(
+                      onPressed: () => PdfService.generateMarineCoverNotePdf(receipt),
+                      icon: const Icon(Icons.print_rounded),
+                      label: const Text('Download Cover Note PDF'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF10B981),
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(double.infinity, 55),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton.icon(
+                      onPressed: () => PdfService.generateMarinePolicySchedulePdf(receipt),
+                      icon: const Icon(Icons.print_rounded),
+                      label: const Text('Download Policy'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF3B82F6),
                         foregroundColor: Colors.white,
                         minimumSize: const Size(double.infinity, 55),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),

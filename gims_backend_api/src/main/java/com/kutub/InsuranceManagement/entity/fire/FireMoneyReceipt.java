@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "moneyreceipts")
+@Table(name = "fire_money_receipt")
 public class FireMoneyReceipt {
 
     @Id

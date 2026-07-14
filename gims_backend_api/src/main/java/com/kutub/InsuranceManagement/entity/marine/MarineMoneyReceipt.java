@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "marinebillmoneyreceipts")
+@Table(name = "marine_money_receipt")
 public class MarineMoneyReceipt {
 
     @Id
@@ -29,7 +29,7 @@ public class MarineMoneyReceipt {
 
     private String issuedAgainst;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinColumn(name = "marinebillId")
     private MarineBill marinebill;
 

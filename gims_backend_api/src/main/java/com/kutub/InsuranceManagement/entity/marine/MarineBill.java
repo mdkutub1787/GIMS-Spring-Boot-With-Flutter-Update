@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "marineinsurancebills")
+@Table(name = "marine_bill")
 public class MarineBill {
 
     @Id
