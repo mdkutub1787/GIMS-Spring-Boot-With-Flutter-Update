@@ -31,6 +31,7 @@ class ApiConfig {
   
   /// Fire Bill API endpoints
   static String get fireBillSaveUrl => '$baseUrl/api/bill/save';
+  static String get fireBillCalculateUrl => '$baseUrl/api/bill/calculate';
   static String get fireBillListUrl => '$baseUrl/api/bill/list';
   static String fireBillUpdateUrl(int id) => '$baseUrl/api/bill/update/$id';
   static String fireBillDeleteUrl(int id) => '$baseUrl/api/bill/delete/$id';
@@ -53,6 +54,7 @@ class ApiConfig {
   
   /// Marine Bill API endpoints
   static String get marineBillSaveUrl => '$baseUrl/api/marinebill/save';
+  static String get marineBillCalculateUrl => '$baseUrl/api/marinebill/calculate';
   static String get marineBillListUrl => '$baseUrl/api/marinebill/list';
   static String marineBillUpdateUrl(int id) => '$baseUrl/api/marinebill/update/$id';
   static String marineBillDeleteUrl(int id) => '$baseUrl/api/marinebill/delete/$id';

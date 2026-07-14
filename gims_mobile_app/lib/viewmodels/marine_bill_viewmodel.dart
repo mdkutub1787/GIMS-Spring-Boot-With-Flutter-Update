@@ -48,6 +48,14 @@ class MarineBillViewModel extends StateNotifier<MarineBillState> {
     }
   }
 
+  Future<MarineBill?> calculateBill(MarineBill bill) async {
+    try {
+      return await _repository.calculateBill(bill);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<bool> deleteBill(int id) async {
     try {
       final success = await _repository.deleteBill(id);

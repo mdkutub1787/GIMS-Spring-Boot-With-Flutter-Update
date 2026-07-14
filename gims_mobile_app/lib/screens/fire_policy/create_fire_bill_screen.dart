@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,6 +24,7 @@ class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
   final TextEditingController netPremiumController = TextEditingController();
   final TextEditingController taxController = TextEditingController();
   final TextEditingController grossPremiumController = TextEditingController();
+  Timer? _debounce;
 
   FirePolicy? selectedPolicy;
 
@@ -45,23 +47,36 @@ class _CreateFireBillScreenState extends ConsumerState<CreateFireBillScreen> {
     rsdController.addListener(_updateCalculatedFields);
   }
 
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    fireController.dispose();
+    rsdController.dispose();
+    super.dispose();
+  }
+
   void _updateCalculatedFields() {
     if (selectedPolicy == null) return;
-    double sumInsured = selectedPolicy!.sumInsured ?? 0.0;
-    double fire = double.tryParse(fireController.text) ?? 0.0;
-    double rsd = double.tryParse(rsdController.text) ?? 0.0;
-    const double taxRate = 15.0;
+    
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      final tempBill = FireBill(
+        fire: double.tryParse(fireController.text) ?? 0.0,
+        rsd: double.tryParse(rsdController.text) ?? 0.0,
+        netPremium: 0,
+        tax: 15.0,
+        grossPremium: 0,
+        policy: selectedPolicy!,
+      );
 
-    double netPremium = (sumInsured * (fire + rsd)) / 100;
-    double grossPremium = netPremium + (netPremium * taxRate) / 100;
-
-    netPremium = (netPremium + 0.5).toInt().toDouble();
-    grossPremium = (grossPremium + 0.5).toInt().toDouble();
-
-    setState(() {
-      netPremiumController.text = netPremium.toStringAsFixed(0);
-      taxController.text = "${taxRate.toStringAsFixed(0)}%";
-      grossPremiumController.text = grossPremium.toStringAsFixed(0);
+      final calculatedBill = await ref.read(fireBillViewModelProvider.notifier).calculateBill(tempBill);
+      if (calculatedBill != null && mounted) {
+        setState(() {
+          netPremiumController.text = calculatedBill.netPremium?.toStringAsFixed(0) ?? '0';
+          taxController.text = "${calculatedBill.tax?.toStringAsFixed(0) ?? '15'}%";
+          grossPremiumController.text = calculatedBill.grossPremium?.toStringAsFixed(0) ?? '0';
+        });
+      }
     });
   }
 

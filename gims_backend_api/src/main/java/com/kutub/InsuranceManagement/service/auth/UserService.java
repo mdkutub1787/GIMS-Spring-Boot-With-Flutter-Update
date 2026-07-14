@@ -34,12 +34,15 @@ public class UserService implements UserDetailsService {
     @Transactional
     public User updateProfile(ProfileUpdateRequest request) {
         User user = getProfile();
-        if (request.getFirstname() != null) user.setFirstname(request.getFirstname());
-        if (request.getLastname() != null) user.setLastname(request.getLastname());
         if (request.getPhone() != null) user.setPhone(request.getPhone());
         if (request.getAddress() != null) user.setAddress(request.getAddress());
-        if (request.getDob() != null) user.setDob(request.getDob());
-        if (request.getGender() != null) user.setGender(request.getGender());
+        
+        if (request.getOfficeName() != null && user.getOffice() != null) {
+            user.getOffice().setName(request.getOfficeName());
+            // Since CascadeType.ALL might not be enabled, we might need to rely on the transaction to dirty-check the entity,
+            // or we could autowire IssueOfficeRepository if needed. JPA dirty checking will usually update it automatically if it's managed.
+        }
+        
         return userRepository.save(user);
     }
 }

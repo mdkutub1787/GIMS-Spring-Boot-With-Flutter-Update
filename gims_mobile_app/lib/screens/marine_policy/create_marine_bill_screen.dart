@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,6 +25,7 @@ class _CreateMarineBillScreenState extends ConsumerState<CreateMarineBillScreen>
   final TextEditingController taxController = TextEditingController();
   final TextEditingController stampDutyController = TextEditingController();
   final TextEditingController grossPremiumController = TextEditingController();
+  Timer? _debounce;
 
   MarinePolicy? selectedPolicy;
 
@@ -48,26 +50,38 @@ class _CreateMarineBillScreenState extends ConsumerState<CreateMarineBillScreen>
     stampDutyController.addListener(_updateCalculatedFields);
   }
 
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    marineRateController.dispose();
+    warSrccRateController.dispose();
+    stampDutyController.dispose();
+    super.dispose();
+  }
+
   void _updateCalculatedFields() {
     if (selectedPolicy == null) return;
-    double sumInsured = selectedPolicy!.sumInsured ?? 0.0;
-    double marineRate = double.tryParse(marineRateController.text) ?? 0.0;
-    double warSrccRate = double.tryParse(warSrccRateController.text) ?? 0.0;
-    double stampDuty = double.tryParse(stampDutyController.text) ?? 0.0;
-    const double taxRate = 15.0;
+    
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      final tempBill = MarineBill(
+        marineRate: double.tryParse(marineRateController.text) ?? 0.0,
+        warSrccRate: double.tryParse(warSrccRateController.text) ?? 0.0,
+        stampDuty: double.tryParse(stampDutyController.text) ?? 0.0,
+        netPremium: 0,
+        tax: 15,
+        grossPremium: 0,
+        marineDetails: selectedPolicy!,
+      );
 
-    double netPremium = (sumInsured * (marineRate + warSrccRate)) / 100;
-    double tax = (netPremium * taxRate) / 100;
-    double grossPremium = netPremium + tax + stampDuty;
-
-    netPremium = (netPremium + 0.5).toInt().toDouble();
-    tax = (tax + 0.5).toInt().toDouble();
-    grossPremium = (grossPremium + 0.5).toInt().toDouble();
-
-    setState(() {
-      netPremiumController.text = netPremium.toStringAsFixed(0);
-      taxController.text = "${taxRate.toStringAsFixed(0)}%";
-      grossPremiumController.text = grossPremium.toStringAsFixed(0);
+      final calculatedBill = await ref.read(marineBillViewModelProvider.notifier).calculateBill(tempBill);
+      if (calculatedBill != null && mounted) {
+        setState(() {
+          netPremiumController.text = calculatedBill.netPremium?.toStringAsFixed(0) ?? '0';
+          taxController.text = "${calculatedBill.tax?.toStringAsFixed(0) ?? '15'}%";
+          grossPremiumController.text = calculatedBill.grossPremium?.toStringAsFixed(0) ?? '0';
+        });
+      }
     });
   }
 

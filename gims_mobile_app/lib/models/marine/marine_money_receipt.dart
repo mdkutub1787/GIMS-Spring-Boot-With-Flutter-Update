@@ -1,8 +1,9 @@
+import '../utility/issue_office.dart';
 import 'marine_bill.dart';
 
 class MarineMoneyReceipt {
   int? id;
-  String? issuingOffice;
+  IssueOffice? issuingOffice;
   String? classOfInsurance;
   DateTime? date;
   String? modeOfPayment;
@@ -21,7 +22,11 @@ class MarineMoneyReceipt {
 
   MarineMoneyReceipt.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        issuingOffice = json['issuingOffice'],
+        issuingOffice = (json['issuingOffice'] != null || json['issuing_office'] != null)
+            ? (json['issuingOffice'] is String 
+                ? IssueOffice(name: json['issuingOffice']) 
+                : IssueOffice.fromJson(json['issuingOffice'] ?? json['issuing_office']))
+            : null,
         classOfInsurance = json['classOfInsurance'],
         date = json['date'] != null ? DateTime.tryParse(json['date'].toString()) : null,
         modeOfPayment = json['modeOfPayment'],
@@ -33,7 +38,7 @@ class MarineMoneyReceipt {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (id != null) data['id'] = id;
-    data['issuingOffice'] = issuingOffice;
+    if (issuingOffice != null) data['issuingOffice'] = issuingOffice!.toJson();
     data['classOfInsurance'] = classOfInsurance;
     if (date != null) data['date'] = date?.toIso8601String();
     data['modeOfPayment'] = modeOfPayment;

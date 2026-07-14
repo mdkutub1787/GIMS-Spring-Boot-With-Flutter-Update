@@ -280,7 +280,7 @@ class _ViewFireMoneyReceiptScreenState extends ConsumerState<ViewFireMoneyReceip
                     _buildDetailRow('Bank Name', receipt.bill?.policy?.bank?.name),
                     _buildDetailRow('MR ID', '#${receipt.id}'),
                     _buildDetailRow('Date', receipt.date != null ? DateFormat('dd MMM, yyyy').format(receipt.date!) : 'N/A'),
-                    _buildDetailRow('Issuing Office', receipt.issuingOffice),
+                    _buildDetailRow('Issuing Office', receipt.issuingOffice?.name),
                     _buildDetailRow('Insurance Class', receipt.classOfInsurance),
                     _buildDetailRow('Payment Mode', receipt.modeOfPayment),
                     _buildDetailRow('Issued Against', receipt.issuedAgainst),

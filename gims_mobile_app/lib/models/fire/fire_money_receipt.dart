@@ -1,8 +1,9 @@
+import '../utility/issue_office.dart';
 import 'fire_bill.dart';
 
 class FireMoneyReceipt {
   int? id;
-  String? issuingOffice;
+  IssueOffice? issuingOffice;
   String? classOfInsurance;
   DateTime? date;
   String? modeOfPayment;
@@ -22,7 +23,11 @@ class FireMoneyReceipt {
   FireMoneyReceipt.fromJson(Map<String, dynamic> json) {
     // Handling both camelCase and snake_case from API
     id = json['id'] ?? json['money_receipt_id'] ?? json['receipt_id'];
-    issuingOffice = json['issuingOffice'] ?? json['issuing_office'] ?? 'N/A';
+    issuingOffice = (json['issuingOffice'] != null || json['issuing_office'] != null)
+        ? (json['issuingOffice'] is String 
+            ? IssueOffice(name: json['issuingOffice']) 
+            : IssueOffice.fromJson(json['issuingOffice'] ?? json['issuing_office']))
+        : null;
     classOfInsurance = json['classOfInsurance'] ?? json['class_of_insurance'] ?? 'N/A';
     date = json['date'] != null ? DateTime.tryParse(json['date'].toString()) : null;
     modeOfPayment = json['modeOfPayment'] ?? json['mode_of_payment'] ?? 'N/A';
@@ -39,7 +44,7 @@ class FireMoneyReceipt {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (id != null) data['id'] = id;
-    data['issuingOffice'] = issuingOffice;
+    if (issuingOffice != null) data['issuingOffice'] = issuingOffice!.toJson();
     data['classOfInsurance'] = classOfInsurance;
     if (date != null) data['date'] = date?.toIso8601String();
     data['modeOfPayment'] = modeOfPayment;

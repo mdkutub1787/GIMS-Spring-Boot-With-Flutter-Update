@@ -4,8 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../models/fire/fire_bill.dart';
 import '../../models/fire/fire_money_receipt.dart';
+import '../../models/utility/issue_office.dart';
 import '../../viewmodels/fire_bill_viewmodel.dart';
 import '../../viewmodels/fire_receipt_viewmodel.dart';
+import '../../viewmodels/issue_office_viewmodel.dart';
 
 class CreateFireMoneyReceiptScreen extends ConsumerStatefulWidget {
   final FireMoneyReceipt? receipt;
@@ -19,11 +21,11 @@ class CreateFireMoneyReceiptScreen extends ConsumerStatefulWidget {
 class _CreateFireMoneyReceiptScreenState extends ConsumerState<CreateFireMoneyReceiptScreen> {
   final _formKey = GlobalKey<FormState>();
   
-  final TextEditingController issuingOfficeController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
   final TextEditingController issuedAgainstController = TextEditingController();
 
   FireBill? selectedBill;
+  IssueOffice? selectedIssueOffice;
   String? selectedClassOfInsurance;
   String? selectedModeOfPayment;
 
@@ -33,11 +35,14 @@ class _CreateFireMoneyReceiptScreenState extends ConsumerState<CreateFireMoneyRe
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => ref.read(fireBillViewModelProvider.notifier).fetchBills());
+    Future.microtask(() {
+      ref.read(fireBillViewModelProvider.notifier).fetchBills();
+      ref.read(issueOfficeViewModelProvider.notifier).fetchOffices();
+    });
     
     if (widget.receipt != null) {
       final r = widget.receipt!;
-      issuingOfficeController.text = r.issuingOffice ?? '';
+      selectedIssueOffice = r.issuingOffice;
       selectedClassOfInsurance = r.classOfInsurance;
       selectedModeOfPayment = r.modeOfPayment;
       dateController.text = r.date != null ? DateFormat('yyyy-MM-dd').format(r.date!) : DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -49,9 +54,9 @@ class _CreateFireMoneyReceiptScreenState extends ConsumerState<CreateFireMoneyRe
   }
 
   void _submit() async {
-    if (_formKey.currentState!.validate() && selectedBill != null) {
+    if (_formKey.currentState!.validate() && selectedBill != null && selectedIssueOffice != null) {
       final receipt = FireMoneyReceipt(
-        issuingOffice: issuingOfficeController.text,
+        issuingOffice: selectedIssueOffice,
         classOfInsurance: selectedClassOfInsurance!,
         modeOfPayment: selectedModeOfPayment!,
         date: DateTime.parse(dateController.text),
@@ -79,6 +84,7 @@ class _CreateFireMoneyReceiptScreenState extends ConsumerState<CreateFireMoneyRe
   Widget build(BuildContext context) {
     final billState = ref.watch(fireBillViewModelProvider);
     final receiptState = ref.watch(fireReceiptViewModelProvider);
+    final issueOfficeState = ref.watch(issueOfficeViewModelProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -113,7 +119,20 @@ class _CreateFireMoneyReceiptScreenState extends ConsumerState<CreateFireMoneyRe
               const SizedBox(height: 30),
               Text('Receipt Details', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
               const SizedBox(height: 15),
-              _buildField(issuingOfficeController, 'Issuing Office', Icons.business_outlined),
+              DropdownButtonFormField<IssueOffice>(
+                value: selectedIssueOffice != null && issueOfficeState.offices.any((o) => o.id == selectedIssueOffice!.id)
+                       ? issueOfficeState.offices.firstWhere((o) => o.id == selectedIssueOffice!.id)
+                       : (issueOfficeState.offices.isNotEmpty && selectedIssueOffice != null ? selectedIssueOffice : null),
+                isExpanded: true,
+                decoration: _inputDecoration('Issuing Office', Icons.business_outlined),
+                items: [
+                  if (selectedIssueOffice != null && !issueOfficeState.offices.any((o) => o.id == selectedIssueOffice!.id))
+                    DropdownMenuItem<IssueOffice>(value: selectedIssueOffice, child: Text(selectedIssueOffice!.name)),
+                  ...issueOfficeState.offices.map((o) => DropdownMenuItem<IssueOffice>(value: o, child: Text(o.name)))
+                ],
+                onChanged: (val) => setState(() => selectedIssueOffice = val),
+                validator: (val) => val == null ? 'Required' : null,
+              ),
               const SizedBox(height: 15),
               _buildDropdown('Class of Insurance', Icons.category_outlined, classOfInsuranceOptions, selectedClassOfInsurance, (val) => setState(() => selectedClassOfInsurance = val)),
               const SizedBox(height: 15),

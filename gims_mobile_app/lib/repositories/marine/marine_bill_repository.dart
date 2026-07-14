@@ -48,6 +48,17 @@ class MarineBillRepository {
     return response.statusCode == 200 || response.statusCode == 201;
   }
 
+  Future<MarineBill?> calculateBill(MarineBill bill) async {
+    final response = await _apiService.calculateMarineBill(bill.toJson());
+    if (response.statusCode == 200) {
+      final decoded = jsonDecode(response.body);
+      if (decoded['status'] == true) {
+        return MarineBill.fromJson(decoded['data']);
+      }
+    }
+    return null;
+  }
+
   Future<bool> updateBill(int id, MarineBill bill) async {
     final response = await _apiService.updateMarineBill(id, bill.toJson());
     return response.statusCode == 200;

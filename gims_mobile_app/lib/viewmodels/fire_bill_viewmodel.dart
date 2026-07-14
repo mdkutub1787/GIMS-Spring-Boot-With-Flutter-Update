@@ -58,6 +58,14 @@ class FireBillViewModel extends StateNotifier<FireBillState> {
     }
   }
 
+  Future<FireBill?> calculateBill(FireBill bill) async {
+    try {
+      return await _repository.calculateBill(bill);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<bool> updateBill(int id, FireBill bill) async {
     state = state.copyWith(isLoading: true);
     try {

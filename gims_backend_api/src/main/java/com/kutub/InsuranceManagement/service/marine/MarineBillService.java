@@ -96,6 +96,16 @@ public class MarineBillService {
         billRepository.deleteById(id);
     }
 
+    public MarineBill calculateMarineBill(MarineBill bill) {
+        if (bill.getMarineDetails() != null && bill.getMarineDetails().getSumInsured() == 0) {
+            MarinePolicy marinePolicy = policyRepository.findById(bill.getMarineDetails().getId())
+                    .orElseThrow(() -> new RuntimeException("Policy not found with ID: " + bill.getMarineDetails().getId()));
+            bill.setMarineDetails(marinePolicy);
+        }
+        calculatePremiums(bill);
+        return bill;
+    }
+
     // Calculation method for premiums
     private void calculatePremiums(MarineBill bill) {
         double marineRate = bill.getMarineRate() / 100;
@@ -105,13 +115,17 @@ public class MarineBillService {
         // Get the sum insured from the related MarinePolicy
         double sumInsured = bill.getMarineDetails().getSumInsured();
 
+        // Calculate individual amounts (these fields need to be set if they exist on entity, or we just calculate net)
+        double marineAmount = sumInsured * marineRate;
+        double warSrccAmount = sumInsured * warSrccRate;
+
         // Calculate net premium
-        double netPremium = (sumInsured * marineRate) + (sumInsured * warSrccRate);
+        double netPremium = marineAmount + warSrccAmount;
         bill.setNetPremium(roundToTwoDecimalPlaces(netPremium));
 
         // Calculate tax on net premium
         double tax = netPremium * taxRate;
-
+        bill.setTax(15.0);
         // Calculate gross premium
         double grossPremium = netPremium + tax + bill.getStampDuty();
         bill.setGrossPremium(roundToTwoDecimalPlaces(grossPremium));

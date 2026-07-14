@@ -109,6 +109,16 @@ public class FireBillService {
 
 
 
+    public FireBill calculateBill(FireBill bill) {
+        if (bill.getPolicy() != null && bill.getPolicy().getSumInsured() == 0) {
+            FirePolicy policy = policyRepository.findById(bill.getPolicy().getId())
+                    .orElseThrow(() -> new RuntimeException("Policy not found with ID: " + bill.getPolicy().getId()));
+            bill.setPolicy(policy);
+        }
+        calculatePremiums(bill);
+        return bill;
+    }
+
     // Calculation method for premiums
     private void calculatePremiums(FireBill bill) {
         double fireRate = bill.getFire() / 100; // Fire rate in percentage

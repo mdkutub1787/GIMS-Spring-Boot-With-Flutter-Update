@@ -122,6 +122,16 @@ public class MarineBillController {
         return new ResponseEntity<>(ApiResponse.success(savedBill), HttpStatus.CREATED);
     }
 
+    @PostMapping("/calculate")
+    public ResponseEntity<ApiResponse<MarineBill>> calculateMarineBill(@RequestBody MarineBill mb) {
+        try {
+            MarineBill calculatedBill = marineBillService.calculateMarineBill(mb);
+            return ResponseEntity.ok(ApiResponse.success(calculatedBill));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<Object> updateMarineBill(@PathVariable long id, @RequestBody MarineBill mb) {
         try {

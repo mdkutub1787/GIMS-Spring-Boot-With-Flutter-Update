@@ -48,6 +48,17 @@ class FireBillRepository {
     return response.statusCode == 200 || response.statusCode == 201;
   }
 
+  Future<FireBill?> calculateBill(FireBill bill) async {
+    final response = await _apiService.calculateFireBill(bill.toJson());
+    if (response.statusCode == 200) {
+      final decoded = jsonDecode(response.body);
+      if (decoded['status'] == true) {
+        return FireBill.fromJson(decoded['data']);
+      }
+    }
+    return null;
+  }
+
   Future<bool> updateBill(int id, FireBill bill) async {
     final response = await _apiService.updateFireBill(id, bill.toJson());
     return response.statusCode == 200;

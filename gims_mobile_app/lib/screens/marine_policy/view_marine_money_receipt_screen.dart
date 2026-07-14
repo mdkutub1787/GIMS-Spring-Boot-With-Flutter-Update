@@ -297,7 +297,7 @@ class _ViewMarineMoneyReceiptScreenState extends ConsumerState<ViewMarineMoneyRe
                     _buildDetailRow('MR ID', '#${receipt.id}'),
                     _buildDetailRow('Date', receipt.date != null ? DateFormat('dd MMM, yyyy').format(receipt.date!) : 'N/A'),
                     _buildDetailRow('Class of Insurance', receipt.classOfInsurance),
-                    _buildDetailRow('Issuing Office', receipt.issuingOffice),
+                    _buildDetailRow('Issuing Office', receipt.issuingOffice?.name),
                     _buildDetailRow('Payment Mode', receipt.modeOfPayment),
                     _buildDetailRow('Issued Against', receipt.issuedAgainst),
                     const SizedBox(height: 30),
@@ -328,7 +328,7 @@ class _ViewMarineMoneyReceiptScreenState extends ConsumerState<ViewMarineMoneyRe
                     ElevatedButton.icon(
                       onPressed: () => PdfService.generateMarinePolicySchedulePdf(receipt),
                       icon: const Icon(Icons.print_rounded),
-                      label: const Text('Download Policy'),
+                      label: const Text('Download Policy Schedule PDF'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF3B82F6),
                         foregroundColor: Colors.white,

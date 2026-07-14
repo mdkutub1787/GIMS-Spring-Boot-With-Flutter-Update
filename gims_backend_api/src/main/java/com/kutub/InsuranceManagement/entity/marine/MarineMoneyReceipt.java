@@ -18,7 +18,9 @@ public class MarineMoneyReceipt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String issuingOffice;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "issueOfficeId")
+    private com.kutub.InsuranceManagement.entity.utility.IssueOffice issuingOffice;
 
     private String classOfInsurance;
 

@@ -10,10 +10,7 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProfileUpdateRequest {
-    private String firstname;
-    private String lastname;
+    private String officeName;
     private String phone;
     private String address;
-    private Date dob;
-    private String gender;
 }

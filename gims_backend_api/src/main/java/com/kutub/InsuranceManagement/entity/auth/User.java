@@ -14,6 +14,9 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import com.kutub.InsuranceManagement.entity.utility.InsInfo;
+import com.kutub.InsuranceManagement.entity.utility.IssueOffice;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -25,8 +28,6 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String firstname;
-    private String lastname;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -42,8 +43,6 @@ public class User implements UserDetails {
     private String phone;
 
     private String address;
-    private Date dob;
-    private String gender;
 
     @Column(nullable = false)
     private boolean active = false;
@@ -64,6 +63,14 @@ public class User implements UserDetails {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "company_id")
+    private InsInfo company;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "office_id")
+    private IssueOffice office;
 
     @JsonIgnore
     @Override

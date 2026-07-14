@@ -66,6 +66,7 @@ class ApiService {
   Future<http.Response> getFireBills() => get(ApiConfig.fireBillListUrl);
   Future<http.Response> getFireBillById(int id) => get(ApiConfig.fireBillGetUrl(id));
   Future<http.Response> saveFireBill(Map<String, dynamic> data) => post(ApiConfig.fireBillSaveUrl, data);
+  Future<http.Response> calculateFireBill(Map<String, dynamic> data) => post(ApiConfig.fireBillCalculateUrl, data);
   Future<http.Response> updateFireBill(int id, Map<String, dynamic> data) => put(ApiConfig.fireBillUpdateUrl(id), data);
   Future<http.Response> deleteFireBill(int id) => delete(ApiConfig.fireBillDeleteUrl(id));
   Future<http.Response> searchFireBillsByPolicyholder(String policyholder) => get(ApiConfig.fireBillSearchPolicyholderUrl(policyholder));
@@ -87,6 +88,7 @@ class ApiService {
   Future<http.Response> getMarineBills() => get(ApiConfig.marineBillListUrl);
   Future<http.Response> getMarineBillById(int id) => get(ApiConfig.marineBillGetUrl(id));
   Future<http.Response> saveMarineBill(Map<String, dynamic> data) => post(ApiConfig.marineBillSaveUrl, data);
+  Future<http.Response> calculateMarineBill(Map<String, dynamic> data) => post(ApiConfig.marineBillCalculateUrl, data);
   Future<http.Response> updateMarineBill(int id, Map<String, dynamic> data) => put(ApiConfig.marineBillUpdateUrl(id), data);
   Future<http.Response> deleteMarineBill(int id) => delete(ApiConfig.marineBillDeleteUrl(id));
 

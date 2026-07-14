@@ -5,51 +5,45 @@ enum Role {
 
 class UserModel {
   int? id;
-  String? name;
-  String? firstName;
-  String? lastName;
   String? username;
   String? email;
   String? password;
   String? cell;
   String? address;
-  DateTime? dob;
-  String? gender;
+  int? companyId;
+  String? companyName;
+  int? officeId;
+  String? officeName;
   Role? role;
 
   UserModel({
     this.id,
-    this.name,
-    this.firstName,
-    this.lastName,
     this.username,
     this.email,
     this.password,
     this.cell,
     this.address,
-    this.dob,
-    this.gender,
+    this.companyId,
+    this.companyName,
+    this.officeId,
+    this.officeName,
     this.role,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    String? combinedName = json['name'];
-    if (combinedName == null && json['firstname'] != null) {
-      combinedName = "${json['firstname']} ${json['lastname'] ?? ''}".trim();
-    }
+  String? get name => officeName ?? companyName ?? username;
 
+  factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'],
-      name: combinedName,
-      firstName: json['firstname'],
-      lastName: json['lastname'],
       username: json['username'],
       email: json['email'],
       password: json['password'],
       cell: json['phone'] ?? json['cell'],
       address: json['address'],
-      dob: json['dob'] == null ? null : DateTime.tryParse(json['dob'].toString()),
-      gender: json['gender'],
+      companyId: json['companyId'],
+      companyName: json['companyName'],
+      officeId: json['officeId'],
+      officeName: json['officeName'],
       role: _parseRole(json['role']),
     );
   }
@@ -57,17 +51,16 @@ class UserModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
-      'firstname': firstName,
-      'lastname': lastName,
       'username': username,
       'email': email,
       'password': password,
       'phone': cell,
       'cell': cell,
       'address': address,
-      'dob': dob?.toIso8601String(),
-      'gender': gender,
+      'companyId': companyId,
+      'companyName': companyName,
+      'officeId': officeId,
+      'officeName': officeName,
       'role': role?.toString().split('.').last,
     };
   }

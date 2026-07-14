@@ -10,6 +10,9 @@ import com.kutub.InsuranceManagement.entity.auth.User;
 import com.kutub.InsuranceManagement.exception.auth.UserAlreadyExistsException;
 import com.kutub.InsuranceManagement.repository.auth.TokenRepository;
 import com.kutub.InsuranceManagement.repository.auth.UserRepository;
+import com.kutub.InsuranceManagement.repository.utility.InsInfoRepository;
+import com.kutub.InsuranceManagement.repository.utility.IssueOfficeRepository;
+import com.kutub.InsuranceManagement.entity.utility.IssueOffice;
 import com.kutub.InsuranceManagement.security.jwt.JwtService;
 import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
@@ -34,6 +37,8 @@ public class AuthService {
     private final TokenRepository tokenRepository;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
+    private final InsInfoRepository insInfoRepository;
+    private final IssueOfficeRepository issueOfficeRepository;
 
     private String generateOtpCode() {
         SecureRandom random = new SecureRandom();
@@ -50,20 +55,34 @@ public class AuthService {
         }
 
         User user = new User();
-        user.setFirstname(request.getFirstname());
-        user.setLastname(request.getLastname());
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(role);
         
+        if (request.getCompanyId() != null) {
+            user.setCompany(insInfoRepository.findById(request.getCompanyId()).orElse(null));
+        }
+        
+        IssueOffice newOffice = new IssueOffice();
+        newOffice.setName(request.getOfficeName());
+        newOffice.setAddress(request.getOfficeAddress());
+        newOffice.setPhone(request.getOfficePhone());
+        newOffice.setMobile(request.getOfficeMobile());
+        newOffice.setFax(request.getOfficeFax());
+        newOffice.setEmail(request.getOfficeEmail());
+        newOffice.setWebsite(request.getOfficeWebsite());
+        
+        IssueOffice savedOffice = issueOfficeRepository.save(newOffice);
+        user.setOffice(savedOffice);
+        
         String activationCode = generateOtpCode();
         user.setActivationCode(activationCode);
         user.setCodeExpiresAt(LocalDateTime.now().plusMinutes(10));
 
         userRepository.save(user);
-        sendEmail(user.getEmail(), user.getFirstname(), activationCode, "Your Account Activation Code", "Your activation code is: ");
+        sendEmail(user.getEmail(), user.getUsername(), activationCode, "Your Account Activation Code", "Your activation code is: ");
 
         return new AuthenticationResponse(null, "User registration was successful. Please check your email for the activation code.");
     }
@@ -89,12 +108,20 @@ public class AuthService {
 
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
-        userDto.setFirstname(user.getFirstname());
-        userDto.setLastname(user.getLastname());
         userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());
         userDto.setPhone(user.getPhone());
         userDto.setRole(user.getRole().name());
+        
+        if (user.getCompany() != null) {
+            userDto.setCompanyId(user.getCompany().getId());
+            userDto.setCompanyName(user.getCompany().getName());
+        }
+        
+        if (user.getOffice() != null) {
+            userDto.setOfficeId(user.getOffice().getId());
+            userDto.setOfficeName(user.getOffice().getName());
+        }
 
         return new AuthenticationResponse(jwt, "User login was successful", userDto);
     }
@@ -124,7 +151,7 @@ public class AuthService {
         user.setResetCodeExpiresAt(LocalDateTime.now().plusMinutes(10));
         userRepository.save(user);
 
-        sendEmail(email, user.getFirstname(), resetCode, "Password Reset Code", "Your password reset code is: ");
+        sendEmail(email, user.getUsername(), resetCode, "Password Reset Code", "Your password reset code is: ");
     }
 
     public String verifyPasswordResetCode(String code) {
@@ -152,7 +179,7 @@ public class AuthService {
         userRepository.save(user);
     }
 
-    private void sendEmail(String email, String firstname, String code, String subject, String title) {
+    private void sendEmail(String email, String username, String code, String subject, String title) {
         String htmlContent = """
             <!DOCTYPE html>
             <html lang="en">
@@ -189,7 +216,7 @@ public class AuthService {
                 </div>
             </body>
             </html>
-            """.formatted(subject, title, firstname, code);
+            """.formatted(subject, title, username, code);
 
         try {
             emailService.sendSimpleEmail(email, subject, htmlContent);

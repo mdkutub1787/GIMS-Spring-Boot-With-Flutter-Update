@@ -18,7 +18,9 @@ public class FireMoneyReceipt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String issuingOffice;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "issueOfficeId")
+    private com.kutub.InsuranceManagement.entity.utility.IssueOffice issuingOffice;
 
     private String classOfInsurance;
 

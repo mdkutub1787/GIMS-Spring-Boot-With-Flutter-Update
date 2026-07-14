@@ -14,74 +14,33 @@ class EditProfileScreen extends ConsumerStatefulWidget {
 
 class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
-  
-  late TextEditingController firstnameController;
-  late TextEditingController lastnameController;
-  late TextEditingController phoneController;
+  late TextEditingController officeNameController;
   late TextEditingController addressController;
-  late TextEditingController dobController;
-  
-  String? selectedGender;
+  late TextEditingController phoneController;
 
   @override
   void initState() {
     super.initState();
     final user = ref.read(authViewModelProvider).user;
-    firstnameController = TextEditingController(text: user?.firstName ?? '');
-    lastnameController = TextEditingController(text: user?.lastName ?? '');
-    phoneController = TextEditingController(text: user?.cell ?? '');
+    officeNameController = TextEditingController(text: user?.officeName ?? '');
     addressController = TextEditingController(text: user?.address ?? '');
-    dobController = TextEditingController(
-      text: user?.dob != null ? DateFormat('yyyy-MM-dd').format(user!.dob!) : '',
-    );
-    selectedGender = user?.gender;
+    phoneController = TextEditingController(text: user?.cell ?? '');
   }
 
   @override
   void dispose() {
-    firstnameController.dispose();
-    lastnameController.dispose();
-    phoneController.dispose();
+    officeNameController.dispose();
     addressController.dispose();
-    dobController.dispose();
+    phoneController.dispose();
     super.dispose();
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now().subtract(const Duration(days: 365 * 18)), // Default to 18 years ago
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: Theme.of(context).primaryColor,
-              onPrimary: Colors.white,
-              onSurface: Colors.black,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (picked != null) {
-      setState(() {
-        dobController.text = DateFormat('yyyy-MM-dd').format(picked);
-      });
-    }
   }
 
   void _submitUpdate() async {
     if (_formKey.currentState!.validate()) {
       final data = {
-        'firstname': firstnameController.text.trim(),
-        'lastname': lastnameController.text.trim(),
-        'phone': phoneController.text.trim(),
+        'officeName': officeNameController.text.trim(),
         'address': addressController.text.trim(),
-        if (dobController.text.trim().isNotEmpty) 'dob': dobController.text.trim(),
-        if (selectedGender != null) 'gender': selectedGender,
+        'phone': phoneController.text.trim(),
       };
 
       final success = await ref.read(authViewModelProvider.notifier).updateProfile(data);
@@ -129,16 +88,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     _buildTextField(
-                      controller: firstnameController,
-                      label: 'First Name',
-                      icon: Icons.person_outline,
-                      validator: (value) => value!.isEmpty ? 'First name is required' : null,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTextField(
-                      controller: lastnameController,
-                      label: 'Last Name',
-                      icon: Icons.person_outline,
+                      controller: officeNameController,
+                      label: 'Office Name',
+                      icon: Icons.store,
+                      validator: (value) => value!.isEmpty ? 'Required' : null,
                     ),
                     const SizedBox(height: 16),
                     _buildTextField(
@@ -153,35 +106,6 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       label: 'Address',
                       icon: Icons.location_on_outlined,
                       maxLines: 3,
-                    ),
-                    const SizedBox(height: 16),
-                    GestureDetector(
-                      onTap: () => _selectDate(context),
-                      child: AbsorbPointer(
-                        child: _buildTextField(
-                          controller: dobController,
-                          label: 'Date of Birth (YYYY-MM-DD)',
-                          icon: Icons.calendar_today_outlined,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    DropdownButtonFormField<String>(
-                      value: selectedGender,
-                      decoration: const InputDecoration(
-                        labelText: 'Gender',
-                        prefixIcon: Icon(Icons.people_outline, color: Color(0xFF64748B)),
-                      ),
-                      items: const [
-                        DropdownMenuItem(value: 'Male', child: Text('Male')),
-                        DropdownMenuItem(value: 'Female', child: Text('Female')),
-                        DropdownMenuItem(value: 'Other', child: Text('Other')),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          selectedGender = value;
-                        });
-                      },
                     ),
                     const SizedBox(height: 32),
                     ElevatedButton(

@@ -8,6 +8,7 @@ import '../models/fire/fire_bill.dart';
 import '../models/fire/fire_money_receipt.dart';
 import '../models/marine/marine_bill.dart';
 import '../models/marine/marine_money_receipt.dart';
+import '../models/utility/issue_office.dart';
 
 class PdfService {
   static Future<pw.Document> _createDocument() async {
@@ -86,7 +87,7 @@ class PdfService {
         pageFormat: PdfPageFormat.a4,
         margin: const pw.EdgeInsets.all(30),
         build: (pw.Context context) {
-          return _buildFireTemplate(bill, "FIRE COVER NOTE", receiptId: receipt.id.toString());
+          return _buildFireTemplate(bill, "FIRE COVER NOTE", receiptId: receipt.id.toString(), issuingOffice: receipt.issuingOffice);
         },
       ),
     );
@@ -94,7 +95,7 @@ class PdfService {
     await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => pdf.save());
   }
 
-  static pw.Widget _buildFireTemplate(FireBill bill, String title, {String? receiptId}) {
+  static pw.Widget _buildFireTemplate(FireBill bill, String title, {String? receiptId, IssueOffice? issuingOffice}) {
     final String bankStr = bill.policy?.bank?.name != null ? "${bill.policy?.bank?.name}, " : "";
     final String branchStr = bill.policy?.branch?.name != null ? "${bill.policy?.branch?.name}, " : "";
     final String insuredNameStr = "$bankStr$branchStr${bill.policy?.policyholder ?? ''}";
@@ -116,9 +117,9 @@ class PdfService {
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
                   pw.Text('Crystal', style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, fontStyle: pw.FontStyle.italic, color: PdfColors.blue900)),
-                  pw.Text(bill.policy?.company?.name ?? 'Crystal Insurance PLC', style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
-                  pw.Text('${bill.policy?.branch?.name ?? ''} Branch', style: pw.TextStyle(fontSize: 10)),
-                  pw.Text('Tel: N/A\nMob: N/A', style: pw.TextStyle(fontSize: 9, color: PdfColors.blue)),
+                  pw.Text(issuingOffice?.name ?? bill.policy?.company?.name ?? 'Crystal Insurance PLC', style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
+                  pw.Text(issuingOffice?.address ?? '${bill.policy?.branch?.name ?? ''} Branch', style: pw.TextStyle(fontSize: 10)),
+                  pw.Text('Tel: ${issuingOffice?.phone ?? 'N/A'}\nMob: ${issuingOffice?.mobile ?? 'N/A'}', style: pw.TextStyle(fontSize: 9, color: PdfColors.blue)),
                   if (title == "FIRE COVER NOTE") ...[
                     pw.SizedBox(height: 5),
                     pw.Text('FIRE COVER NOTE NO : ${bill.policy?.sysNumber ?? ''}', style: pw.TextStyle(fontSize: 9, color: PdfColors.grey700)),
@@ -131,7 +132,7 @@ class PdfService {
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.center,
                 children: [
-                  pw.Text(bill.policy?.company?.name ?? 'Crystal Insurance PLC', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold, color: PdfColors.blue800)),
+                  pw.Text(issuingOffice?.name ?? bill.policy?.company?.name ?? 'Crystal Insurance PLC', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold, color: PdfColors.blue800)),
                   if (title == "FIRE COVER NOTE") 
                     pw.Container(
                       padding: const pw.EdgeInsets.symmetric(horizontal: 10, vertical: 2),
@@ -149,7 +150,7 @@ class PdfService {
                 crossAxisAlignment: pw.CrossAxisAlignment.end,
                 children: [
                   pw.Text('Corporate Office', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold)),
-                  pw.Text('DR Tower (14th floor), 65/2/2,\nBox Culvert Road, Purana\nPaltan, Dhaka-1000\nTel: 88-02-55112733-38\nFax: 88-029567205\nE-mail: info@crystalins.com\nWebsite: www.crystalins.com', 
+                  pw.Text('DR Tower (14th floor), 65/2/2,\nBox Culvert Road, Purana\nPaltan, Dhaka-1000\nTel: ${issuingOffice?.phone ?? '88-02-55112733-38'}\nFax: ${issuingOffice?.fax ?? '88-029567205'}\nE-mail: ${issuingOffice?.email ?? 'info@crystalins.com'}\nWebsite: ${issuingOffice?.website ?? 'www.crystalins.com'}', 
                     textAlign: pw.TextAlign.right, style: pw.TextStyle(fontSize: 8, color: PdfColors.grey700)),
                   pw.SizedBox(height: 5),
                   pw.Text('Date: ${bill.policy?.date != null ? DateFormat('dd-MMM-yy').format(bill.policy!.date!) : 'N/A'}', style: pw.TextStyle(fontSize: 9)),
@@ -346,9 +347,9 @@ class PdfService {
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
                         pw.Text('Crystal', style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, fontStyle: pw.FontStyle.italic, color: PdfColors.black)),
-                        pw.Text(bill.policy?.company?.name ?? 'Crystal Insurance PLC', style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
-                        pw.Text('${bill.policy?.branch?.name ?? ''} Branch', style: pw.TextStyle(fontSize: 10)),
-                        pw.Text('Tel: N/A\nMob: N/A', style: pw.TextStyle(fontSize: 9, color: PdfColors.blue)),
+                        pw.Text(receipt.issuingOffice?.name ?? bill.policy?.company?.name ?? 'Crystal Insurance PLC', style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
+                        pw.Text(receipt.issuingOffice?.address ?? '${bill.policy?.branch?.name ?? ''} Branch', style: pw.TextStyle(fontSize: 10)),
+                        pw.Text('Tel: ${receipt.issuingOffice?.phone ?? 'N/A'}\nMob: ${receipt.issuingOffice?.mobile ?? 'N/A'}', style: pw.TextStyle(fontSize: 9, color: PdfColors.blue)),
                       ],
                     ),
                   ),
@@ -357,7 +358,7 @@ class PdfService {
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
                       children: [
-                        pw.Text(bill.policy?.company?.name ?? 'Crystal Insurance PLC', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold, fontStyle: pw.FontStyle.italic)),
+                        pw.Text(receipt.issuingOffice?.name ?? bill.policy?.company?.name ?? 'Crystal Insurance PLC', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold, fontStyle: pw.FontStyle.italic)),
                         pw.SizedBox(height: 5),
                         pw.Container(
                             padding: const pw.EdgeInsets.symmetric(horizontal: 10, vertical: 2),
@@ -375,7 +376,7 @@ class PdfService {
                       crossAxisAlignment: pw.CrossAxisAlignment.end,
                       children: [
                         pw.Text('Corporate Office', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold)),
-                        pw.Text('DR Tower (14th floor), 65/2/2,\nBox Culvert Road, Purana\nPaltan, Dhaka-1000\nTel: 88-02-55112733-38\nFax: 88-029567205\nE-mail: info@crystalins.com\nWebsite: www.crystalins.com', 
+                        pw.Text('DR Tower (14th floor), 65/2/2,\nBox Culvert Road, Purana\nPaltan, Dhaka-1000\nTel: ${receipt.issuingOffice?.phone ?? '88-02-55112733-38'}\nFax: ${receipt.issuingOffice?.fax ?? '88-029567205'}\nE-mail: ${receipt.issuingOffice?.email ?? 'info@crystalins.com'}\nWebsite: ${receipt.issuingOffice?.website ?? 'www.crystalins.com'}', 
                           textAlign: pw.TextAlign.right, style: pw.TextStyle(fontSize: 8, color: PdfColors.grey700)),
                       ],
                     ),
@@ -390,12 +391,12 @@ class PdfService {
                 children: [
                   pw.TableRow(
                     children: [
-                      pw.Padding(padding: const pw.EdgeInsets.all(4), child: pw.Text('The Company : ${bill.policy?.company?.name ?? \'Crystal Insurance PLC\'}', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold))),
+                      pw.Padding(padding: const pw.EdgeInsets.all(4), child: pw.Text('The Company : ${bill.policy?.company?.name ?? 'Crystal Insurance PLC'}', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold))),
                       pw.Padding(padding: const pw.EdgeInsets.all(4), child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.center, children: [
                           pw.Text('POLICY NUMBER', style: pw.TextStyle(fontSize: 9)),
-                          pw.Text('${bill.policy?.sysNumber ?? \'N/A\'}', style: pw.TextStyle(fontSize: 9)),
+                          pw.Text('${bill.policy?.sysNumber ?? 'N/A'}', style: pw.TextStyle(fontSize: 9)),
                           pw.Text('IN LIEU OF COVER NOTE NO.', style: pw.TextStyle(fontSize: 9)),
-                          pw.Text('${bill.policy?.sysNumber ?? \'N/A\'}', style: pw.TextStyle(fontSize: 9)),
+                          pw.Text('${bill.policy?.sysNumber ?? 'N/A'}', style: pw.TextStyle(fontSize: 9)),
                       ])),
                     ]
                   ),
@@ -446,7 +447,7 @@ class PdfService {
                   ),
                   pw.TableRow(
                     children: [
-                      pw.Padding(padding: const pw.EdgeInsets.all(4), child: pw.Text('${bill.policy?.stockInsured ?? \'Stock Of All Kinds\'}', style: pw.TextStyle(fontSize: 9, color: PdfColors.grey700))),
+                      pw.Padding(padding: const pw.EdgeInsets.all(4), child: pw.Text('${bill.policy?.stockInsured ?? 'Stock Of All Kinds'}', style: pw.TextStyle(fontSize: 9, color: PdfColors.grey700))),
                       pw.Padding(padding: const pw.EdgeInsets.all(4), child: pw.Text('Tk.', textAlign: pw.TextAlign.center, style: pw.TextStyle(fontSize: 9))),
                       pw.Padding(padding: const pw.EdgeInsets.all(4), child: pw.Text(NumberFormat('#,##,###.00').format(bill.policy?.sumInsured ?? 0), textAlign: pw.TextAlign.right, style: pw.TextStyle(fontSize: 9))),
                     ]
@@ -594,9 +595,9 @@ class PdfService {
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
                       pw.Text('Crystal', style: pw.TextStyle(fontSize: 28, fontWeight: pw.FontWeight.bold, fontStyle: pw.FontStyle.italic, color: PdfColors.blue900)),
-                      pw.Text(receipt.bill?.policy?.company?.name ?? 'Crystal Insurance PLC', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
-                      pw.Text('${receipt.bill?.policy?.branch?.name ?? ''} Branch', style: pw.TextStyle(fontSize: 11)),
-                      pw.Text('Tel: N/A\nMob: N/A', style: pw.TextStyle(fontSize: 10, color: PdfColors.blue)),
+                      pw.Text(receipt.issuingOffice?.name ?? receipt.bill?.policy?.company?.name ?? 'Crystal Insurance PLC', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold, color: PdfColors.blue)),
+                      pw.Text(receipt.issuingOffice?.address ?? '${receipt.bill?.policy?.branch?.name ?? ''} Branch', style: pw.TextStyle(fontSize: 11)),
+                      pw.Text('Tel: ${receipt.issuingOffice?.phone ?? 'N/A'}\nMob: ${receipt.issuingOffice?.mobile ?? 'N/A'}', style: pw.TextStyle(fontSize: 10, color: PdfColors.blue)),
                     ],
                   ),
                   pw.Column(
@@ -621,7 +622,7 @@ class PdfService {
               pw.Row(
                 children: [
                   pw.SizedBox(width: 120, child: pw.Text('Issuing Office', style: pw.TextStyle(fontSize: 10))),
-                  pw.Text(': ${receipt.issuingOffice ?? ''}', style: pw.TextStyle(fontSize: 10)),
+                  pw.Text(': ${receipt.issuingOffice?.name ?? ''}', style: pw.TextStyle(fontSize: 10)),
                 ]
               ),
               pw.Row(
@@ -725,16 +726,16 @@ class PdfService {
   // MARINE PDFs
   // --------------------------------------------------------------------------
 
-  static pw.Widget _buildMarineHeader(MarineBill bill, String title, {String? receiptNo, String? dateStr}) {
+  static pw.Widget _buildMarineHeader(MarineBill bill, String title, {String? receiptNo, String? dateStr, IssueOffice? issuingOffice}) {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.center,
       children: [
-        pw.Text('Islami Insurance Com. Bangladesh Ltd', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-        pw.Text('DR Tower (14th floor), 65/2/2,Purana Paltan, Dhaka-1000.', style: pw.TextStyle(fontSize: 10)),
-        pw.Text('Tel: 02478853405, Mob: 01763001787', style: pw.TextStyle(fontSize: 10)),
-        pw.Text('Fax: +88 02 55112742', style: pw.TextStyle(fontSize: 10)),
-        pw.Text('Email: infociclbd.com', style: pw.TextStyle(fontSize: 10)),
-        pw.Text('Web: www.islamiinsurance.com', style: pw.TextStyle(fontSize: 10)),
+        pw.Text(issuingOffice?.name ?? 'Islami Insurance Com. Bangladesh Ltd', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+        pw.Text(issuingOffice?.address ?? 'DR Tower (14th floor), 65/2/2,Purana Paltan, Dhaka-1000.', style: pw.TextStyle(fontSize: 10)),
+        pw.Text('Tel: ${issuingOffice?.phone ?? '02478853405'}, Mob: ${issuingOffice?.mobile ?? '01763001787'}', style: pw.TextStyle(fontSize: 10)),
+        pw.Text('Fax: ${issuingOffice?.fax ?? '+88 02 55112742'}', style: pw.TextStyle(fontSize: 10)),
+        pw.Text('Email: ${issuingOffice?.email ?? 'infociclbd.com'}', style: pw.TextStyle(fontSize: 10)),
+        pw.Text('Web: ${issuingOffice?.website ?? 'www.islamiinsurance.com'}', style: pw.TextStyle(fontSize: 10)),
         pw.SizedBox(height: 15),
         pw.Text(title, style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
         pw.SizedBox(height: 15),
@@ -826,7 +827,7 @@ class PdfService {
                   ]),
                   pw.TableRow(children: [
                     pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Interest Insured')),
-                    pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('${bill.marineDetails?.interestInsured ?? 'Benapole Port'}')),
+                    pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('${bill.marineDetails?.stockItem ?? 'Benapole Port'}')),
                   ]),
                   pw.TableRow(children: [
                     pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Coverage')),
@@ -910,7 +911,7 @@ class PdfService {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              _buildMarineHeader(bill, 'Marine Cover Note'),
+              _buildMarineHeader(bill, 'Marine Cover Note', issuingOffice: receipt.issuingOffice),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.black, width: 1),
                 children: [
@@ -976,7 +977,7 @@ class PdfService {
                   ]),
                   pw.TableRow(children: [
                     pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Interest Insured')),
-                    pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('${bill.marineDetails?.interestInsured ?? 'Benapole Port'}')),
+                    pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('${bill.marineDetails?.stockItem ?? 'Benapole Port'}')),
                   ]),
                   pw.TableRow(children: [
                     pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Coverage')),
@@ -1091,7 +1092,7 @@ class PdfService {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              _buildMarineHeader(bill, 'Marine Money Receipt'),
+              _buildMarineHeader(bill, 'Marine Money Receipt', issuingOffice: receipt.issuingOffice),
               pw.Table(
                 border: pw.TableBorder.all(color: PdfColors.black, width: 1),
                 children: [
@@ -1109,7 +1110,7 @@ class PdfService {
                 children: [
                   pw.TableRow(children: [
                     pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Center(child: pw.Text('Issuing Office', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)))),
-                    pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Center(child: pw.Text('${receipt.issuingOffice ?? 'Dhaka'}', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)))),
+                    pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Center(child: pw.Text('${receipt.issuingOffice?.name ?? 'Dhaka'}', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)))),
                   ]),
                   pw.TableRow(children: [
                     pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text('Money Receipt No')),
@@ -1209,9 +1210,9 @@ class PdfService {
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
-                        pw.Text('Islami Insurance Com. Bangladesh Ltd', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold, color: PdfColors.black)),
-                        pw.Text('DR Tower (14th floor), 65/2/2,Purana Paltan, Dhaka-1000.', style: pw.TextStyle(fontSize: 8)),
-                        pw.Text('Tel: 02478853405, Mob: 01763001787', style: pw.TextStyle(fontSize: 8)),
+                        pw.Text(receipt.issuingOffice?.name ?? 'Islami Insurance Com. Bangladesh Ltd', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold, color: PdfColors.black)),
+                        pw.Text(receipt.issuingOffice?.address ?? 'DR Tower (14th floor), 65/2/2,Purana Paltan, Dhaka-1000.', style: pw.TextStyle(fontSize: 8)),
+                        pw.Text('Tel: ${receipt.issuingOffice?.phone ?? '02478853405'}, Mob: ${receipt.issuingOffice?.mobile ?? '01763001787'}', style: pw.TextStyle(fontSize: 8)),
                       ],
                     ),
                   ),
@@ -1220,7 +1221,7 @@ class PdfService {
                     child: pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.center,
                       children: [
-                        pw.Text('Islami Insurance Com. Bangladesh Ltd', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
+                        pw.Text(receipt.issuingOffice?.name ?? 'Islami Insurance Com. Bangladesh Ltd', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
                         pw.SizedBox(height: 5),
                         pw.Container(
                             padding: const pw.EdgeInsets.symmetric(horizontal: 10, vertical: 2),
@@ -1238,7 +1239,7 @@ class PdfService {
                       crossAxisAlignment: pw.CrossAxisAlignment.end,
                       children: [
                         pw.Text('Corporate Office', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold)),
-                        pw.Text('Fax: +88 02 55112742\nEmail: infociclbd.com\nWeb: www.islamiinsurance.com', 
+                        pw.Text('Fax: ${receipt.issuingOffice?.fax ?? '+88 02 55112742'}\nEmail: ${receipt.issuingOffice?.email ?? 'infociclbd.com'}\nWeb: ${receipt.issuingOffice?.website ?? 'www.islamiinsurance.com'}', 
                           textAlign: pw.TextAlign.right, style: pw.TextStyle(fontSize: 8, color: PdfColors.grey700)),
                       ],
                     ),
@@ -1256,9 +1257,9 @@ class PdfService {
                       pw.Padding(padding: const pw.EdgeInsets.all(4), child: pw.Text('The Company : Islami Insurance Com. Bangladesh Ltd', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold))),
                       pw.Padding(padding: const pw.EdgeInsets.all(4), child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.center, children: [
                           pw.Text('POLICY NUMBER', style: pw.TextStyle(fontSize: 9)),
-                          pw.Text('${bill.marineDetails?.sysNumber ?? \'N/A\'}', style: pw.TextStyle(fontSize: 9)),
+                          pw.Text('${bill.marineDetails?.sysNumber ?? 'N/A'}', style: pw.TextStyle(fontSize: 9)),
                           pw.Text('IN LIEU OF COVER NOTE NO.', style: pw.TextStyle(fontSize: 9)),
-                          pw.Text('${bill.marineDetails?.sysNumber ?? \'N/A\'}', style: pw.TextStyle(fontSize: 9)),
+                          pw.Text('${bill.marineDetails?.sysNumber ?? 'N/A'}', style: pw.TextStyle(fontSize: 9)),
                       ])),
                     ]
                   ),
@@ -1325,7 +1326,7 @@ class PdfService {
               ),
 
               pw.SizedBox(height: 5),
-              _buildDetailRow('INTEREST INSURED', bill.marineDetails?.interestInsured ?? 'N/A'),
+              _buildDetailRow('INTEREST INSURED', bill.marineDetails?.stockItem ?? 'N/A'),
               _buildDetailRow('RISK(S) COVERED', bill.marineDetails?.coverage ?? 'Lorry Risk Only'),
               _buildDetailRow('VOYAGE FROM', bill.marineDetails?.voyageFrom ?? 'India'),
               _buildDetailRow('VOYAGE TO', bill.marineDetails?.voyageTo ?? 'Dhaka'),

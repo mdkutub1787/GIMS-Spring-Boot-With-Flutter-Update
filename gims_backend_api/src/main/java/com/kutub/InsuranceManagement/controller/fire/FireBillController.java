@@ -144,6 +144,17 @@ public class FireBillController {
         return new ResponseEntity<>(ApiResponse.success(savedBill), HttpStatus.CREATED);
     }
 
+    // Calculate bill premiums without saving
+    @PostMapping("/calculate")
+    public ResponseEntity<ApiResponse<FireBill>> calculateBill(@RequestBody FireBill b) {
+        try {
+            FireBill calculatedBill = billService.calculateBill(b);
+            return ResponseEntity.ok(ApiResponse.success(calculatedBill));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
     // Update an existing bill
     @PutMapping("/update/{id}")
     public ResponseEntity<ApiResponse<FireBill>> updateBill(@PathVariable int id, @RequestBody FireBill b) {
