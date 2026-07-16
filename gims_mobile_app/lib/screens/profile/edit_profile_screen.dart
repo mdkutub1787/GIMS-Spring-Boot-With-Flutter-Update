@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../core/widgets/brand_app_bar.dart';
+import '../../viewmodels/utility_viewmodel.dart';
+import '../../models/utility_models.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
   const EditProfileScreen({super.key});
@@ -17,6 +19,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   late TextEditingController officeNameController;
   late TextEditingController addressController;
   late TextEditingController phoneController;
+  int? selectedCompanyId;
 
   @override
   void initState() {
@@ -25,6 +28,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     officeNameController = TextEditingController(text: user?.officeName ?? '');
     addressController = TextEditingController(text: user?.address ?? '');
     phoneController = TextEditingController(text: user?.cell ?? '');
+    selectedCompanyId = user?.companyId;
+
+    Future.microtask(() {
+      ref.read(utilityViewModelProvider.notifier).fetchInsuranceCompanies();
+    });
   }
 
   @override
@@ -38,6 +46,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   void _submitUpdate() async {
     if (_formKey.currentState!.validate()) {
       final data = {
+        'companyId': selectedCompanyId,
         'officeName': officeNameController.text.trim(),
         'address': addressController.text.trim(),
         'phone': phoneController.text.trim(),
@@ -64,6 +73,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(authViewModelProvider).isLoading;
+    final utilityState = ref.watch(utilityViewModelProvider);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -87,6 +97,29 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    DropdownButtonFormField<int>(
+                      value: selectedCompanyId,
+                      decoration: InputDecoration(
+                        labelText: 'Company',
+                        labelStyle: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
+                        prefixIcon: const Icon(Icons.business, color: Color(0xFF7C3AED)),
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Color(0xFF7C3AED), width: 1.5)),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      ),
+                      items: utilityState.insuranceCompanies.map((InsuranceCompany company) {
+                        return DropdownMenuItem<int>(
+                          value: company.id,
+                          child: Text(company.name ?? 'Unknown', style: GoogleFonts.poppins(fontSize: 14)),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) => setState(() => selectedCompanyId = newValue),
+                      validator: (value) => value == null ? 'Please select a company' : null,
+                    ),
+                    const SizedBox(height: 16),
                     _buildTextField(
                       controller: officeNameController,
                       label: 'Office Name',

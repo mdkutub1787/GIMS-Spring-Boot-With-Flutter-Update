@@ -18,11 +18,10 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
-                .orElseThrow(()->new UsernameNotFoundException("User Not Found With this username: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found With this username: " + username));
     }
 
     public User getProfile() {
@@ -34,15 +33,19 @@ public class UserService implements UserDetailsService {
     @Transactional
     public User updateProfile(ProfileUpdateRequest request) {
         User user = getProfile();
-        if (request.getPhone() != null) user.setPhone(request.getPhone());
-        if (request.getAddress() != null) user.setAddress(request.getAddress());
-        
+        if (request.getPhone() != null)
+            user.setPhone(request.getPhone());
+        if (request.getAddress() != null)
+            user.setAddress(request.getAddress());
+
         if (request.getOfficeName() != null && user.getOffice() != null) {
             user.getOffice().setName(request.getOfficeName());
-            // Since CascadeType.ALL might not be enabled, we might need to rely on the transaction to dirty-check the entity,
-            // or we could autowire IssueOfficeRepository if needed. JPA dirty checking will usually update it automatically if it's managed.
+            // Since CascadeType.ALL might not be enabled, we might need to rely on the
+            // transaction to dirty-check the entity,
+            // or we could autowire IssueOfficeRepository if needed. JPA dirty checking will
+            // usually update it automatically if it's managed.
         }
-        
+
         return userRepository.save(user);
     }
 }

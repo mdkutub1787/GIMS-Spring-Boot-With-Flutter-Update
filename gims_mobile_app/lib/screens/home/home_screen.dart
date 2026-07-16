@@ -115,31 +115,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
               // Fire Section
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(width: 70, child: _buildActionIcon(Icons.security, 'Fire Policy', const Color(0xFF20B2AA), () => Navigator.pushNamed(context, AppRouter.viewFirePolicy))),
-                  SizedBox(width: 70, child: _buildActionIcon(Icons.receipt, 'Fire Bill', const Color(0xFF28B9A9), () => Navigator.pushNamed(context, AppRouter.viewFireBill))),
-                  SizedBox(width: 70, child: _buildActionIcon(Icons.request_quote, 'Fire MR', const Color(0xFF1CB1A1), () => Navigator.pushNamed(context, AppRouter.viewFireMoneyReceipt))),
+                  Expanded(child: _buildActionIcon(Icons.security, 'Fire Policy', const Color(0xFF20B2AA), () => Navigator.pushNamed(context, AppRouter.viewFirePolicy))),
+                  const SizedBox(width: 10),
+                  Expanded(child: _buildActionIcon(Icons.receipt, 'Fire Bill', const Color(0xFF28B9A9), () => Navigator.pushNamed(context, AppRouter.viewFireBill))),
+                  const SizedBox(width: 10),
+                  Expanded(child: _buildActionIcon(Icons.request_quote, 'Fire MR', const Color(0xFF1CB1A1), () => Navigator.pushNamed(context, AppRouter.viewFireMoneyReceipt))),
                 ],
               ),
               const SizedBox(height: 24),
 
               // Marine Section
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(width: 70, child: _buildActionIcon(Icons.directions_boat, 'Marine', const Color(0xFF20B2AA), () => Navigator.pushNamed(context, AppRouter.viewMarinePolicy))),
-                  SizedBox(width: 70, child: _buildActionIcon(Icons.receipt_long, 'Marine Bill', const Color(0xFF28B9A9), () => Navigator.pushNamed(context, AppRouter.viewMarineBill))),
-                  SizedBox(width: 70, child: _buildActionIcon(Icons.monetization_on, 'Marine MR', const Color(0xFF1CB1A1), () => Navigator.pushNamed(context, AppRouter.viewMarineMoneyReceipt))),
+                  Expanded(child: _buildActionIcon(Icons.directions_boat, 'Marine', const Color(0xFF20B2AA), () => Navigator.pushNamed(context, AppRouter.viewMarinePolicy))),
+                  const SizedBox(width: 10),
+                  Expanded(child: _buildActionIcon(Icons.receipt_long, 'Marine Bill', const Color(0xFF28B9A9), () => Navigator.pushNamed(context, AppRouter.viewMarineBill))),
+                  const SizedBox(width: 10),
+                  Expanded(child: _buildActionIcon(Icons.monetization_on, 'Marine MR', const Color(0xFF1CB1A1), () => Navigator.pushNamed(context, AppRouter.viewMarineMoneyReceipt))),
                 ],
               ),
               const SizedBox(height: 24),
 
               // Reports Section
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(width: 70, child: _buildActionIcon(Icons.assessment, 'Reports', const Color(0xFF0F9485), () => Navigator.pushNamed(context, AppRouter.combinedReport))),
+                  Expanded(child: _buildActionIcon(Icons.assessment, 'Reports', const Color(0xFF0F9485), () => Navigator.pushNamed(context, AppRouter.combinedReport))),
+                  const SizedBox(width: 10),
+                  const Expanded(child: SizedBox()),
+                  const SizedBox(width: 10),
+                  const Expanded(child: SizedBox()),
                 ],
               ),
               const SizedBox(height: 35),
@@ -323,6 +331,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           const SizedBox(height: 10),
           Text(
             label,
+            textAlign: TextAlign.center,
             style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black87),
           ),
         ],
